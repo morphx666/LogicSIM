@@ -60,6 +60,8 @@
 
         g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
 
+        gr.UpgardeGrid()
+
         If selRect.Width > 0 AndAlso selRect.Height > 0 Then
             Using b As New SolidBrush(Color.FromArgb(64, Color.DimGray))
                 g.FillRoundedRectangle(b, selRect, 10, RectangleEdgeFilter.All)
@@ -115,20 +117,12 @@
             Else
                 If gt.Flow <> IBaseGate.DataFlow.Out Then
                     For Each ip In gt.Inputs
-                        If selPin = ip Then
-                            pinUI = selPinUI
-                        Else
-                            pinUI = ip.UI
-                        End If
+                        pinUI = If(selPin = ip, selPinUI, ip.UI)
                         g.FillRectangle(Brushes.MediumVioletRed, New Rectangle(gt.UI.Location + pinUI.Location, pinUI.Size))
                     Next
                 End If
                 If gt.Flow <> IBaseGate.DataFlow.In Then
-                    If selPin = gt.Output Then
-                        pinUI = selPinUI
-                    Else
-                        pinUI = gt.Output.UI
-                    End If
+                    pinUI = If(selPin = gt.Output, selPinUI, gt.Output.UI)
                     g.FillRectangle(Brushes.Orange, New Rectangle(gt.UI.Location + pinUI.Location, pinUI.Size))
                 End If
             End If
@@ -249,7 +243,7 @@
             selPin = Nothing
             If overGate Is Nothing Then
                 selGates.Clear()
-                Me.Invalidate()
+                'Me.Invalidate()
             Else
                 If Not isCtrlDown AndAlso Not selGates.Contains(overGate) Then selGates.Clear()
                 If isCtrlDown AndAlso selGates.Contains(overGate) Then
@@ -297,15 +291,9 @@
             End If
         End If
 
-        gr.UpgardeGrid()
-
         Dim lastMousePos As Point = mousePos
         For Each gt In mCircuit.Gates
-            If gt.UI.Angle <> 0 Then
-                mousePos = gr.TransformPoint(mousePos, gt)
-            Else
-                mousePos = lastMousePos
-            End If
+            mousePos = If(gt.UI.Angle <> 0, gr.TransformPoint(mousePos, gt), lastMousePos)
 
             If Not isMouseDown AndAlso gt.UI.Bounds.Contains(mousePos) Then
                 overGate = gt
@@ -317,11 +305,9 @@
                     Dim pb As Rectangle
 
                     If gt.Flow <> IBaseGate.DataFlow.In Then
-                        If selPin = gt.Output Then
-                            pb = New Rectangle(gt.UI.Location + selPinUI.Location, selPinUI.Size)
-                        Else
-                            pb = New Rectangle(gt.UI.Location + gt.Output.UI.Location, gt.Output.UI.Size)
-                        End If
+                        pb = If(selPin = gt.Output,
+                            New Rectangle(gt.UI.Location + selPinUI.Location, selPinUI.Size),
+                            New Rectangle(gt.UI.Location + gt.Output.UI.Location, gt.Output.UI.Size))
                         If gt.UI.Angle <> 0 Then pb.Location = gr.TransformPoint(pb.Location, gt)
 
                         If pb.Contains(e.Location) Then
@@ -335,11 +321,9 @@
 
                     If gt.Flow <> IBaseGate.DataFlow.Out Then
                         For Each ip In gt.Inputs
-                            If selPin = ip Then
-                                pb = New Rectangle(gt.UI.Location + selPinUI.Location, selPinUI.Size)
-                            Else
-                                pb = New Rectangle(gt.UI.Location + ip.UI.Location, ip.UI.Size)
-                            End If
+                            pb = If(selPin = ip,
+                                New Rectangle(gt.UI.Location + selPinUI.Location, selPinUI.Size),
+                                New Rectangle(gt.UI.Location + ip.UI.Location, ip.UI.Size))
                             If gt.UI.Angle <> 0 Then pb.Location = gr.TransformPoint(pb.Location, gt)
 
                             If pb.Contains(e.Location) Then
@@ -522,7 +506,7 @@
             selPin = Nothing
         End If
 
-        'Me.Invalidate()
+        Me.Invalidate()
     End Sub
 
     Private Sub CircuitSurface_Click(sender As Object, e As EventArgs) Handles Me.Click

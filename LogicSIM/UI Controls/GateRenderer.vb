@@ -101,7 +101,7 @@
         Next
 
         Dim b As Rectangle
-        For Each gt As LogicGates.BaseGate In mCircuit.Gates.AsParallel()
+        For Each gt As LogicGates.BaseGate In mCircuit.Gates
             If gt.GateType = IBaseGate.GateTypes.Component Then Continue For
 
             b = gt.UI.Bounds
@@ -338,12 +338,7 @@
                     DrawWire(g, p1, gt.UI.Location + New Point(gt.UI.Width / 2, gt.UI.Height / 2), op.Pin)
                 Next
             ElseIf gt.Output.ConnectedToPinNumber <> -1 Then
-                Dim p As LogicGates.Pin
-                If gt.Output = selPin Then
-                    p = selPin
-                Else
-                    p = gt.Output
-                End If
+                Dim p As LogicGates.Pin = If(gt.Output = selPin, selPin, gt.Output)
 
                 p1 = gt.UI.Location + p.UI.Location
                 p1.X += p.UI.Width
@@ -405,7 +400,7 @@
 
         For Each gt In mCircuit.Gates
             If gt.GateType = IBaseGate.GateTypes.Node Then
-                Dim n = CType(gt, LogicGates.Node)
+                Dim n As LogicGates.Node = CType(gt, LogicGates.Node)
                 For Each op In n.Outputs
                     p1 = gt.UI.Location + New Point(gt.UI.Width / 2, gt.UI.Height / 2)
                     p2 = op.Gate.UI.Location + op.Pin.UI.Location
@@ -416,12 +411,7 @@
                     DrawWire(g, p1, p2, gt, op.Pin)
                 Next
             ElseIf gt.Output.ConnectedToPinNumber <> -1 Then
-                Dim p As LogicGates.Pin
-                If gt.Output = selPin Then
-                    p = selPin
-                Else
-                    p = gt.Output
-                End If
+                Dim p As LogicGates.Pin = If(gt.Output = selPin, selPin, gt.Output)
 
                 p1 = gt.UI.Location + p.UI.Location
                 p1.X += p.UI.Width
@@ -504,7 +494,7 @@
         End If
     End Function
 
-    Dim wm As Integer = 0
+    Private wm As Integer = 0
     Private Sub AddWireToGrid(p1 As Point, p2 As Point)
         For x = Math.Min(p1.X, p2.X) - 1 To Math.Max(p1.X, p2.X)
             For y = Math.Min(p1.Y, p2.Y) - 1 To Math.Max(p1.Y, p2.Y)

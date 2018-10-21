@@ -89,21 +89,18 @@ namespace PathFinder {
 
         #region Constructors
         public PathFinderFast(byte[,] grid) {
-            if (grid == null)
-                throw new Exception("Grid cannot be null");
-
-            mGrid = grid;
+            mGrid = grid ?? throw new Exception("Grid cannot be null");
             mGridX = (ushort)(mGrid.GetUpperBound(0) + 1);
             mGridY = (ushort)(mGrid.GetUpperBound(1) + 1);
             mGridXMinus1 = (ushort)(mGridX - 1);
             mGridYLog2 = (ushort)Math.Log(mGridY, 2);
 
             // This should be done at the constructor, for now we leave it here.
-            if (Math.Log(mGridX, 2) != (int)Math.Log(mGridX, 2) ||
+            if(Math.Log(mGridX, 2) != (int)Math.Log(mGridX, 2) ||
                 Math.Log(mGridY, 2) != (int)Math.Log(mGridY, 2))
                 throw new Exception("Invalid Grid, size in X and Y must be power of 2");
 
-            if (mCalcGrid == null || mCalcGrid.Length != (mGridX * mGridY))
+            if(mCalcGrid == null || mCalcGrid.Length != (mGridX * mGridY))
                 mCalcGrid = new PathFinderNodeFast[mGridX * mGridY];
 
             mOpen = new PriorityQueueB<int>(new ComparePFNodeMatrix(mCalcGrid));
@@ -124,7 +121,7 @@ namespace PathFinder {
             get { return mDiagonals; }
             set {
                 mDiagonals = value;
-                if (mDiagonals)
+                if(mDiagonals)
                     mDirection = new sbyte[8, 2] { { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 1 }, { -1, -1 } };
                 else
                     mDirection = new sbyte[4, 2] { { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } };
@@ -178,7 +175,7 @@ namespace PathFinder {
         }
 
         public List<PathFinderNode> FindPath(Point start, Point end) {
-            lock (this) {
+            lock(this) {
                 HighResolutionTime.Start();
 
                 // Is faster if we don't clear the matrix, just assign different values for open and close and ignore the rest
@@ -211,11 +208,11 @@ namespace PathFinder {
                 mCalcGrid[mLocation].Status = mOpenNodeValue;
 
                 mOpen.Push(mLocation);
-                while (mOpen.Count > 0 && !mStop) {
+                while(mOpen.Count > 0 && !mStop) {
                     mLocation = mOpen.Pop();
 
                     //Is it in closed list? means this node was already processed
-                    if (mCalcGrid[mLocation].Status == mCloseNodeValue)
+                    if(mCalcGrid[mLocation].Status == mCloseNodeValue)
                         continue;
 
                     mLocationX = (ushort)(mLocation & mGridXMinus1);
@@ -226,54 +223,54 @@ namespace PathFinder {
                         PathFinderDebug(0, 0, mLocation & mGridXMinus1, mLocation >> mGridYLog2, PathFinderNodeType.Current, -1, -1);
 #endif
 
-                    if (mLocation == mEndLocation) {
+                    if(mLocation == mEndLocation) {
                         mCalcGrid[mLocation].Status = mCloseNodeValue;
                         mFound = true;
                         break;
                     }
 
-                    if (mCloseNodeCounter > mSearchLimit) {
+                    if(mCloseNodeCounter > mSearchLimit) {
                         mStopped = true;
                         mCompletedTime = HighResolutionTime.GetTime();
                         return null;
                     }
 
-                    if (mPunishChangeDirection)
+                    if(mPunishChangeDirection)
                         mHoriz = (mLocationX - mCalcGrid[mLocation].PX);
 
                     //Lets calculate each successors
-                    for (int i = 0; i < (mDiagonals ? 8 : 4); i++) {
+                    for(int i = 0; i < (mDiagonals ? 8 : 4); i++) {
                         mNewLocationX = (ushort)(mLocationX + mDirection[i, 0]);
                         mNewLocationY = (ushort)(mLocationY + mDirection[i, 1]);
                         mNewLocation = (mNewLocationY << mGridYLog2) + mNewLocationX;
 
-                        if (mNewLocationX >= mGridX || mNewLocationY >= mGridY)
+                        if(mNewLocationX >= mGridX || mNewLocationY >= mGridY)
                             continue;
 
                         // Unbreakable?
-                        if (mGrid[mNewLocationX, mNewLocationY] == 0)
+                        if(mGrid[mNewLocationX, mNewLocationY] == 0)
                             continue;
 
-                        if (mHeavyDiagonals && i > 3)
+                        if(mHeavyDiagonals && i > 3)
                             mNewG = mCalcGrid[mLocation].G + (int)(mGrid[mNewLocationX, mNewLocationY] * 2.41);
                         else
                             mNewG = mCalcGrid[mLocation].G + mGrid[mNewLocationX, mNewLocationY];
 
-                        if (mPunishChangeDirection) {
-                            if ((mNewLocationX - mLocationX) != 0) {
-                                if (mHoriz == 0)
+                        if(mPunishChangeDirection) {
+                            if((mNewLocationX - mLocationX) != 0) {
+                                if(mHoriz == 0)
                                     mNewG += Math.Abs(mNewLocationX - end.X) + Math.Abs(mNewLocationY - end.Y);
                             }
-                            if ((mNewLocationY - mLocationY) != 0) {
-                                if (mHoriz != 0)
+                            if((mNewLocationY - mLocationY) != 0) {
+                                if(mHoriz != 0)
                                     mNewG += Math.Abs(mNewLocationX - end.X) + Math.Abs(mNewLocationY - end.Y);
                             }
                         }
 
                         //Is it open or closed?
-                        if (mCalcGrid[mNewLocation].Status == mOpenNodeValue || mCalcGrid[mNewLocation].Status == mCloseNodeValue) {
+                        if(mCalcGrid[mNewLocation].Status == mOpenNodeValue || mCalcGrid[mNewLocation].Status == mCloseNodeValue) {
                             // The current node has less code than the previous? then skip this node
-                            if (mCalcGrid[mNewLocation].G <= mNewG)
+                            if(mCalcGrid[mNewLocation].G <= mNewG)
                                 continue;
                         }
 
@@ -281,7 +278,7 @@ namespace PathFinder {
                         mCalcGrid[mNewLocation].PY = mLocationY;
                         mCalcGrid[mNewLocation].G = mNewG;
 
-                        switch (mFormula) {
+                        switch(mFormula) {
                             default:
                             case HeuristicFormula.Manhattan:
                                 mH = mHEstimate * (Math.Abs(mNewLocationX - end.X) + Math.Abs(mNewLocationY - end.Y));
@@ -307,7 +304,7 @@ namespace PathFinder {
                                 mH = mHEstimate * (Diagonal + Orthogonal + dxy.X + dxy.Y);
                                 break;
                         }
-                        if (mTieBreaker) {
+                        if(mTieBreaker) {
                             int dx1 = mLocationX - end.X;
                             int dy1 = mLocationY - end.Y;
                             int dx2 = start.X - end.X;
@@ -348,7 +345,7 @@ namespace PathFinder {
                 }
 
                 mCompletedTime = HighResolutionTime.GetTime();
-                if (mFound) {
+                if(mFound) {
                     mClose.Clear();
                     int posX = end.X;
                     int posY = end.Y;
@@ -363,7 +360,7 @@ namespace PathFinder {
                     fNode.X = end.X;
                     fNode.Y = end.Y;
 
-                    while (fNode.X != fNode.PX || fNode.Y != fNode.PY) {
+                    while(fNode.X != fNode.PX || fNode.Y != fNode.PY) {
                         mClose.Add(fNode);
 #if DEBUGON
                         if (mDebugFoundPath && PathFinderDebug != null)
@@ -411,9 +408,9 @@ namespace PathFinder {
 
             #region IComparer Members
             public int Compare(int a, int b) {
-                if (mMatrix[a].F > mMatrix[b].F)
+                if(mMatrix[a].F > mMatrix[b].F)
                     return 1;
-                else if (mMatrix[a].F < mMatrix[b].F)
+                else if(mMatrix[a].F < mMatrix[b].F)
                     return -1;
                 return 0;
             }
