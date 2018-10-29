@@ -14,7 +14,7 @@
 
         Protected Overrides Sub InitializeInputs()
             Name = "NOT"
-            Inputs.Add(New Pin(Me))
+            Inputs.Add(New Pin(Me, Inputs.Count))
         End Sub
 
         Public Shared Function FromXML(xml As XElement) As BaseGate

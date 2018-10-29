@@ -45,7 +45,7 @@
                 Next
             End If
 
-            mOutputs(outputPinNumber) = New Component.PinConnection(gate, pinNumber)
+            mOutputs(outputPinNumber) = New Component.PinConnection(gate, pinNumber, outputPinNumber)
         End Sub
 
         Public Sub ConnectTo(gate As BaseGate, pin As Pin)
@@ -96,7 +96,7 @@
             UI.NameOffset = New Point(5, 5)
             UI.FillColor = Brushes.Blue
 
-            Inputs.Add(New Pin(Me))
+            Inputs.Add(New Pin(Me, Inputs.Count))
             Inputs(0).UI.Size = New Size(10, 10)
 
             mOutputs = New List(Of Component.PinConnection)()
@@ -124,7 +124,7 @@
 
             xml.Add(<internals>
                         <outputPins>
-                            <%= From op In mOutputs Select (op.ToXML()) %>
+                            <%= From op In mOutputs Select (op?.ToXML()) %>
                         </outputPins>
                     </internals>)
 

@@ -7,13 +7,18 @@ Partial Public Class LogicGates
             Public Property Gate As BaseGate
             Public Property Pin As Pin
             Public Property PinNumber As Integer
+            Public Property OutputPinNumber As Integer
 
-            Public Sub New(gate As BaseGate, pinNumber As Integer)
+            Public Sub New(gate As BaseGate, pinNumber As Integer, Optional outputPinNumber As Integer = -1)
                 Me.Gate = gate
                 Me.PinNumber = pinNumber
+                Me.OutputPinNumber = outputPinNumber
                 If pinNumber = -1 Then
                     Me.Pin = gate.Output
                 Else
+                    While pinNumber >= gate.Inputs.Count
+                        gate.Inputs.Add(New Pin(gate, gate.Inputs.Count))
+                    End While
                     Me.Pin = gate.Inputs(pinNumber)
                 End If
             End Sub
@@ -22,6 +27,7 @@ Partial Public Class LogicGates
                 Return <gatePin>
                            <gate><%= Gate.ID.ToString() %></gate>
                            <pinNumber><%= PinNumber %></pinNumber>
+                           <outputPinNumber><%= OutputPinNumber %></outputPinNumber>
                        </gatePin>
             End Function
         End Class
@@ -66,8 +72,8 @@ Partial Public Class LogicGates
             mCompInputs.Add(New PinConnection(gate, pinNumber))
         End Sub
 
-        Public Sub DefineOutputPin(gate As BaseGate)
-            mCompOutputs.Add(New PinConnection(gate, -1))
+        Public Sub DefineOutputPin(gate As BaseGate, pinNumber As Integer)
+            mCompOutputs.Add(New PinConnection(gate, pinNumber))
         End Sub
 
         Protected Friend Overrides Sub Evaluate()
@@ -93,7 +99,7 @@ Partial Public Class LogicGates
             Next
 
             For Each ipXml In xml.<internals>.<outputPins>.<gatePin>
-                c.DefineOutputPin(GetGateById(ipXml.<gate>.Value, c))
+                c.DefineOutputPin(GetGateById(ipXml.<gate>.Value, c), ipXml.<pinNumber>.Value)
             Next
 
             For Each gXml In xml.<internals>.<gates>.<gate>
@@ -102,7 +108,7 @@ Partial Public Class LogicGates
                 If TypeOf g Is Node Then
                     Dim n = CType(g, Node)
                     For Each opXml In gXml.<internals>.<outputPins>.<gatePin>
-                        n.ConnectTo(GetGateById(opXml.<gate>.Value, c), opXml.<pinNumber>.Value)
+                        n.ConnectTo(GetGateById(opXml.<gate>.Value, c), opXml.<pinNumber>.Value, opXml.<outputPinNumber>.Value)
                     Next
                 Else
                     For Each ipXml In gXml.<inputPins>.<pin>

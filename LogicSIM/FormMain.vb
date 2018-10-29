@@ -3,65 +3,54 @@
 Public Class FormMain
     Dim circuit As Component
 
-    Dim testFile As String = "E:\Information Resources\LogicSIM.xml"
+    Dim testFile As String = IO.Path.Combine(My.Application.Info.DirectoryPath, "LogicSIM_Sample.xml")
 
     Private Sub FormMain_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        'IO.File.WriteAllText(testFile, circuit.ToXML().ToString())
+        IO.File.WriteAllText(testFile, circuit.ToXML().ToString())
     End Sub
 
     Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        GenTestProject()
-        'GenSimpleTestProject()
+        'GenTestProject()
 
         If IO.File.Exists(testFile) AndAlso circuit Is Nothing Then
             Dim xDoc = XDocument.Parse(IO.File.ReadAllText(testFile))
-            'circuit = Component.FromXML(xDoc.FirstNode())
+            circuit = Component.FromXML(xDoc.FirstNode())
         End If
 
         CircuitSurface1.Circuit = circuit
     End Sub
 
-    Private Sub GenSimpleTestProject()
-        circuit = New Component()
+    Private Sub GenTestProject() ' Full adder: https://en.wikipedia.org/wiki/Adder_(electronics)#Full_adder
+        circuit = New Component() With {.Name = "Full Adder"}
 
-        Dim n As New Node()
-        n.UI.Location = New Point(200, 200)
-        n.ConnectTo(New ORGate(), 0)
+        Dim xor1 As New XORGate() With {.Name = "XOR 1"}
+        Dim xor2 As New XORGate() With {.Name = "XOR 2"}
 
-        circuit.Gates.Add(n)
-    End Sub
+        Dim and1 As New ANDGate() With {.Name = "AND 1"}
+        Dim and2 As New ANDGate() With {.Name = "AND 2"}
 
-    Private Sub GenTestProject()
-        circuit = New Component()
+        Dim or1 As New ORGate() With {.Name = "OR"}
 
-        Dim xor1 As New XORGate()
-        Dim xor2 As New XORGate()
+        Dim led1 As New Led() With {.Name = "S"}
+        Dim led2 As New Led() With {.Name = "C"}
 
-        Dim and1 As New ANDGate()
-        Dim and2 As New ANDGate()
+        Dim sw1 As New Switch() With {.Name = "A"}
+        Dim sw2 As New Switch() With {.Name = "B"}
+        Dim sw3 As New Switch() With {.Name = "C"}
 
-        Dim or1 As New ORGate()
-
-        Dim led1 As New Led()
-        Dim led2 As New Led()
-
-        Dim sw1 As New Switch()
-        Dim sw2 As New Switch()
-        Dim sw3 As New Switch()
-
-        Dim node1 As New Node()
+        Dim node1 As New Node() With {.Name = "1"}
         node1.ConnectTo(xor1, 0, 1)
         node1.ConnectTo(and2, 0, 2)
 
-        Dim node2 As New Node()
+        Dim node2 As New Node() With {.Name = "2"}
         node2.ConnectTo(xor1, 1, 1)
         node2.ConnectTo(and2, 1, 2)
 
-        Dim node3 As New Node()
+        Dim node3 As New Node() With {.Name = "3"}
         node3.ConnectTo(xor2, 0, 1)
         node3.ConnectTo(and1, 0, 2)
 
-        Dim node4 As New Node()
+        Dim node4 As New Node() With {.Name = "4"}
         node4.ConnectTo(xor2, 1, 1)
         node4.ConnectTo(and1, 1, 2)
 
@@ -92,18 +81,15 @@ Public Class FormMain
         circuit.Gates.Add(sw3)
 
         circuit.DefineInputPin(sw1, 0)
-        circuit.DefineInputPin(sw2, 0)
-        circuit.DefineInputPin(sw3, 0)
+        circuit.DefineInputPin(sw2, 1)
+        circuit.DefineInputPin(sw3, 2)
 
-        circuit.DefineOutputPin(xor2)
-        circuit.DefineOutputPin(or1)
+        circuit.DefineOutputPin(xor2, 0)
+        circuit.DefineOutputPin(or1, 1)
 
         circuit.Inputs(0).Value = False ' A
         circuit.Inputs(1).Value = False ' B
         circuit.Inputs(2).Value = False ' C
-
-        'Debug.WriteLine("S = {0}", If(circuit.Outputs(0).Value, 1, 0))
-        'Debug.WriteLine("C = {0}", If(circuit.Outputs(1).Value, 1, 0))
 
         xor1.UI.Location = New Point(300, 20)
         xor2.UI.Location = New Point(550, 40)
@@ -124,18 +110,9 @@ Public Class FormMain
         sw2.UI.Location = New Point(60, node2.UI.Y - 10)
         sw3.UI.Location = New Point(60, node4.UI.Y + 10)
 
-        led1.Name = "S"
-        led2.Name = "C"
-
         node1.Name = "1"
         node2.Name = "2"
         node3.Name = "3"
         node4.Name = "4"
-
-        sw1.Name = "A"
-        sw2.Name = "B"
-        sw3.Name = "C"
-
-        'xor2.UI.Angle = 45
     End Sub
 End Class

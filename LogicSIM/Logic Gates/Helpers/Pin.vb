@@ -16,12 +16,13 @@
 
         Private mName As String
 
-        Public Sub New(parentGate As BaseGate)
+        Public Sub New(parentGate As BaseGate, pinNumber As Integer)
             mID = Guid.NewGuid()
             mParentGate = parentGate
             mName = "PIN"
             mUI = New GateUI()
             mUI.Size = New Size(10, 10)
+            mPinNumber = pinNumber
 
             SetupUI()
         End Sub
@@ -154,21 +155,23 @@
         End Operator
 
         Public Shared Function FromXML(xml As XElement, parent As BaseGate) As Pin
-            Dim p As New Pin(parent)
-            p.Name = xml.<name>.Value
-            p.UI = GateUI.FromXML(xml.<ui>(0))
+            Dim p As New Pin(parent, xml.<pinNumber>.Value) With {
+                .Name = xml.<name>.Value,
+                .UI = GateUI.FromXML(xml.<ui>(0))
+            }
             Return p
         End Function
 
         Public Function ToXML() As XElement
             Return <pin>
                        <name><%= Name %></name>
-                       <parentGate><%= mParentGate.ID.ToString() %></parentGate>
+                       <parentGate><%= mParentGate.ID %></parentGate>
                        <connectedTo>
-                           <gate><%= If(mConnectedToPinNumber <> -1, mConnectedToGate.ID.ToString(), "") %></gate>
-                           <pinNumber><%= If(mConnectedToPinNumber <> -1, mConnectedToPinNumber.ToString(), -1) %></pinNumber>
+                           <gate><%= If(mConnectedToPinNumber <> -1, mConnectedToGate.ID, "") %></gate>
+                           <pinNumber><%= mConnectedToPinNumber %></pinNumber>
                        </connectedTo>
-                       <value><%= mValue.ToString() %></value>
+                       <value><%= mValue %></value>
+                       <pinNumber><%= mPinNumber %></pinNumber>
                        <%= mUI.ToXML() %>
                    </pin>
         End Function

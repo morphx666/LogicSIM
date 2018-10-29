@@ -17,11 +17,16 @@
         Public Sub New()
             mUI = New GateUI()
             mInternalID = Guid.NewGuid()
-            mOutput = New Pin(Me)
+            mOutput = New Pin(Me, 0)
 
             mUI.NameOffset = New Point(mUI.Width / 2 - 20, mUI.Height / 2 - 10)
 
             InitializeInputs()
+        End Sub
+
+        Public Sub New(name As String)
+            MyBase.New()
+            mName = name
         End Sub
 
         Public Property ID As Guid

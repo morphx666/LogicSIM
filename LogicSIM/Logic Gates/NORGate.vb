@@ -20,7 +20,7 @@
         Protected Overrides Sub InitializeInputs()
             Name = "NOR"
             For i As Integer = 0 To 2 - 1
-                Inputs.Add(New Pin(Me))
+                Inputs.Add(New Pin(Me, Inputs.Count))
             Next
         End Sub
 

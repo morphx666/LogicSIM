@@ -37,7 +37,7 @@
 
         Protected Overrides Sub InitializeInputs()
             Name = "LED"
-            Inputs.Add(New Pin(Me))
+            Inputs.Add(New Pin(Me, Inputs.Count))
         End Sub
 
         Public Overrides ReadOnly Property Flow As IBaseGate.DataFlow
