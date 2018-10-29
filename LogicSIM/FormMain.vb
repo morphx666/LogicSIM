@@ -138,5 +138,18 @@ Public Class FormMain
         CircuitSurfaceGatePicker.Circuit = gatesContainer
         CircuitSurfaceGatePicker.Readonly = True
         CircuitSurfaceGatePicker.MultiSelect = False
+
+        AddHandler CircuitSurfaceContainer.MouseUp, Sub(o As Object, e As MouseEventArgs)
+                                                        If CircuitSurfaceGatePicker.SelectedGates.Any() Then
+                                                            If CircuitSurfaceContainer.SelectedGates.Count = 0 Then
+                                                                circuit.Gates.Add(CircuitSurfaceGatePicker.SelectedGates(0).Clone())
+                                                                circuit.Gates.Last.UI.Location = e.Location
+                                                                CircuitSurfaceContainer.SelectedGates.Add(circuit.Gates.Last)
+                                                                CircuitSurfaceContainer.Invalidate()
+                                                            End If
+                                                            CircuitSurfaceGatePicker.SelectedGates.Clear()
+                                                            CircuitSurfaceGatePicker.Invalidate()
+                                                        End If
+                                                    End Sub
     End Sub
 End Class

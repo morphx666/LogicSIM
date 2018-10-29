@@ -4,7 +4,7 @@
     Private mGateRenderer As GateRenderer
 
     Private overGate As LogicGates.BaseGate
-    Private selGates As New List(Of LogicGates.BaseGate)
+    Private mSelectedGates As New List(Of LogicGates.BaseGate)
     Private selPin As LogicGates.Pin
     Private selPinUI As GateUI
 
@@ -54,6 +54,12 @@
     Public ReadOnly Property GateRenderer As GateRenderer
         Get
             Return mGateRenderer
+        End Get
+    End Property
+
+    Public ReadOnly Property SelectedGates As List(Of LogicGates.BaseGate)
+        Get
+            Return mSelectedGates
         End Get
     End Property
 
@@ -113,7 +119,7 @@
             Dim pinUI As GateUI
             If gt.GateType = IBaseGate.GateTypes.Node Then
                 Dim n = CType(gt, LogicGates.Node)
-                If selGates.Contains(n) OrElse overGate = n Then
+                If mSelectedGates.Contains(n) OrElse overGate = n Then
                     pinUI = n.Input.UI
                     g.FillRectangle(Brushes.Blue, New Rectangle(gt.UI.Location + pinUI.Location, pinUI.Size))
 
@@ -175,7 +181,7 @@
                 g.ResetTransform()
             End If
 
-            For Each gt In selGates
+            For Each gt In mSelectedGates
                 Dim selBounds = gt.UI.Bounds
                 selBounds.Inflate(10, 10)
 
@@ -216,17 +222,19 @@
         End If
 
         Select Case keyData
-            Case Keys.Tab
-                For Each gt In selGates
-                    gt.UI.Angle += 15 * If(isShiftDown, -1, 1)
-                Next
+            Case Keys.Delete
+                mSelectedGates.ForEach(Sub(gt) mCircuit.Gates.Remove(gt))
+                mSelectedGates.Clear()
+                Me.Invalidate()
 
-                mGateRenderer.UpgardeGrid()
+            Case Keys.Tab
+                mSelectedGates.ForEach(Sub(gt) gt.UI.Angle += 15 * If(isShiftDown, -1, 1))
                 Me.Invalidate()
                 Return False
-            Case Else
-                Return MyBase.ProcessCmdKey(msg, keyData)
+
         End Select
+
+        Return MyBase.ProcessCmdKey(msg, keyData)
     End Function
 
     Private Sub CircuitSurface_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
@@ -247,21 +255,21 @@
             selPinUI = selPin.UI.Clone()
             selPin.UI.Location = mGateRenderer.TransformPoint(selPin.ParentGate.UI.Location + selPin.UI.Location, selPin.ParentGate) - selPin.ParentGate.UI.Location
             overPin = Nothing
-            selGates.Clear()
+            mSelectedGates.Clear()
         Else
             selPin = Nothing
             If overGate Is Nothing Then
-                selGates.Clear()
+                mSelectedGates.Clear()
                 'Me.Invalidate()
             Else
-                If Not isCtrlDown AndAlso Not selGates.Contains(overGate) Then selGates.Clear()
-                If isCtrlDown AndAlso selGates.Contains(overGate) Then
-                    selGates.Remove(overGate)
+                If Not isCtrlDown AndAlso Not mSelectedGates.Contains(overGate) Then mSelectedGates.Clear()
+                If isCtrlDown AndAlso mSelectedGates.Contains(overGate) Then
+                    mSelectedGates.Remove(overGate)
                     Exit Sub
                 End If
-                If Not selGates.Contains(overGate) Then
-                    If Not MultiSelect Then selGates.Clear()
-                    selGates.Add(overGate)
+                If Not mSelectedGates.Contains(overGate) Then
+                    If Not MultiSelect Then mSelectedGates.Clear()
+                    mSelectedGates.Add(overGate)
                 End If
             End If
         End If
@@ -281,8 +289,8 @@
         Dim deltaY As Integer = (mousePos.Y - mouseOrigin.Y)
 
         If isMouseDown Then
-            If selGates.Count > 0 AndAlso Not [Readonly] Then
-                For Each gt In selGates
+            If mSelectedGates.Count > 0 AndAlso Not [Readonly] Then
+                For Each gt In mSelectedGates
                     gt.UI.Path = Nothing
                     gt.UI.Bounds = New Rectangle(gt.UI.Bounds.X + deltaX,
                                                  gt.UI.Bounds.Y + deltaY,
@@ -373,7 +381,7 @@
         isMouseDown = False
 
         If selRect.Width > 0 Then
-            selGates.Clear()
+            mSelectedGates.Clear()
 
             For Each gt In mCircuit.Gates
                 Dim p1 As Point = selRect.Location
@@ -381,10 +389,10 @@
                 p2.X -= p1.X
                 p2.Y -= p1.Y
                 Dim testRect As Rectangle = New Rectangle(p1, p2)
-                If testRect.IntersectsWith(gt.UI.Bounds) Then selGates.Add(gt)
+                If testRect.IntersectsWith(gt.UI.Bounds) Then mSelectedGates.Add(gt)
             Next
 
-            If selGates.Count > 0 Then Me.Invalidate()
+            If mSelectedGates.Count > 0 Then Me.Invalidate()
             selRect = Rectangle.Empty
         ElseIf selPin IsNot Nothing Then
             If overPin Is Nothing Then
