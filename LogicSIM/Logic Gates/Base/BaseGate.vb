@@ -1,4 +1,6 @@
-﻿Partial Public Class LogicGates
+﻿Imports System.Reflection
+
+Partial Public Class LogicGates
     Public MustInherit Class BaseGate
         Implements IBaseGate, ICloneable
 
@@ -20,6 +22,8 @@
             mOutput = New Pin(Me, 0)
 
             mUI.NameOffset = New Point(mUI.Width / 2 - 20, mUI.Height / 2 - 10)
+
+            mName = Me.GetType().ToString().Split("+")(1).Replace("Gate", "")
 
             InitializeInputs()
         End Sub
@@ -170,4 +174,33 @@
             Return Nothing
         End Function
     End Class
+
+    Public Shared Function GetAvailableGates() As List(Of Tuple(Of String, Type))
+        Return GetType(BaseGate).Assembly.GetTypes().
+                Where(Function(t) t.IsClass AndAlso t.IsSubclassOf(GetType(BaseGate)) AndAlso Not t.IsAbstract).
+                Select(Function(t) New Tuple(Of String, Type)(t.Name, t)).ToList()
+    End Function
+
+    'Public Shared Function GetProperties(obj As Object) As List(Of Tuple(Of MemberInfo, Double, Double, String, String))
+    '    Dim properties As New List(Of Tuple(Of MemberInfo, Double, Double, String, String))
+
+    '    Dim objType As Type = obj.GetType()
+    '    Dim asm As Assembly = Assembly.GetAssembly(objType)
+
+    '    For Each t As Type In asm.GetExportedTypes().Where(Function(testType As Type) testType Is objType)
+    '        For Each mi As MemberInfo In t.GetMembers.Where(Function(member As MemberInfo) member.MemberType = MemberTypes.Property Or
+    '                                                                                       member.MemberType = MemberTypes.Field)
+
+    '            Dim caObj() As Object = mi.GetCustomAttributes(GetType(BaseGate.EffectProperyAttribute), False)
+    '            If caObj.Length = 0 Then
+    '                properties.Add(New Tuple(Of MemberInfo, Double, Double, String, String)(mi, 0, 0, "", ""))
+    '            Else
+    '                Dim filterAttr As BaseGate.EffectProperyAttribute = CType(caObj(0), BaseGate.EffectProperyAttribute)
+    '                properties.Add(New Tuple(Of MemberInfo, Double, Double, String, String)(mi, filterAttr.Minimum, filterAttr.Maximum, filterAttr.Unit, filterAttr.Description))
+    '            End If
+    '        Next
+    '    Next
+
+    '    Return properties
+    'End Function
 End Class

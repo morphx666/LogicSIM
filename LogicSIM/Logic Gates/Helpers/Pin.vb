@@ -20,9 +20,10 @@
             mID = Guid.NewGuid()
             mParentGate = parentGate
             mName = "PIN"
-            mUI = New GateUI()
-            mUI.Size = New Size(10, 10)
             mPinNumber = pinNumber
+            mUI = New GateUI With {
+                .Size = New Size(10, 10)
+            }
 
             SetupUI()
         End Sub
@@ -37,6 +38,7 @@
                     mParentGate.Inputs.Add(Me)
 
                     If mParentGate.Inputs.Count = 1 Then
+                        mParentGate.Inputs(0).UI.X = -mUI.Width
                         mParentGate.Inputs(0).UI.Y = mParentGate.UI.Height / 2
                     Else
                         Dim stp = mParentGate.UI.Height / mParentGate.Inputs.Count

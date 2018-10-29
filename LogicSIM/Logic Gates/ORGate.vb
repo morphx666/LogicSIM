@@ -18,7 +18,6 @@
         End Sub
 
         Protected Overrides Sub InitializeInputs()
-            Name = "OR"
             For i As Integer = 0 To 2 - 1
                 Inputs.Add(New Pin(Me, Inputs.Count))
             Next

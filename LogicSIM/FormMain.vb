@@ -17,7 +17,9 @@ Public Class FormMain
             circuit = Component.FromXML(xDoc.FirstNode())
         End If
 
-        CircuitSurface1.Circuit = circuit
+        CircuitSurfaceContainer.Circuit = circuit
+
+        AddGatesToUI()
     End Sub
 
     Private Sub GenTestProject() ' Full adder: https://en.wikipedia.org/wiki/Adder_(electronics)#Full_adder
@@ -114,5 +116,27 @@ Public Class FormMain
         node2.Name = "2"
         node3.Name = "3"
         node4.Name = "4"
+    End Sub
+
+    Private Sub AddGatesToUI()
+        Dim gatesContainer = New Component() With {.Name = "Gates Container"}
+
+        For Each gateType In LogicGates.GetAvailableGates()
+            If gateType.Item2 <> GetType(Component) AndAlso gateType.Item2 <> GetType(Node) Then
+                gatesContainer.Gates.Add(Activator.CreateInstance(gateType.Item2))
+                If gateType.Item2 = GetType(Switch) Then gatesContainer.Gates.Last().UI.NameOffset = New Point(0, gatesContainer.Gates.Last().UI.Height)
+            End If
+        Next
+
+        Dim p As Point = New Point(0, CircuitSurfaceGatePicker.Snap.Height)
+        gatesContainer.Gates.ForEach(Sub(g)
+                                         p.X = (CircuitSurfaceGatePicker.Width - g.UI.Width) / 2
+                                         g.UI.Location = p
+                                         p.Y += g.UI.Height + If(g.UI.NameOffset.Y > g.UI.Height / 2, g.UI.NameOffset.Y, 0) + CircuitSurfaceGatePicker.Snap.Height * 2
+                                     End Sub)
+
+        CircuitSurfaceGatePicker.Circuit = gatesContainer
+        CircuitSurfaceGatePicker.Readonly = True
+        CircuitSurfaceGatePicker.MultiSelect = False
     End Sub
 End Class

@@ -13,7 +13,6 @@
         End Sub
 
         Protected Overrides Sub InitializeInputs()
-            Name = "NOT"
             Inputs.Add(New Pin(Me, Inputs.Count))
         End Sub
 
