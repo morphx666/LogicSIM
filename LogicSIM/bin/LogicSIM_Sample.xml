@@ -1431,13 +1431,101 @@
         </ui>
       </gate>
       <gate>
-        <id>f70375e8-5631-4bfd-a68f-d63441a77f93</id>
-        <type>XORGate</type>
-        <name>XOR</name>
+        <id>81a010d4-cd72-4a70-9e43-a34b1558c981</id>
+        <type>Node</type>
+        <name>Node</name>
         <inputPins>
           <pin>
             <name>PIN</name>
-            <parentGate>f70375e8-5631-4bfd-a68f-d63441a77f93</parentGate>
+            <parentGate>81a010d4-cd72-4a70-9e43-a34b1558c981</parentGate>
+            <connectedTo>
+              <gate></gate>
+              <pinNumber>-1</pinNumber>
+            </connectedTo>
+            <value>false</value>
+            <pinNumber>0</pinNumber>
+            <value>false</value>
+            <ui>
+              <location>{X=-10,Y=0}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </inputPins>
+        <outputPin>
+          <pin>
+            <name>PIN</name>
+            <parentGate>81a010d4-cd72-4a70-9e43-a34b1558c981</parentGate>
+            <connectedTo>
+              <gate></gate>
+              <pinNumber>-1</pinNumber>
+            </connectedTo>
+            <value>false</value>
+            <pinNumber>0</pinNumber>
+            <value>false</value>
+            <ui>
+              <location>{X=0,Y=0}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </outputPin>
+        <ui>
+          <location>{X=380,Y=630}</location>
+          <size>{Width=10, Height=10}</size>
+          <borderColor>-1</borderColor>
+          <borderWidth>2</borderWidth>
+          <fillColor>-16776961</fillColor>
+          <activeColor>-7114533</activeColor>
+          <foreColor>-256</foreColor>
+          <font>
+            <family>Consolas</family>
+            <size>12</size>
+            <style>Regular</style>
+          </font>
+          <nameOffset>{X=-13,Y=10}</nameOffset>
+          <angle>0</angle>
+        </ui>
+        <internals>
+          <outputPins>
+            <gatePin>
+              <gate>924626d1-49e2-4600-933b-8c5d1497d03c</gate>
+              <pinNumber>0</pinNumber>
+              <outputPinNumber>1</outputPinNumber>
+            </gatePin>
+          </outputPins>
+        </internals>
+      </gate>
+      <gate>
+        <id>924626d1-49e2-4600-933b-8c5d1497d03c</id>
+        <type>ANDGate</type>
+        <name>AND</name>
+        <inputPins>
+          <pin>
+            <name>PIN</name>
+            <parentGate>924626d1-49e2-4600-933b-8c5d1497d03c</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -1464,7 +1552,7 @@
           </pin>
           <pin>
             <name>PIN</name>
-            <parentGate>f70375e8-5631-4bfd-a68f-d63441a77f93</parentGate>
+            <parentGate>924626d1-49e2-4600-933b-8c5d1497d03c</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -1493,7 +1581,7 @@
         <outputPin>
           <pin>
             <name>PIN</name>
-            <parentGate>f70375e8-5631-4bfd-a68f-d63441a77f93</parentGate>
+            <parentGate>924626d1-49e2-4600-933b-8c5d1497d03c</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -1520,7 +1608,7 @@
           </pin>
         </outputPin>
         <ui>
-          <location>{X=390,Y=580}</location>
+          <location>{X=640,Y=610}</location>
           <size>{Width=100, Height=80}</size>
           <borderColor>-1</borderColor>
           <borderWidth>2</borderWidth>

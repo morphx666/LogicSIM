@@ -121,19 +121,21 @@ Public Class CircuitSurface
 
             Dim pinUI As GateUI
             If gt.GateType = IBaseGate.GateTypes.Node Then
-                Dim n = CType(gt, Node)
-                If mSelectedGates.Contains(n) OrElse overGate = n Then
-                    pinUI = n.Input.UI
-                    g.FillRectangle(Brushes.Blue, New Rectangle(gt.UI.Location + pinUI.Location, pinUI.Size))
+                If Not [Readonly] Then
+                    Dim n = CType(gt, Node)
+                    If mSelectedGates.Contains(n) OrElse overGate = n Then
+                        pinUI = n.Input.UI
+                        g.FillRectangle(Brushes.Blue, New Rectangle(gt.UI.Location + pinUI.Location, pinUI.Size))
 
-                    For Each op In n.OutputsUIs
-                        pinUI = If(selPin = op, selPinUI, op.UI)
-                        g.FillRectangle(Brushes.MediumVioletRed, New Rectangle(gt.UI.Location + pinUI.Location, pinUI.Size))
-                    Next
-                    For Each ip In gt.Inputs
-                        pinUI = If(selPin = ip, selPinUI, ip.UI)
-                        g.FillRectangle(Brushes.MediumVioletRed, New Rectangle(gt.UI.Location + pinUI.Location, pinUI.Size))
-                    Next
+                        For Each op In n.OutputsUIs
+                            pinUI = If(selPin = op, selPinUI, op.UI)
+                            g.FillRectangle(Brushes.MediumVioletRed, New Rectangle(gt.UI.Location + pinUI.Location, pinUI.Size))
+                        Next
+                        For Each ip In gt.Inputs
+                            pinUI = If(selPin = ip, selPinUI, ip.UI)
+                            g.FillRectangle(Brushes.MediumVioletRed, New Rectangle(gt.UI.Location + pinUI.Location, pinUI.Size))
+                        Next
+                    End If
                 End If
             Else
                 If gt.Flow <> IBaseGate.DataFlow.Out Then

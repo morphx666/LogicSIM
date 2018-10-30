@@ -135,7 +135,7 @@ Public Class FormMain
         gates = (From g In gates Order By g.UI.Bounds.Height, g.Flow, g.Name Select g).ToList()
         gates.ForEach(Sub(g) gatesContainer.Gates.Add(g))
 
-        Dim p As Point = New Point(0, CircuitSurfaceGatePicker.Snap.Height)
+        Dim p As Point = New Point(0, CircuitSurfaceGatePicker.Snap.Height + 10)
         gatesContainer.Gates.ForEach(Sub(g)
                                          p.X = (CircuitSurfaceGatePicker.Width - g.UI.Width) / 2
                                          g.UI.Location = p
@@ -156,6 +156,7 @@ Public Class FormMain
                                                                     g.UI.X -= g.UI.X Mod CircuitSurfaceContainer.Snap.Width
                                                                     g.UI.Y -= g.UI.Y Mod CircuitSurfaceContainer.Snap.Height
                                                                 End If
+                                                                If g.GateType = IBaseGate.GateTypes.Node Then g.UI.Location.Offset(-2, -2)
                                                                 CircuitSurfaceContainer.SelectedGates.Add(g)
                                                                 CircuitSurfaceContainer.Invalidate()
                                                             End If
