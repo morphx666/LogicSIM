@@ -143,9 +143,14 @@ Public Class FormMain
         AddHandler CircuitSurfaceContainer.MouseUp, Sub(o As Object, e As MouseEventArgs)
                                                         If CircuitSurfaceGatePicker.SelectedGates.Any() Then
                                                             If CircuitSurfaceContainer.SelectedGates.Count = 0 Then
-                                                                circuit.Gates.Add(CircuitSurfaceGatePicker.SelectedGates(0).Clone())
-                                                                circuit.Gates.Last.UI.Location = CircuitSurfaceContainer.GateRenderer.TransformPoint(e.Location)
-                                                                CircuitSurfaceContainer.SelectedGates.Add(circuit.Gates.Last)
+                                                                Dim g As BaseGate = CircuitSurfaceGatePicker.SelectedGates(0).Clone()
+                                                                circuit.Gates.Add(g)
+                                                                g.UI.Location = CircuitSurfaceContainer.GateRenderer.TransformPoint(e.Location)
+                                                                If CircuitSurfaceContainer.SnapToGrid Then
+                                                                    g.UI.X -= g.UI.X Mod CircuitSurfaceContainer.Snap.Width
+                                                                    g.UI.Y -= g.UI.Y Mod CircuitSurfaceContainer.Snap.Height
+                                                                End If
+                                                                CircuitSurfaceContainer.SelectedGates.Add(g)
                                                                 CircuitSurfaceContainer.Invalidate()
                                                             End If
                                                             CircuitSurfaceGatePicker.SelectedGates.Clear()

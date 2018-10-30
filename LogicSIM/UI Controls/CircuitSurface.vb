@@ -17,6 +17,7 @@ Public Class CircuitSurface
     Private isCtrlDown As Boolean
 
     Private mouseOrigin As Point
+    Private mousePosSnaped As Point
     Private mousePos As Point
 
     Private selRect As Rectangle = Rectangle.Empty
@@ -179,7 +180,7 @@ Public Class CircuitSurface
             g.FillRectangle(Brushes.Red, overPinBounds)
             g.ResetTransform()
         Else
-            If overGate IsNot Nothing AndAlso overGate.GateType <> IBaseGate.GateTypes.Node Then
+            If overGate IsNot Nothing Then
                 Dim overBounds = overGate.UI.Bounds
                 overBounds.Inflate(10, 10)
 
@@ -305,15 +306,16 @@ Public Class CircuitSurface
     Private Sub CircuitSurface_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
         If mCircuit Is Nothing Then Exit Sub
 
-        mousePos = mGateRenderer.TransformPoint(e.Location)
+        mousePosSnaped = mGateRenderer.TransformPoint(e.Location)
+        mousePos = mousePosSnaped
 
         If SnapToGrid Then
-            mousePos.X -= mousePos.X Mod Snap.Width
-            mousePos.Y -= mousePos.Y Mod Snap.Height
+            mousePosSnaped.X -= mousePosSnaped.X Mod Snap.Width
+            mousePosSnaped.Y -= mousePosSnaped.Y Mod Snap.Height
         End If
 
-        Dim deltaX As Integer = (mousePos.X - mouseOrigin.X)
-        Dim deltaY As Integer = (mousePos.Y - mouseOrigin.Y)
+        Dim deltaX As Integer = (mousePosSnaped.X - mouseOrigin.X)
+        Dim deltaY As Integer = (mousePosSnaped.Y - mouseOrigin.Y)
 
         If isMouseDown Then
             If mSelectedGates.Count > 0 AndAlso Not [Readonly] Then
@@ -324,12 +326,12 @@ Public Class CircuitSurface
                                                  gt.UI.Bounds.Width,
                                                  gt.UI.Bounds.Height)
                 Next
-                mouseOrigin += (mousePos - mouseOrigin)
+                mouseOrigin += (mousePosSnaped - mouseOrigin)
             ElseIf overGate Is Nothing Then
                 If selPin Is Nothing Then
                     If MultiSelect Then
-                        Dim p1 As Point = New Point(Math.Min(mouseOrigin.X, mousePos.X), Math.Min(mouseOrigin.Y, mousePos.Y))
-                        Dim p2 As Point = New Point(Math.Max(mouseOrigin.X, mousePos.X), Math.Max(mouseOrigin.Y, mousePos.Y))
+                        Dim p1 As Point = New Point(Math.Min(mouseOrigin.X, mousePosSnaped.X), Math.Min(mouseOrigin.Y, mousePosSnaped.Y))
+                        Dim p2 As Point = New Point(Math.Max(mouseOrigin.X, mousePosSnaped.X), Math.Max(mouseOrigin.Y, mousePosSnaped.Y))
                         selRect = New Rectangle(p1, New Size(p2.X - p1.X, p2.Y - p1.Y))
                     End If
                 Else
@@ -337,17 +339,15 @@ Public Class CircuitSurface
                                                      selPin.UI.Bounds.Y + deltaY,
                                                      selPin.UI.Bounds.Width,
                                                      selPin.UI.Bounds.Height)
-                    mouseOrigin += (mousePos - mouseOrigin)
+                    mouseOrigin += (mousePosSnaped - mouseOrigin)
                 End If
             End If
         End If
 
-        Dim lastMousePos As Point = mousePos
+        Dim lastMousePos As Point = mousePosSnaped
         For Each gt In mCircuit.Gates
-            mousePos = If(gt.UI.Angle <> 0, mGateRenderer.TransformPoint(mousePos, gt), lastMousePos)
-            Dim r As Rectangle = gt.UI.Bounds
-            r.Width -= 5
-            If Not isMouseDown AndAlso r.Contains(mousePos) Then
+            mousePosSnaped = If(gt.UI.Angle <> 0, mGateRenderer.TransformPoint(mousePos, gt), mousePos)
+            If Not isMouseDown AndAlso gt.UI.Bounds.Contains(mousePosSnaped) Then
                 overGate = gt
                 overPin = Nothing
                 Me.Invalidate()
@@ -610,7 +610,7 @@ Public Class CircuitSurface
         If mCircuit Is Nothing OrElse [Readonly] Then Exit Sub
 
         For Each gt In mCircuit.Gates.Where(Function(k) k.GateType = IBaseGate.GateTypes.Switch)
-            If gt.UI.Bounds.Contains(mousePos) Then
+            If gt.UI.Bounds.Contains(mousePosSnaped) Then
                 gt.Inputs(0).Value = Not gt.Inputs(0).Value
                 'Me.Invalidate()
                 Exit Sub
@@ -624,7 +624,9 @@ Public Class CircuitSurface
         If overGate Is Nothing AndAlso overPin Is Nothing Then
             Dim n As New Node()
             mCircuit.Gates.Add(n)
-            n.UI.Location = mousePos
+
+            mousePosSnaped.Offset(Snap.Width / 2, Snap.Height / 2)
+            n.UI.Location = mousePosSnaped
         End If
     End Sub
 End Class
