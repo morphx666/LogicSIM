@@ -417,6 +417,11 @@ Public Class CircuitSurface
         If mCircuit Is Nothing Then Exit Sub
         isMouseDown = False
 
+        If SnapToGrid Then
+            mousePosSnaped.X -= mousePosSnaped.X Mod Snap.Width
+            mousePosSnaped.Y -= mousePosSnaped.Y Mod Snap.Height
+        End If
+
         If selRect.Width > 0 Then
             mSelectedGates.Clear()
 
@@ -624,8 +629,7 @@ Public Class CircuitSurface
         If overGate Is Nothing AndAlso overPin Is Nothing Then
             Dim n As New Node()
             mCircuit.Gates.Add(n)
-
-            mousePosSnaped.Offset(Snap.Width / 2, Snap.Height / 2)
+            mousePosSnaped.Offset(-2, -2)
             n.UI.Location = mousePosSnaped
         End If
     End Sub
