@@ -460,7 +460,7 @@
           </pin>
         </outputPin>
         <ui>
-          <location>{X=550,Y=270}</location>
+          <location>{X=550,Y=280}</location>
           <size>{Width=100, Height=80}</size>
           <borderColor>-1</borderColor>
           <borderWidth>2</borderWidth>
@@ -1427,6 +1427,112 @@
             <style>Regular</style>
           </font>
           <nameOffset>{X=3,Y=3}</nameOffset>
+          <angle>0</angle>
+        </ui>
+      </gate>
+      <gate>
+        <id>f70375e8-5631-4bfd-a68f-d63441a77f93</id>
+        <type>XORGate</type>
+        <name>XOR</name>
+        <inputPins>
+          <pin>
+            <name>PIN</name>
+            <parentGate>f70375e8-5631-4bfd-a68f-d63441a77f93</parentGate>
+            <connectedTo>
+              <gate></gate>
+              <pinNumber>-1</pinNumber>
+            </connectedTo>
+            <value>false</value>
+            <pinNumber>0</pinNumber>
+            <value>false</value>
+            <ui>
+              <location>{X=-10,Y=15}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+          <pin>
+            <name>PIN</name>
+            <parentGate>f70375e8-5631-4bfd-a68f-d63441a77f93</parentGate>
+            <connectedTo>
+              <gate></gate>
+              <pinNumber>-1</pinNumber>
+            </connectedTo>
+            <value>false</value>
+            <pinNumber>1</pinNumber>
+            <value>false</value>
+            <ui>
+              <location>{X=-10,Y=55}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </inputPins>
+        <outputPin>
+          <pin>
+            <name>PIN</name>
+            <parentGate>f70375e8-5631-4bfd-a68f-d63441a77f93</parentGate>
+            <connectedTo>
+              <gate></gate>
+              <pinNumber>-1</pinNumber>
+            </connectedTo>
+            <value>false</value>
+            <pinNumber>0</pinNumber>
+            <value>false</value>
+            <ui>
+              <location>{X=100,Y=35}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </outputPin>
+        <ui>
+          <location>{X=390,Y=580}</location>
+          <size>{Width=100, Height=80}</size>
+          <borderColor>-1</borderColor>
+          <borderWidth>2</borderWidth>
+          <fillColor>-16728065</fillColor>
+          <activeColor>-7114533</activeColor>
+          <foreColor>-256</foreColor>
+          <font>
+            <family>Consolas</family>
+            <size>12</size>
+            <style>Regular</style>
+          </font>
+          <nameOffset>{X=30,Y=30}</nameOffset>
           <angle>0</angle>
         </ui>
       </gate>

@@ -16,7 +16,7 @@
         End Sub
 
         Public Overrides Function Clone() As Object
-            Return Led.FromXML(Me.ToXML())
+            Return Led.FromXML(Me.ToXML(), True)
         End Function
 
         Protected Friend Overrides Sub Evaluate()
@@ -29,9 +29,9 @@
             End Get
         End Property
 
-        Public Shared Function FromXML(xml As XElement) As BaseGate
+        Public Shared Function FromXML(xml As XElement, resetID As Boolean) As BaseGate
             Dim g As New Led()
-            g.SetBaseFromXML(xml)
+            g.SetBaseFromXML(xml, resetID)
             Return g
         End Function
 

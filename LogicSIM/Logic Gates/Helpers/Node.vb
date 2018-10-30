@@ -112,10 +112,9 @@
             PositionOutputs()
         End Sub
 
-        Public Shared Function FromXML(xml As XElement) As BaseGate
+        Public Shared Function FromXML(xml As XElement, Optional resetID As Boolean = False) As BaseGate
             Dim g As New Node()
-            g.SetBaseFromXML(xml)
-
+            g.SetBaseFromXML(xml, resetID)
             Return g
         End Function
 
@@ -132,7 +131,7 @@
         End Function
 
         Public Overrides Function Clone() As Object
-            Return Node.FromXML(Me.ToXML())
+            Return Node.FromXML(Me.ToXML(), True)
         End Function
 
         Public Overrides ReadOnly Property Flow As IBaseGate.DataFlow

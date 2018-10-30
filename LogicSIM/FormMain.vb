@@ -121,13 +121,19 @@ Public Class FormMain
 
     Private Sub AddGatesToUI()
         Dim gatesContainer = New Component() With {.Name = "Gates Container"}
+        Dim gates As New List(Of BaseGate)
 
         For Each gateType In GetAvailableGates()
-            If gateType.Item2 <> GetType(Component) AndAlso gateType.Item2 <> GetType(Node) Then
-                gatesContainer.Gates.Add(Activator.CreateInstance(gateType.Item2))
-                If gateType.Item2 = GetType(Switch) Then gatesContainer.Gates.Last().UI.NameOffset = New Point(0, gatesContainer.Gates.Last().UI.Height)
+            If gateType.Item2 <> GetType(Component) Then
+                Dim g As BaseGate = Activator.CreateInstance(gateType.Item2)
+                gates.Add(g)
+                If gateType.Item2 = GetType(Switch) OrElse gateType.Item2 = GetType(Node) Then
+                    g.UI.NameOffset = New Point((g.UI.Width - g.Name.Length * 9) / 2, g.UI.Height)
+                End If
             End If
         Next
+        gates = (From g In gates Order By g.UI.Bounds.Height, g.Flow, g.Name Select g).ToList()
+        gates.ForEach(Sub(g) gatesContainer.Gates.Add(g))
 
         Dim p As Point = New Point(0, CircuitSurfaceGatePicker.Snap.Height)
         gatesContainer.Gates.ForEach(Sub(g)

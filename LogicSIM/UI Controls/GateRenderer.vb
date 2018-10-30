@@ -78,9 +78,9 @@
         pf.HeavyDiagonals = True
         pf.PunishChangeDirection = True
         pf.TieBreaker = True
-        pf.HeuristicEstimate = 16
+        pf.HeuristicEstimate = 20
         pf.Formula = PathFinder.HeuristicFormula.Manhattan
-        pf.SearchLimit = 128 * 512
+        pf.SearchLimit = 512 * 512
 
         SetGridResolution()
     End Sub

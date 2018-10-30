@@ -37,11 +37,6 @@ namespace PathFinder {
         }
         #endregion
 
-        #region Win32APIs
-        [System.Runtime.InteropServices.DllImport("KERNEL32.DLL", EntryPoint = "RtlZeroMemory")]
-        public unsafe static extern bool ZeroMemory(byte* destination, int length);
-        #endregion
-
         #region Events
         public event PathFinderDebugHandler PathFinderDebug;
         #endregion
@@ -235,8 +230,7 @@ namespace PathFinder {
                         return null;
                     }
 
-                    if(mPunishChangeDirection)
-                        mHoriz = (mLocationX - mCalcGrid[mLocation].PX);
+                    if(mPunishChangeDirection) mHoriz = (mLocationX - mCalcGrid[mLocation].PX);
 
                     //Lets calculate each successors
                     for(int i = 0; i < (mDiagonals ? 8 : 4); i++) {
@@ -258,20 +252,17 @@ namespace PathFinder {
 
                         if(mPunishChangeDirection) {
                             if((mNewLocationX - mLocationX) != 0) {
-                                if(mHoriz == 0)
-                                    mNewG += Math.Abs(mNewLocationX - end.X) + Math.Abs(mNewLocationY - end.Y);
+                                if(mHoriz == 0) mNewG += Math.Abs(mNewLocationX - end.X) + Math.Abs(mNewLocationY - end.Y);
                             }
                             if((mNewLocationY - mLocationY) != 0) {
-                                if(mHoriz != 0)
-                                    mNewG += Math.Abs(mNewLocationX - end.X) + Math.Abs(mNewLocationY - end.Y);
+                                if(mHoriz != 0) mNewG += Math.Abs(mNewLocationX - end.X) + Math.Abs(mNewLocationY - end.Y);
                             }
                         }
 
                         //Is it open or closed?
                         if(mCalcGrid[mNewLocation].Status == mOpenNodeValue || mCalcGrid[mNewLocation].Status == mCloseNodeValue) {
                             // The current node has less code than the previous? then skip this node
-                            if(mCalcGrid[mNewLocation].G <= mNewG)
-                                continue;
+                            if(mCalcGrid[mNewLocation].G <= mNewG) continue;
                         }
 
                         mCalcGrid[mNewLocation].PX = mLocationX;

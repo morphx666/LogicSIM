@@ -255,6 +255,9 @@ Public Class CircuitSurface
                                            mCircuit.Gates.Remove(gt)
                                        End Sub)
                 mSelectedGates.Clear()
+                overGate = Nothing
+                overPin = Nothing
+                selPin = Nothing
                 mCircuit.Evaluate()
                 Me.Invalidate()
 
@@ -355,7 +358,7 @@ Public Class CircuitSurface
                 overPin = Nothing
                 Me.Invalidate()
                 Exit Sub
-            Else
+            ElseIf Not [Readonly] Then
                 Dim pb As Rectangle
 
                 If gt.Flow <> IBaseGate.DataFlow.In Then
@@ -375,7 +378,6 @@ Public Class CircuitSurface
                         If gt.UI.Angle <> 0 Then pb.Location = mGateRenderer.TransformPoint(pb.Location, gt)
 
                         If pb.Contains(e.Location) Then
-                            Debug.WriteLine(o.PinNumber)
                             overPin = o
                             overPinBounds = New Rectangle(overPin.ParentGate.UI.Location + overPin.UI.Location, overPin.UI.Size)
                             overGate = Nothing
@@ -528,6 +530,8 @@ Public Class CircuitSurface
                         If gt Is Nothing Then
                             If overPin.ParentGate.GateType = IBaseGate.GateTypes.Node Then
                                 CType(overPin.ParentGate, Node).ConnectTo(selPin.ParentGate, selPin.PinNumber, overPin.PinNumber)
+                            ElseIf selPin.ParentGate.GateType = IBaseGate.GateTypes.Node Then
+                                CType(selPin.ParentGate, Node).ConnectTo(overPin.ParentGate, overPin.PinNumber, selPin.PinNumber)
                             Else
                                 If overPin.ParentGate.Output = overPin Then
                                     ' Connect from Input pin to Output pin
@@ -627,14 +631,14 @@ Public Class CircuitSurface
         Next
     End Sub
 
-    Private Sub CircuitSurface_DoubleClick(sender As Object, e As EventArgs) Handles Me.DoubleClick
-        If mCircuit Is Nothing OrElse [Readonly] Then Exit Sub
+    'Private Sub CircuitSurface_DoubleClick(sender As Object, e As EventArgs) Handles Me.DoubleClick
+    '    If mCircuit Is Nothing OrElse [Readonly] Then Exit Sub
 
-        If overGate Is Nothing AndAlso overPin Is Nothing Then
-            Dim n As New Node()
-            mCircuit.Gates.Add(n)
-            mousePosSnaped.Offset(-2, -2)
-            n.UI.Location = mousePosSnaped
-        End If
-    End Sub
+    '    If overGate Is Nothing AndAlso overPin Is Nothing Then
+    '        Dim n As New Node()
+    '        mCircuit.Gates.Add(n)
+    '        mousePosSnaped.Offset(-2, -2)
+    '        n.UI.Location = mousePosSnaped
+    '    End If
+    'End Sub
 End Class
