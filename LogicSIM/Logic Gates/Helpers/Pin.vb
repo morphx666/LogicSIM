@@ -106,6 +106,12 @@
             End Get
         End Property
 
+        Public ReadOnly Property PinNumber As Integer
+            Get
+                Return mPinNumber
+            End Get
+        End Property
+
         Public Sub ConnectTo(gate As BaseGate, pinNumber As Integer)
             'If mConnectedToPinNumber <> -1 Then Throw New Exception("Pin already connected")
             Disconnect()

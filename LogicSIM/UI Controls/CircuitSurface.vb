@@ -375,6 +375,7 @@ Public Class CircuitSurface
                         If gt.UI.Angle <> 0 Then pb.Location = mGateRenderer.TransformPoint(pb.Location, gt)
 
                         If pb.Contains(e.Location) Then
+                            Debug.WriteLine(o.PinNumber)
                             overPin = o
                             overPinBounds = New Rectangle(overPin.ParentGate.UI.Location + overPin.UI.Location, overPin.UI.Size)
                             overGate = Nothing
@@ -526,7 +527,7 @@ Public Class CircuitSurface
                         Dim gt = BaseGate.GetGateConnectedToInput(mCircuit, selPin)
                         If gt Is Nothing Then
                             If overPin.ParentGate.GateType = IBaseGate.GateTypes.Node Then
-                                CType(overPin.ParentGate, Node).ConnectTo(selPin.ParentGate, selPin)
+                                CType(overPin.ParentGate, Node).ConnectTo(selPin.ParentGate, selPin.PinNumber, overPin.PinNumber)
                             Else
                                 If overPin.ParentGate.Output = overPin Then
                                     ' Connect from Input pin to Output pin
