@@ -236,6 +236,9 @@ Public Class CircuitSurface
                                                                  i.ConnectedFromGate?.Output.Disconnect()
                                                                  i.Disconnect()
                                                              End Sub)
+                                           If gt.GateType = IBaseGate.GateTypes.Node Then
+                                               CType(gt, Node).Outputs.ForEach(Sub(o) o?.Pin.Disconnect())
+                                           End If
                                            gt.Output.Disconnect()
                                            For i As Integer = 0 To mCircuit.Inputs.Count - 1
                                                If mCircuit.Inputs(i).ParentGate = gt Then
