@@ -1,14 +1,16 @@
-﻿Public Class CircuitSurface
+﻿Imports LogicSIM.LogicGates
+
+Public Class CircuitSurface
     Private mCircuit As LogicGates.Component
 
     Private mGateRenderer As GateRenderer
 
-    Private overGate As LogicGates.BaseGate
-    Private mSelectedGates As New List(Of LogicGates.BaseGate)
-    Private selPin As LogicGates.Pin
+    Private overGate As BaseGate
+    Private mSelectedGates As New List(Of BaseGate)
+    Private selPin As Pin
     Private selPinUI As GateUI
 
-    Private overPin As LogicGates.Pin
+    Private overPin As Pin
     Private overPinBounds As Rectangle
 
     Private isMouseDown As Boolean
@@ -40,11 +42,11 @@
                                    End Sub
     End Sub
 
-    Public Property Circuit As LogicGates.Component
+    Public Property Circuit As Component
         Get
             Return mCircuit
         End Get
-        Set(value As LogicGates.Component)
+        Set(value As Component)
             mCircuit = value
             mGateRenderer = New GateRenderer(Me, mCircuit)
             Me.Invalidate()
@@ -57,7 +59,7 @@
         End Get
     End Property
 
-    Public ReadOnly Property SelectedGates As List(Of LogicGates.BaseGate)
+    Public ReadOnly Property SelectedGates As List(Of BaseGate)
         Get
             Return mSelectedGates
         End Get
@@ -118,7 +120,7 @@
 
             Dim pinUI As GateUI
             If gt.GateType = IBaseGate.GateTypes.Node Then
-                Dim n = CType(gt, LogicGates.Node)
+                Dim n = CType(gt, Node)
                 If mSelectedGates.Contains(n) OrElse overGate = n Then
                     pinUI = n.Input.UI
                     g.FillRectangle(Brushes.Blue, New Rectangle(gt.UI.Location + pinUI.Location, pinUI.Size))
@@ -223,8 +225,28 @@
 
         Select Case keyData
             Case Keys.Delete
-                mSelectedGates.ForEach(Sub(gt) mCircuit.Gates.Remove(gt))
+                mSelectedGates.ForEach(Sub(gt)
+                                           gt.Inputs.ForEach(Sub(i)
+                                                                 i.ConnectedFromGate?.Output.Disconnect()
+                                                                 i.Disconnect()
+                                                             End Sub)
+                                           gt.Output.Disconnect()
+                                           For i As Integer = 0 To mCircuit.Inputs.Count - 1
+                                               If mCircuit.Inputs(i).ParentGate = gt Then
+                                                   mCircuit.RemoveInputPin(mCircuit.Inputs(i))
+                                                   Exit For
+                                               End If
+                                           Next
+                                           For i As Integer = 0 To mCircuit.Outputs.Count - 1
+                                               If mCircuit.Outputs(i).ParentGate = gt Then
+                                                   mCircuit.RemoveOutputPin(mCircuit.Outputs(i))
+                                                   Exit For
+                                               End If
+                                           Next
+                                           mCircuit.Gates.Remove(gt)
+                                       End Sub)
                 mSelectedGates.Clear()
+                mCircuit.Evaluate()
                 Me.Invalidate()
 
             Case Keys.Tab
@@ -307,9 +329,9 @@
                     End If
                 Else
                     selPin.UI.Bounds = New Rectangle(selPin.UI.Bounds.X + deltaX,
-                                             selPin.UI.Bounds.Y + deltaY,
-                                             selPin.UI.Bounds.Width,
-                                             selPin.UI.Bounds.Height)
+                                                     selPin.UI.Bounds.Y + deltaY,
+                                                     selPin.UI.Bounds.Width,
+                                                     selPin.UI.Bounds.Height)
                     mouseOrigin += (mousePos - mouseOrigin)
                 End If
             End If
@@ -318,47 +340,46 @@
         Dim lastMousePos As Point = mousePos
         For Each gt In mCircuit.Gates
             mousePos = If(gt.UI.Angle <> 0, mGateRenderer.TransformPoint(mousePos, gt), lastMousePos)
-
-            If Not isMouseDown AndAlso gt.UI.Bounds.Contains(mousePos) Then
+            Dim r As Rectangle = gt.UI.Bounds
+            r.Width -= 5
+            If Not isMouseDown AndAlso r.Contains(mousePos) Then
                 overGate = gt
                 overPin = Nothing
                 Me.Invalidate()
                 Exit Sub
             Else
-                If gt.GateType <> IBaseGate.GateTypes.Node OrElse True Then
-                    Dim pb As Rectangle
+                Dim pb As Rectangle
 
-                    If gt.Flow <> IBaseGate.DataFlow.In Then
-                        pb = If(selPin = gt.Output,
-                            New Rectangle(gt.UI.Location + selPinUI.Location, selPinUI.Size),
-                            New Rectangle(gt.UI.Location + gt.Output.UI.Location, gt.Output.UI.Size))
+                If gt.Flow <> IBaseGate.DataFlow.In Then
+                    pb = If(selPin = gt.Output,
+                                                    New Rectangle(gt.UI.Location + selPinUI.Location, selPinUI.Size),
+                                                    New Rectangle(gt.UI.Location + gt.Output.UI.Location, gt.Output.UI.Size))
+                    If gt.UI.Angle <> 0 Then pb.Location = mGateRenderer.TransformPoint(pb.Location, gt)
+
+                    If pb.Contains(e.Location) Then
+                        overPin = gt.Output
+                        overPinBounds = New Rectangle(overPin.ParentGate.UI.Location + overPin.UI.Location, overPin.UI.Size)
+                        overGate = Nothing
+                        Me.Invalidate()
+                        Exit Sub
+                    End If
+                End If
+
+                If gt.Flow <> IBaseGate.DataFlow.Out Then
+                    For Each ip In gt.Inputs
+                        pb = If(selPin = ip,
+                                New Rectangle(gt.UI.Location + selPinUI.Location, selPinUI.Size),
+                                New Rectangle(gt.UI.Location + ip.UI.Location, ip.UI.Size))
                         If gt.UI.Angle <> 0 Then pb.Location = mGateRenderer.TransformPoint(pb.Location, gt)
 
                         If pb.Contains(e.Location) Then
-                            overPin = gt.Output
+                            overPin = ip
                             overPinBounds = New Rectangle(overPin.ParentGate.UI.Location + overPin.UI.Location, overPin.UI.Size)
                             overGate = Nothing
                             Me.Invalidate()
                             Exit Sub
                         End If
-                    End If
-
-                    If gt.Flow <> IBaseGate.DataFlow.Out Then
-                        For Each ip In gt.Inputs
-                            pb = If(selPin = ip,
-                                New Rectangle(gt.UI.Location + selPinUI.Location, selPinUI.Size),
-                                New Rectangle(gt.UI.Location + ip.UI.Location, ip.UI.Size))
-                            If gt.UI.Angle <> 0 Then pb.Location = mGateRenderer.TransformPoint(pb.Location, gt)
-
-                            If pb.Contains(e.Location) Then
-                                overPin = ip
-                                overPinBounds = New Rectangle(overPin.ParentGate.UI.Location + overPin.UI.Location, overPin.UI.Size)
-                                overGate = Nothing
-                                Me.Invalidate()
-                                Exit Sub
-                            End If
-                        Next
-                    End If
+                    Next
                 End If
             End If
         Next
@@ -398,11 +419,11 @@
             If overPin Is Nothing Then
                 If selPin.ConnectedToPinNumber = -1 Then
                     ' Disconnect Input Pin
-                    Dim pc As LogicGates.Component.PinConnection = Nothing
+                    Dim pc As Component.PinConnection = Nothing
 
                     For Each gt In mCircuit.Gates
                         If gt.GateType = IBaseGate.GateTypes.Node Then
-                            Dim node = CType(gt, LogicGates.Node)
+                            Dim node = CType(gt, Node)
                             For Each o In node.Outputs
                                 If o Is Nothing Then Continue For
                                 If o.Pin = selPin Then
@@ -419,6 +440,38 @@
                             Exit For
                         End If
                     Next
+
+                    '' It's a wire
+                    'Dim addNode As Boolean = False
+                    'Dim p As New Point(mousePos.X / mGateRenderer.GridResolution.Width, mousePos.Y / mGateRenderer.GridResolution.Height)
+                    'For x As Integer = -1 To 1
+                    '    For y As Integer = -1 To 1
+                    '        If mGateRenderer.Grid(p.X + x, p.Y + y) = 128 Then
+                    '            addNode = True
+                    '            Exit For
+                    '        End If
+                    '    Next
+                    'Next
+
+                    'If addNode Then
+                    '    ' Add a node to the wire
+                    '    Dim n As New Node()
+                    '    mCircuit.Gates.Add(n)
+                    '    n.UI.Location = mousePos
+                    '    If selPin.ParentGate.Output = selPin Then
+                    '        selPin.ConnectTo(n, 0)
+                    '    Else
+                    '        For i As Integer = 0 To selPin.ParentGate.Inputs.Count
+                    '            If selPin.ParentGate.Inputs(i) = selPin Then
+                    '                n.ConnectTo(selPin.ParentGate, i, 0)
+                    '                Exit For
+                    '            End If
+                    '        Next
+                    '    End If
+
+                    '    Me.Invalidate()
+                    '    MsgBox("Creating nodes is not yet supported...")
+                    'End If
                 Else
                     ' Disconnect Output Pin
                     selPin.ParentGate.Output.Disconnect()
@@ -426,10 +479,10 @@
             ElseIf selPin <> overPin Then
                 If selPin = selPin.ParentGate.Output Then
                     ' Connect Output Pin
-                    If LogicGates.BaseGate.GetGateConnectedToInput(mCircuit, overPin) Is Nothing Then
+                    If BaseGate.GetGateConnectedToInput(mCircuit, overPin) Is Nothing Then
                         If overPin.ParentGate.GateType = IBaseGate.GateTypes.Node Then
-                            Dim node = CType(overPin.ParentGate, LogicGates.Node)
-                            If LogicGates.BaseGate.GetGateConnectedToInput(mCircuit, node.Input) Is Nothing Then
+                            Dim node = CType(overPin.ParentGate, Node)
+                            If BaseGate.GetGateConnectedToInput(mCircuit, node.Input) Is Nothing Then
                                 node.ConnectTo(selPin.ParentGate, selPin)
                             Else
                                 ' TODO: Notify user that nodes do not support multiple connections from outputs
@@ -446,10 +499,10 @@
                 Else
                     If overPin.ConnectedToPinNumber = -1 Then
                         ' Connect Output Pin
-                        Dim gt = LogicGates.BaseGate.GetGateConnectedToInput(mCircuit, selPin)
+                        Dim gt = BaseGate.GetGateConnectedToInput(mCircuit, selPin)
                         If gt Is Nothing Then
                             If overPin.ParentGate.GateType = IBaseGate.GateTypes.Node Then
-                                CType(overPin.ParentGate, LogicGates.Node).ConnectTo(selPin.ParentGate, selPin)
+                                CType(overPin.ParentGate, Node).ConnectTo(selPin.ParentGate, selPin)
                             Else
                                 If overPin.ParentGate.Output = overPin Then
                                     ' Connect from Input pin to Output pin
@@ -462,7 +515,7 @@
                             End If
                         Else
                             If gt.GateType = IBaseGate.GateTypes.Node Then
-                                Dim node = CType(gt, LogicGates.Node)
+                                Dim node As Node = CType(gt, Node)
                                 For Each o In node.Outputs
                                     If o.Pin = selPin Then
                                         node.Disconnect(o)
@@ -481,13 +534,16 @@
                         overPin.ConnectTo(selPin.ParentGate, selPin)
                     End If
                 End If
+                mCircuit.Evaluate()
+            Else
+                Stop
             End If
 
             Dim isDone As Boolean
             Do
                 isDone = True
                 For Each gt In mCircuit.Gates.Where(Function(k) k.GateType = IBaseGate.GateTypes.Node)
-                    Dim node = CType(gt, LogicGates.Node)
+                    Dim node = CType(gt, Node)
                     Dim hasInput As Boolean = False
 
                     For Each gt2 In mCircuit.Gates
@@ -512,7 +568,7 @@
                     'End If
 
                     If node.Outputs.Count = 1 AndAlso hasInput Then
-                        Dim g = LogicGates.BaseGate.GetGateConnectedToInput(mCircuit, node.Input)
+                        Dim g = BaseGate.GetGateConnectedToInput(mCircuit, node.Input)
                         g.Output.Disconnect()
                         g.Output.ConnectTo(node.Outputs(0).Pin.ParentGate, node.Outputs(0).PinNumber)
                         mCircuit.Gates.Remove(node)
@@ -544,5 +600,15 @@
                 Exit Sub
             End If
         Next
+    End Sub
+
+    Private Sub CircuitSurface_DoubleClick(sender As Object, e As EventArgs) Handles Me.DoubleClick
+        If mCircuit Is Nothing OrElse [Readonly] Then Exit Sub
+
+        If overGate Is Nothing AndAlso overPin Is Nothing Then
+            Dim n As New Node()
+            mCircuit.Gates.Add(n)
+            n.UI.Location = mousePos
+        End If
     End Sub
 End Class

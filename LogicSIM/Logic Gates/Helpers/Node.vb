@@ -67,7 +67,7 @@
 
         Private Sub PositionOutputs()
             Dim a = 180
-            Dim s = 90 ' 360 / (mOutputsUIs.Count + 1)
+            Dim s = 360 / (mOutputsUIs.Count + 1)
             For i = 0 To mOutputsUIs.Count - 1
                 a -= s
                 PositionPin(mOutputsUIs(i), a)

@@ -18,6 +18,7 @@ Public Class FormMain
         End If
 
         CircuitSurfaceContainer.Circuit = circuit
+        circuit.Evaluate()
 
         AddGatesToUI()
     End Sub
@@ -121,7 +122,7 @@ Public Class FormMain
     Private Sub AddGatesToUI()
         Dim gatesContainer = New Component() With {.Name = "Gates Container"}
 
-        For Each gateType In LogicGates.GetAvailableGates()
+        For Each gateType In GetAvailableGates()
             If gateType.Item2 <> GetType(Component) AndAlso gateType.Item2 <> GetType(Node) Then
                 gatesContainer.Gates.Add(Activator.CreateInstance(gateType.Item2))
                 If gateType.Item2 = GetType(Switch) Then gatesContainer.Gates.Last().UI.NameOffset = New Point(0, gatesContainer.Gates.Last().UI.Height)
@@ -143,7 +144,7 @@ Public Class FormMain
                                                         If CircuitSurfaceGatePicker.SelectedGates.Any() Then
                                                             If CircuitSurfaceContainer.SelectedGates.Count = 0 Then
                                                                 circuit.Gates.Add(CircuitSurfaceGatePicker.SelectedGates(0).Clone())
-                                                                circuit.Gates.Last.UI.Location = e.Location
+                                                                circuit.Gates.Last.UI.Location = CircuitSurfaceContainer.GateRenderer.TransformPoint(e.Location)
                                                                 CircuitSurfaceContainer.SelectedGates.Add(circuit.Gates.Last)
                                                                 CircuitSurfaceContainer.Invalidate()
                                                             End If

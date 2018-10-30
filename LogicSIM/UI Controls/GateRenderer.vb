@@ -1,5 +1,5 @@
 ﻿Public Class GateRenderer
-    Private Class WireSegment
+    Public Class WireSegment
         Public Property P1 As Point
         Public Property P2 As Point
 
@@ -59,7 +59,7 @@
 
     Private pf As PathFinder.PathFinderFast
 
-    Private wiresSegments As New List(Of WireSegment)
+    Public ReadOnly Property WiresSegments As New List(Of WireSegment)
 
     Public Sub New(parent As Control, circuit As LogicGates.Component)
         AddHandler parent.SizeChanged, Sub() SetGridResolution()
@@ -80,7 +80,7 @@
         pf.TieBreaker = True
         pf.HeuristicEstimate = 16
         pf.Formula = PathFinder.HeuristicFormula.Manhattan
-        pf.SearchLimit = 512 * 512
+        pf.SearchLimit = 128 * 512
 
         SetGridResolution()
     End Sub
@@ -298,6 +298,8 @@
         Dim p1 As Point
         Dim p2 As Point
 
+        WiresSegments.Clear()
+
         If selPin IsNot Nothing AndAlso selPin.ConnectedToPinNumber = -1 Then
             If LogicGates.BaseGate.GetGateConnectedToInput(mCircuit, selPin) Is Nothing Then
                 For Each ip In selPin.ParentGate.Inputs
@@ -376,7 +378,7 @@
         Dim p1 As Point
         Dim p2 As Point
 
-        wiresSegments.Clear()
+        WiresSegments.Clear()
 
         If selPin IsNot Nothing AndAlso selPin.ConnectedToPinNumber = -1 Then
             If LogicGates.BaseGate.GetGateConnectedToInput(mCircuit, selPin) Is Nothing Then
@@ -457,6 +459,10 @@
                 g.DrawLine(c, p1, p2)
             Else
                 g.DrawLines(c, pts)
+
+                For i As Integer = 0 To pts.Count - 2 Step 2
+                    WiresSegments.Add(New WireSegment(pts(i), pts(i + 1)))
+                Next
             End If
         End Using
     End Sub
@@ -477,15 +483,15 @@
             For i As Integer = 1 To nodes.Count - 1
                 p2 = nodes(i).ToPoint()
                 '' Fast Mode
-                'If p1.X <> p2.X AndAlso p1.Y <> p2.Y Then
-                '    pts.Add(GridNodeToScreenPoint(nodes(i - 1)))
-                '    AddWireToGrid(p1, p2)
-                '    p1 = p2
-                'End If
+                If p1.X <> p2.X AndAlso p1.Y <> p2.Y Then
+                    pts.Add(GridNodeToScreenPoint(nodes(i - 1)))
+                    AddWireToGrid(p1, p2)
+                    p1 = p2
+                End If
 
-                pts.Add(GridNodeToScreenPoint(nodes(i - 1)))
-                AddWireToGrid(p1, p2)
-                p1 = p2
+                'pts.Add(GridNodeToScreenPoint(nodes(i - 1)))
+                'AddWireToGrid(p1, p2)
+                'p1 = p2
             Next
             pts.Add(GridNodeToScreenPoint(nodes.Last()))
             AddWireToGrid(p1, nodes.Last().ToPoint())
@@ -553,6 +559,7 @@
         'Next
 
         'wiresSegments.AddRange(wss)
+        WiresSegments.Add(New WireSegment(p1, p2))
         g.DrawLine(p, p1, p2)
     End Sub
 

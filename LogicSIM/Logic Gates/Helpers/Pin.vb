@@ -12,6 +12,8 @@
         Private mConnectedToPin As Pin
         Private mConnectedToPinNumber As Integer = -1
 
+        Public Property ConnectedFromGate As BaseGate
+
         Private mUI As GateUI
 
         Private mName As String
@@ -39,7 +41,7 @@
 
                     If mParentGate.Inputs.Count = 1 Then
                         mParentGate.Inputs(0).UI.X = -mUI.Width
-                        mParentGate.Inputs(0).UI.Y = mParentGate.UI.Height / 2
+                        mParentGate.Inputs(0).UI.Y = mParentGate.UI.Height / 2 - mParentGate.Inputs(0).UI.Height / 2 + 1
                     Else
                         Dim stp = mParentGate.UI.Height / mParentGate.Inputs.Count
                         For i As Integer = 0 To mParentGate.Inputs.Count - 1
@@ -110,6 +112,8 @@
             mConnectedToGate = gate
             mConnectedToPin = gate.Inputs(pinNumber)
             mConnectedToPinNumber = pinNumber
+
+            gate.Inputs(pinNumber).ConnectedFromGate = mParentGate
         End Sub
 
         Public Sub ConnectTo(gate As BaseGate, inputPin As Pin)
@@ -122,6 +126,9 @@
         End Sub
 
         Public Sub Disconnect()
+            mValue = False
+            If mConnectedToPin IsNot Nothing Then mConnectedToPin.Value = False
+
             mConnectedToGate = Nothing
             mConnectedToPin = Nothing
             mConnectedToPinNumber = -1
@@ -161,6 +168,9 @@
                 .Name = xml.<name>.Value,
                 .UI = GateUI.FromXML(xml.<ui>(0))
             }
+
+            p.mValue = Boolean.Parse(xml.<value>.Value)
+
             Return p
         End Function
 
@@ -174,6 +184,7 @@
                        </connectedTo>
                        <value><%= mValue %></value>
                        <pinNumber><%= mPinNumber %></pinNumber>
+                       <value><%= mValue %></value>
                        <%= mUI.ToXML() %>
                    </pin>
         End Function

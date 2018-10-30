@@ -160,7 +160,7 @@ Partial Public Class LogicGates
             Return System.ComponentModel.TypeDescriptor.GetConverter(type).ConvertFromInvariantString(value)
         End Function
 
-        Public Shared Function GetGateConnectedToInput(parentComponent As Component, inputPin As LogicGates.Pin) As LogicGates.BaseGate
+        Public Shared Function GetGateConnectedToInput(parentComponent As Component, inputPin As Pin) As BaseGate
             For Each gt In parentComponent.Gates
                 If gt.GateType = IBaseGate.GateTypes.Node Then
                     For Each o In CType(gt, Node).Outputs

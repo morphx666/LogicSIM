@@ -72,12 +72,47 @@ Partial Public Class LogicGates
             mCompInputs.Add(New PinConnection(gate, pinNumber))
         End Sub
 
+        Public Sub RemoveInputPin(pin As Pin)
+            For i As Integer = 0 To mCompInputs.Count - 1
+                If mCompInputs(i).Pin = pin Then
+                    mCompInputs.RemoveAt(i)
+                    Exit For
+                End If
+            Next
+        End Sub
+
         Public Sub DefineOutputPin(gate As BaseGate, pinNumber As Integer)
             mCompOutputs.Add(New PinConnection(gate, pinNumber))
         End Sub
 
-        Protected Friend Overrides Sub Evaluate()
+        Public Sub RemoveOutputPin(pin As Pin)
+            For i As Integer = 0 To mCompOutputs.Count - 1
+                If mCompOutputs(i).Pin = pin Then
+                    mCompOutputs.RemoveAt(i)
+                    Exit For
+                End If
+            Next
+        End Sub
 
+        Protected Friend Overrides Sub Evaluate()
+            'For Each g As BaseGate In mGates.Where(Function(tg) tg.GateType() = IBaseGate.GateTypes.Switch)
+            '    g.Inputs(0).Value = Not g.Inputs(0).Value
+            '    g.Inputs(0).Value = Not g.Inputs(0).Value
+            'Next
+
+            For Each g As BaseGate In mGates.Where(Function(tg) tg.GateType() <> IBaseGate.GateTypes.Led)
+                Dim tmpGate As BaseGate = g.Clone()
+
+                For n As Integer = 0 To 2 ^ g.Inputs.Count - 1
+                    For i As Integer = 0 To g.Inputs.Count - 1
+                        g.Inputs(i).Value = (n And (i + 1)) <> 0
+                    Next
+                Next
+
+                For i As Integer = 0 To g.Inputs.Count - 1
+                    g.Inputs(i).Value = tmpGate.Inputs(i).Value
+                Next
+            Next
         End Sub
 
         Protected Overrides Sub InitializeInputs()
@@ -138,7 +173,7 @@ Partial Public Class LogicGates
         End Function
 
         Private Shared Function GetGateById(id As String, c As Component) As BaseGate
-            Dim gId = Guid.Parse(id)
+            Dim gId As Guid = Guid.Parse(id)
             For Each g In c.Gates
                 If g.ID = gId Then Return g
             Next
@@ -149,7 +184,7 @@ Partial Public Class LogicGates
         Private Shared Function InstantiateGate(xml As XElement, gates As List(Of IBaseGate)) As BaseGate
             For Each g In gates
                 If g.GetType().FullName.Split("+")(1) = xml.<type>.Value Then
-                    Dim gt As LogicGates.BaseGate = CType(g, LogicGates.BaseGate).Clone()
+                    Dim gt As BaseGate = CType(g, BaseGate).Clone()
                     gt.SetBaseFromXML(xml)
                     Return gt
                 End If
@@ -161,7 +196,7 @@ Partial Public Class LogicGates
         Private Shared Function GetAvailableGateTypes() As List(Of IBaseGate)
             Dim gateTypes As New List(Of IBaseGate)
 
-            Dim gateType As Type = GetType(LogicGates.BaseGate)
+            Dim gateType As Type = GetType(BaseGate)
             Dim asm As Assembly = Assembly.GetAssembly(Assembly.GetExecutingAssembly.GetType)
 
             For Each t As Type In GetType(LogicGates).GetNestedTypes()
