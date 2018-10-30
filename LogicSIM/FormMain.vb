@@ -155,8 +155,12 @@ Public Class FormMain
                                                                 If CircuitSurfaceContainer.SnapToGrid Then
                                                                     g.UI.X -= g.UI.X Mod CircuitSurfaceContainer.Snap.Width
                                                                     g.UI.Y -= g.UI.Y Mod CircuitSurfaceContainer.Snap.Height
+                                                                    If g.GateType = IBaseGate.GateTypes.Led OrElse g.GateType = IBaseGate.GateTypes.Node OrElse g.GateType = IBaseGate.GateTypes.Switch Then
+                                                                        g.UI.X -= 5
+                                                                        g.UI.Y -= 5
+                                                                        If g.GateType = IBaseGate.GateTypes.Node Then g.Name = ""
+                                                                    End If
                                                                 End If
-                                                                If g.GateType = IBaseGate.GateTypes.Node Then g.UI.Location.Offset(-2, -2)
                                                                 CircuitSurfaceContainer.SelectedGates.Add(g)
                                                                 CircuitSurfaceContainer.Invalidate()
                                                             End If

@@ -178,16 +178,16 @@
     End Operator
 
     Public Shared Function FromXML(xml As XElement) As GateUI
-        Dim ui As New GateUI()
-
-        ui.Location = LogicGates.BaseGate.ParseString(Of Point)(xml.<location>.Value)
-        ui.Size = LogicGates.BaseGate.ParseString(Of Size)(xml.<size>.Value)
-        ui.BorderColor = New Pen(Color.FromArgb(xml.<borderColor>.Value), xml.<borderWidth>.Value)
-        ui.FillColor = New SolidBrush(Color.FromArgb(xml.<fillColor>.Value))
-        ui.ActiveColor = New SolidBrush(Color.FromArgb(xml.<activeColor>.Value))
-        ui.ForeColor = New SolidBrush(Color.FromArgb(xml.<foreColor>.Value))
-        ui.Font = LogicGates.BaseGate.XMLToFont(xml.<font>(0))
-        ui.NameOffset = LogicGates.BaseGate.ParseString(Of Point)(xml.<nameOffset>.Value)
+        Dim ui As New GateUI With {
+            .Location = LogicGates.BaseGate.ParseString(Of Point)(xml.<location>.Value),
+            .Size = LogicGates.BaseGate.ParseString(Of Size)(xml.<size>.Value),
+            .BorderColor = New Pen(Color.FromArgb(xml.<borderColor>.Value), xml.<borderWidth>.Value),
+            .FillColor = New SolidBrush(Color.FromArgb(xml.<fillColor>.Value)),
+            .ActiveColor = New SolidBrush(Color.FromArgb(xml.<activeColor>.Value)),
+            .ForeColor = New SolidBrush(Color.FromArgb(xml.<foreColor>.Value)),
+            .Font = LogicGates.BaseGate.XMLToFont(xml.<font>(0)),
+            .NameOffset = LogicGates.BaseGate.ParseString(Of Point)(xml.<nameOffset>.Value)
+        }
         Double.TryParse(xml.<angle>.Value, ui.Angle)
 
         Return ui

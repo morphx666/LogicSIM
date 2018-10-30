@@ -22,6 +22,8 @@ Public Class CircuitSurface
 
     Private selRect As Rectangle = Rectangle.Empty
 
+    Private txtNameEditor As TextBox
+
     Public Property SnapToGrid As Boolean = True
     Public Property Snap As New Size(10, 10)
     Public Property [Readonly] As Boolean = False
@@ -231,50 +233,54 @@ Public Class CircuitSurface
             isShiftDown = True
         End If
 
-        Select Case keyData
-            Case Keys.Delete
-                mSelectedGates.ForEach(Sub(gt)
-                                           gt.Inputs.ForEach(Sub(i)
-                                                                 i.ConnectedFromGate?.Output.Disconnect()
-                                                                 i.Disconnect()
-                                                             End Sub)
-                                           If gt.GateType = IBaseGate.GateTypes.Node Then
-                                               CType(gt, Node).Outputs.ForEach(Sub(o) o?.Pin.Disconnect())
-                                           End If
-                                           gt.Output.Disconnect()
-                                           For i As Integer = 0 To mCircuit.Inputs.Count - 1
-                                               If mCircuit.Inputs(i).ParentGate = gt Then
-                                                   mCircuit.RemoveInputPin(mCircuit.Inputs(i))
-                                                   Exit For
+        If txtNameEditor Is Nothing Then
+            Select Case keyData
+                Case Keys.Delete
+                    mSelectedGates.ForEach(Sub(gt)
+                                               gt.Inputs.ForEach(Sub(i)
+                                                                     i.ConnectedFromGate?.Output.Disconnect()
+                                                                     i.Disconnect()
+                                                                 End Sub)
+                                               If gt.GateType = IBaseGate.GateTypes.Node Then
+                                                   CType(gt, Node).Outputs.ForEach(Sub(o) o?.Pin.Disconnect())
                                                End If
-                                           Next
-                                           For i As Integer = 0 To mCircuit.Outputs.Count - 1
-                                               If mCircuit.Outputs(i).ParentGate = gt Then
-                                                   mCircuit.RemoveOutputPin(mCircuit.Outputs(i))
-                                                   Exit For
-                                               End If
-                                           Next
-                                           mCircuit.Gates.Remove(gt)
-                                       End Sub)
-                mSelectedGates.Clear()
-                overGate = Nothing
-                overPin = Nothing
-                selPin = Nothing
-                mCircuit.Evaluate()
-                Me.Invalidate()
+                                               gt.Output.Disconnect()
+                                               For i As Integer = 0 To mCircuit.Inputs.Count - 1
+                                                   If mCircuit.Inputs(i).ParentGate = gt Then
+                                                       mCircuit.RemoveInputPin(mCircuit.Inputs(i))
+                                                       Exit For
+                                                   End If
+                                               Next
+                                               For i As Integer = 0 To mCircuit.Outputs.Count - 1
+                                                   If mCircuit.Outputs(i).ParentGate = gt Then
+                                                       mCircuit.RemoveOutputPin(mCircuit.Outputs(i))
+                                                       Exit For
+                                                   End If
+                                               Next
+                                               mCircuit.Gates.Remove(gt)
+                                           End Sub)
+                    mSelectedGates.Clear()
+                    overGate = Nothing
+                    overPin = Nothing
+                    selPin = Nothing
+                    mCircuit.Evaluate()
+                    Me.Invalidate()
 
-            Case Keys.Tab
-                mSelectedGates.ForEach(Sub(gt) gt.UI.Angle += 15 * If(isShiftDown, -1, 1))
-                Me.Invalidate()
-                Return False
+                Case Keys.Tab
+                    mSelectedGates.ForEach(Sub(gt) gt.UI.Angle += 15 * If(isShiftDown, -1, 1))
+                    Me.Invalidate()
+                    Return False
 
-        End Select
+            End Select
+        End If
 
         Return MyBase.ProcessCmdKey(msg, keyData)
     End Function
 
     Private Sub CircuitSurface_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
         If mCircuit Is Nothing Then Exit Sub
+
+        If txtNameEditor IsNot Nothing Then RemoveTextbox(True)
 
         selRect = New Rectangle(mouseOrigin, New Size())
         isMouseDown = (e.Button = Windows.Forms.MouseButtons.Left)
@@ -296,7 +302,6 @@ Public Class CircuitSurface
             selPin = Nothing
             If overGate Is Nothing Then
                 mSelectedGates.Clear()
-                'Me.Invalidate()
             Else
                 If Not isCtrlDown AndAlso Not mSelectedGates.Contains(overGate) Then mSelectedGates.Clear()
                 If isCtrlDown AndAlso mSelectedGates.Contains(overGate) Then
@@ -633,14 +638,42 @@ Public Class CircuitSurface
         Next
     End Sub
 
-    'Private Sub CircuitSurface_DoubleClick(sender As Object, e As EventArgs) Handles Me.DoubleClick
-    '    If mCircuit Is Nothing OrElse [Readonly] Then Exit Sub
+    Private Sub CircuitSurface_DoubleClick(sender As Object, e As EventArgs) Handles Me.DoubleClick
+        If mCircuit Is Nothing OrElse [Readonly] Then Exit Sub
 
-    '    If overGate Is Nothing AndAlso overPin Is Nothing Then
-    '        Dim n As New Node()
-    '        mCircuit.Gates.Add(n)
-    '        mousePosSnaped.Offset(-2, -2)
-    '        n.UI.Location = mousePosSnaped
-    '    End If
-    'End Sub
+        If overGate IsNot Nothing Then
+            Dim w As Integer = TextRenderer.MeasureText(overGate.Name, overGate.UI.Font).Width
+            txtNameEditor = New TextBox With {
+                .Location = New Point(overGate.UI.X + overGate.UI.NameOffset.X - 1, overGate.UI.Y + overGate.UI.NameOffset.Y - 1),
+                .Width = If(w = 0, 80, w),
+                .Tag = overGate,
+                .Text = overGate.Name,
+                .Visible = True
+            }
+            Me.Controls.Add(txtNameEditor)
+            txtNameEditor.Focus()
+
+            AddHandler txtNameEditor.Validated, Sub() RemoveTextbox(True)
+            AddHandler txtNameEditor.KeyDown, Sub(o1 As Object, e1 As KeyEventArgs)
+                                                  If e1.KeyCode = Keys.Escape Then RemoveTextbox(False)
+                                                  If e1.KeyCode = Keys.Enter Then RemoveTextbox(True)
+                                                  If (e1.Modifiers And Keys.Control) = Keys.Control Then
+                                                      Dim gUI As GateUI = CType(txtNameEditor.Tag, BaseGate).UI
+                                                      Select Case e1.KeyCode
+                                                          Case Keys.Up : gUI.NameOffset = New Point(gUI.NameOffset.X, gUI.NameOffset.Y - 1)
+                                                          Case Keys.Down : gUI.NameOffset = New Point(gUI.NameOffset.X, gUI.NameOffset.Y + 1)
+                                                          Case Keys.Left : gUI.NameOffset = New Point(gUI.NameOffset.X - 1, gUI.NameOffset.Y)
+                                                          Case Keys.Right : gUI.NameOffset = New Point(gUI.NameOffset.X + 1, gUI.NameOffset.Y)
+                                                      End Select
+                                                      txtNameEditor.Location = New Point(gUI.X + gUI.NameOffset.X - 1, gUI.Y + gUI.NameOffset.Y - 1)
+                                                  End If
+                                              End Sub
+        End If
+    End Sub
+
+    Private Sub RemoveTextbox(updateGateText As Boolean)
+        If updateGateText Then CType(txtNameEditor.Tag, BaseGate).Name = txtNameEditor.Text
+        Me.Controls.Remove(txtNameEditor)
+        txtNameEditor = Nothing
+    End Sub
 End Class
