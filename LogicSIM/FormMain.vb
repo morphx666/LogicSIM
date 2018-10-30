@@ -10,12 +10,12 @@ Public Class FormMain
     End Sub
 
     Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        'GenTestProject()
-
         If IO.File.Exists(testFile) AndAlso circuit Is Nothing Then
             Dim xDoc = XDocument.Parse(IO.File.ReadAllText(testFile))
             circuit = Component.FromXML(xDoc.FirstNode())
         End If
+
+        If circuit Is Nothing Then GenTestProject()
 
         CircuitSurfaceContainer.Circuit = circuit
         circuit.Evaluate()

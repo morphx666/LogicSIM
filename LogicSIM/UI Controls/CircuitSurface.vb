@@ -125,7 +125,12 @@ Public Class CircuitSurface
                     pinUI = n.Input.UI
                     g.FillRectangle(Brushes.Blue, New Rectangle(gt.UI.Location + pinUI.Location, pinUI.Size))
 
-                    For Each pinUI In n.OutputsUIs
+                    For Each op In n.OutputsUIs
+                        pinUI = If(selPin = op, selPinUI, op.UI)
+                        g.FillRectangle(Brushes.MediumVioletRed, New Rectangle(gt.UI.Location + pinUI.Location, pinUI.Size))
+                    Next
+                    For Each ip In gt.Inputs
+                        pinUI = If(selPin = ip, selPinUI, ip.UI)
                         g.FillRectangle(Brushes.MediumVioletRed, New Rectangle(gt.UI.Location + pinUI.Location, pinUI.Size))
                     Next
                 End If
@@ -351,18 +356,29 @@ Public Class CircuitSurface
                 Dim pb As Rectangle
 
                 If gt.Flow <> IBaseGate.DataFlow.In Then
-                    pb = If(selPin = gt.Output,
-                                                    New Rectangle(gt.UI.Location + selPinUI.Location, selPinUI.Size),
-                                                    New Rectangle(gt.UI.Location + gt.Output.UI.Location, gt.Output.UI.Size))
-                    If gt.UI.Angle <> 0 Then pb.Location = mGateRenderer.TransformPoint(pb.Location, gt)
-
-                    If pb.Contains(e.Location) Then
-                        overPin = gt.Output
-                        overPinBounds = New Rectangle(overPin.ParentGate.UI.Location + overPin.UI.Location, overPin.UI.Size)
-                        overGate = Nothing
-                        Me.Invalidate()
-                        Exit Sub
+                    Dim outputs As New List(Of Pin)
+                    If gt.GateType = IBaseGate.GateTypes.Node Then
+                        Dim n As Node = CType(gt, Node)
+                        For i As Integer = 0 To n.Outputs.Count - 1
+                            outputs.Add(n.OutputsUIs(i))
+                        Next
+                    Else
+                        outputs.Add(gt.Output)
                     End If
+                    For Each o In outputs
+                        pb = If(selPin = o,
+                            New Rectangle(gt.UI.Location + selPinUI.Location, selPinUI.Size),
+                            New Rectangle(gt.UI.Location + o.UI.Location, o.UI.Size))
+                        If gt.UI.Angle <> 0 Then pb.Location = mGateRenderer.TransformPoint(pb.Location, gt)
+
+                        If pb.Contains(e.Location) Then
+                            overPin = o
+                            overPinBounds = New Rectangle(overPin.ParentGate.UI.Location + overPin.UI.Location, overPin.UI.Size)
+                            overGate = Nothing
+                            Me.Invalidate()
+                            Exit Sub
+                        End If
+                    Next
                 End If
 
                 If gt.Flow <> IBaseGate.DataFlow.Out Then

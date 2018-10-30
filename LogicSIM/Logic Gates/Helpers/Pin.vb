@@ -107,11 +107,12 @@
         End Property
 
         Public Sub ConnectTo(gate As BaseGate, pinNumber As Integer)
-            If mConnectedToPinNumber <> -1 Then Throw New Exception("Pin already connected")
+            'If mConnectedToPinNumber <> -1 Then Throw New Exception("Pin already connected")
             Disconnect()
             mConnectedToGate = gate
             mConnectedToPin = gate.Inputs(pinNumber)
             mConnectedToPinNumber = pinNumber
+            mPinNumber = mPinNumber
 
             gate.Inputs(pinNumber).ConnectedFromGate = mParentGate
         End Sub
@@ -170,6 +171,7 @@
             }
 
             p.mValue = Boolean.Parse(xml.<value>.Value)
+            p.mConnectedToPinNumber = xml.<connectedTo>.<pinNumber>.Value
 
             Return p
         End Function

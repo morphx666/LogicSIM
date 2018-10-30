@@ -328,7 +328,7 @@
                     If op Is Nothing Then Continue For
                     Dim opUI = n.OutputsUIs(o)
 
-                    p1 = gt.UI.Location + opUI.Location + New Point(opUI.Width / 2, opUI.Height / 2 - 1)
+                    p1 = gt.UI.Location + opUI.UI.Location + New Point(opUI.UI.Width / 2, opUI.UI.Height / 2 - 1)
                     p1 = TransformPoint(p1, gt)
 
                     p2 = op.Gate.UI.Location + op.Pin.UI.Location

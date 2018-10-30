@@ -138,7 +138,7 @@ Partial Public Class LogicGates
             Next
 
             For Each gXml In xml.<internals>.<gates>.<gate>
-                Dim g = GetGateById(gXml.<id>.Value, c)
+                Dim g As BaseGate = GetGateById(gXml.<id>.Value, c)
 
                 If TypeOf g Is Node Then
                     Dim n = CType(g, Node)

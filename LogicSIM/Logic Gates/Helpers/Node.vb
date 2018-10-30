@@ -5,7 +5,7 @@
         Private Const ToRad As Double = Math.PI / 180
 
         Private mOutputs As List(Of Component.PinConnection)
-        Private mOutputsUIs As List(Of GateUI)
+        Private mOutputsUIs As List(Of Pin)
 
         Public Sub New()
             MyBase.New()
@@ -29,7 +29,7 @@
             End Get
         End Property
 
-        Public ReadOnly Property OutputsUIs As List(Of GateUI)
+        Public ReadOnly Property OutputsUIs As List(Of Pin)
             Get
                 Return mOutputsUIs
             End Get
@@ -74,9 +74,9 @@
             Next
         End Sub
 
-        Private Sub PositionPin(pinUI As GateUI, a As Double)
-            pinUI.X = UI.Width / 2 + UI.Width * Math.Cos(a * ToRad) - pinUI.Width / 2
-            pinUI.Y = UI.Height / 2 + UI.Height * Math.Sin(-a * ToRad) - pinUI.Height / 2
+        Private Sub PositionPin(pin As Pin, a As Double)
+            pin.UI.X = UI.Width / 2 + UI.Width * Math.Cos(a * ToRad) - pin.UI.Width / 2
+            pin.UI.Y = UI.Height / 2 + UI.Height * Math.Sin(-a * ToRad) - pin.UI.Height / 2
         End Sub
 
         Protected Friend Overrides Sub Evaluate()
@@ -100,15 +100,15 @@
             Inputs(0).UI.Size = New Size(10, 10)
 
             mOutputs = New List(Of Component.PinConnection)()
-            mOutputsUIs = New List(Of GateUI)
+            mOutputsUIs = New List(Of Pin)
 
             For i As Integer = 0 To 3 - 1
-                mOutputsUIs.Add(New GateUI())
-                mOutputsUIs.Last().Size = Input.UI.Size()
+                mOutputsUIs.Add(New Pin(Me, i))
+                mOutputsUIs.Last().UI.Size = Input.UI.Size()
                 mOutputs.Add(Nothing)
             Next
 
-            PositionPin(Input.UI, 180)
+            PositionPin(Input, 180)
             PositionOutputs()
         End Sub
 
