@@ -297,11 +297,31 @@
     Public Sub DrawWiresAStar(g As Graphics, r As Rectangle, selPin As LogicGates.Pin, selPinUI As GateUI)
         Dim p1 As Point
         Dim p2 As Point
+        Dim n As LogicGates.Node
 
         WiresSegments.Clear()
 
         If selPin IsNot Nothing AndAlso selPin.ConnectedToPinNumber = -1 Then
-            If LogicGates.BaseGate.GetGateConnectedToInput(mCircuit, selPin) Is Nothing Then
+            If selPin.ParentGate.GateType = IBaseGate.GateTypes.Node Then
+                n = CType(selPin.ParentGate, LogicGates.Node)
+                For i As Integer = 0 To n.Outputs.Count - 1
+                    If n.OutputsUIs(i) = selPin Then
+                        p1 = selPin.ParentGate.UI.Location + selPinUI.Location
+                        p1.X += selPinUI.Width
+                        p1.Y += selPinUI.Height / 2
+
+                        p2 = selPin.ParentGate.UI.Location + selPin.UI.Location
+                        p2.Y += selPin.UI.Height / 2
+
+                        DrawWire(g, p1, p2, n.OutputsUIs(i))
+
+                        Exit For
+                    End If
+                Next
+            End If
+
+            'If LogicGates.BaseGate.GetGateConnectedToInput(mCircuit, selPin) Is Nothing Then
+            If selPin.ConnectedFromGate Is Nothing Then
                 For Each ip In selPin.ParentGate.Inputs
                     If ip = selPin Then
                         p1 = selPin.ParentGate.UI.Location + selPinUI.Location
@@ -319,7 +339,6 @@
             End If
         End If
 
-        Dim n As LogicGates.Node
         For Each gt In mCircuit.Gates
             If gt.GateType = IBaseGate.GateTypes.Node Then
                 n = CType(gt, LogicGates.Node)
