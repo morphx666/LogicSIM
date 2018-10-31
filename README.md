@@ -25,5 +25,3 @@ At this moment it's more a proof of concept than a usable logic simulator.
 * Connecting: Drag a wire from either an input or an output pin to the desired pin.
 * Multiple Connections: Add a Node to the circuit surface to connect up to four gates.
 * Saving/Loading: Not implemented. When closing the simulator, the circuit will be saved in an XML file which will be automatically loaded when re-opening the program.
-* Renaming a gate: Double click on a gate to change its name. While renaming a gate, hold the Shift key down and use the arrow keys to change the gate's name position.
-* Changing other parameters: At this moment there's no UI to change the gates' parameters, other than the name (label).
