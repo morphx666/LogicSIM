@@ -1,4 +1,5 @@
-﻿Imports System.Reflection
+﻿Imports System.ComponentModel
+Imports System.Reflection
 Partial Public Class LogicGates
     Public Class Component
         Inherits BaseGate

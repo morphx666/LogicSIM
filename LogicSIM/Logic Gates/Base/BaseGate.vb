@@ -1,5 +1,5 @@
-﻿Imports System.Threading
-Imports LogicSIM
+﻿Imports System.ComponentModel
+Imports System.Threading
 
 Partial Public Class LogicGates
     Public MustInherit Class BaseGate
@@ -15,8 +15,8 @@ Partial Public Class LogicGates
         Protected Friend MustOverride Sub Evaluate() Implements IBaseGate.Evaluate
         Protected Friend MustOverride Sub Tick() Implements IBaseGate.Tick
         Public MustOverride Function Clone() As Object Implements ICloneable.Clone
-        Public MustOverride ReadOnly Property GateType As IBaseGate.GateTypes Implements IBaseGate.GateType
-        Public MustOverride ReadOnly Property Flow As IBaseGate.DataFlow Implements IBaseGate.Flow
+        <BrowsableAttribute(False)> Public MustOverride ReadOnly Property GateType As IBaseGate.GateTypes Implements IBaseGate.GateType
+        <BrowsableAttribute(False)> Public MustOverride ReadOnly Property Flow As IBaseGate.DataFlow Implements IBaseGate.Flow
 
         Private cts As CancellationTokenSource
         Private ct As CancellationToken
@@ -61,7 +61,7 @@ Partial Public Class LogicGates
             mName = name
         End Sub
 
-        Public Property ID As Guid
+        <BrowsableAttribute(False)> Public Property ID As Guid
             Get
                 Return mInternalID
             End Get

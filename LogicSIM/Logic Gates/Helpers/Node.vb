@@ -94,7 +94,7 @@
 
             UI.Size = New Size(10, 10)
             UI.NameOffset = New Point(5, 5)
-            UI.FillColor = Brushes.Blue
+            UI.FillColor = Color.Blue
 
             Inputs.Add(New Pin(Me, Inputs.Count))
             Inputs(0).UI.Size = New Size(10, 10)

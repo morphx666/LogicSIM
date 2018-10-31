@@ -402,8 +402,6 @@
         Dim pts() As Point = If(recalculate, FindAndSimplifyPath(ScreenPointToGridPoint(p1), ScreenPointToGridPoint(p2)), WiresSegments(hash))
         Using c As New Pen(GetWireColor(pin), 2)
             If pts Is Nothing Then
-                ' FIXME: This should call the old/original DrawWire sub, instead of drawing
-                ' a simple diagonal line
                 g.DrawLine(c, p1, p2)
                 If recalculate Then WiresSegments.Add(hash, {p1, p2})
             Else
@@ -450,7 +448,7 @@
         End If
     End Function
 
-    Private wm As Integer = 0
+    Private ReadOnly wm As Integer = 0
     Private Sub AddWireToGrid(p1 As Point, p2 As Point)
         For x = Math.Min(p1.X, p2.X) - 1 To Math.Max(p1.X, p2.X)
             For y = Math.Min(p1.Y, p2.Y) - 1 To Math.Max(p1.Y, p2.Y)
@@ -470,20 +468,45 @@
     End Function
 
     Public Sub DrawLed(g As Graphics, gt As LogicGates.BaseGate)
-        g.FillEllipse(If(gt.Inputs(0).Value, gt.UI.ActiveColor, gt.UI.FillColor), gt.UI.Bounds)
-        g.DrawEllipse(gt.UI.BorderColor, gt.UI.Bounds)
+        g.FillEllipse(If(gt.Inputs(0).Value, gt.UI.ActiveColorBrush, gt.UI.FillColorBrush), gt.UI.Bounds)
+        g.DrawEllipse(gt.UI.BorderColorPen, gt.UI.Bounds)
     End Sub
 
     Public Sub DrawSwitch(g As Graphics, gt As LogicGates.BaseGate)
-        g.FillRectangle(If(gt.Inputs(0).Value, gt.UI.ActiveColor, gt.UI.FillColor), gt.UI.Bounds)
-        g.DrawRectangle(gt.UI.BorderColor, gt.UI.Bounds)
+        g.FillRectangle(If(gt.Inputs(0).Value, gt.UI.ActiveColorBrush, gt.UI.FillColorBrush), gt.UI.Bounds)
+        g.DrawRectangle(gt.UI.BorderColorPen, gt.UI.Bounds)
     End Sub
 
     Public Sub DrawClock(g As Graphics, gt As LogicGates.BaseGate)
-        g.FillRectangle(gt.UI.FillColor, gt.UI.Bounds)
-        g.DrawRectangle(gt.UI.BorderColor, gt.UI.Bounds)
+        g.FillRectangle(gt.UI.FillColorBrush, gt.UI.Bounds)
+        g.DrawRectangle(gt.UI.BorderColorPen, gt.UI.Bounds)
 
-        g.FillEllipse(If(gt.Output.Value, gt.UI.ActiveColor, gt.UI.ForeColor), gt.UI.Bounds.Right - 20, gt.UI.Y + 6, 12, 12)
+        g.FillEllipse(If(gt.Output.Value, gt.UI.ActiveColorBrush, gt.UI.ForeColorBrush), gt.UI.Bounds.Right - 20, gt.UI.Y + 6, 12, 12)
+
+        ' FIXME: This needs to be cached inside a DirectBitmap
+        Dim gc As LogicGates.Clock = CType(gt, LogicGates.Clock)
+        Dim l As Integer = gt.UI.Bounds.Width / 6
+        Dim lx As Integer = gt.UI.X + l
+        Dim h As Integer = gt.UI.Bounds.Height / 2
+        Dim x As Integer
+        Dim y As Integer = gt.UI.Bounds.Bottom - h
+        Dim o As Integer = 0
+        h -= 12
+        Using p As New Pen(Color.Black, 2)
+            For x = lx To gt.UI.Bounds.Right - l - 1 Step 2
+                g.DrawLine(p, x, y + o, x + 1, y + o)
+
+                If x - lx >= If(o = 0, 1 - gc.DutyCycle, gc.DutyCycle) * h Then
+                    If o = 0 Then
+                        g.DrawLine(p, lx, y, lx, y + h)
+                    Else
+                        g.DrawLine(p, lx, y + h, lx, y)
+                    End If
+                    lx = x
+                    o = If(o = 0, h, 0)
+                End If
+            Next
+        End Using
     End Sub
 
     Public Sub ApplyRotation(g As Graphics, ui As GateUI)

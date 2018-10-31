@@ -1,12 +1,12 @@
 ﻿Imports LogicSIM.LogicGates
 
 Public Class CircuitSurface
-    Private mCircuit As LogicGates.Component
+    Private mCircuit As Component
     Private mGateRenderer As GateRenderer
 
     Private overGate As BaseGate
     Private mSelectedGates As New List(Of BaseGate)
-    Private selPin As Pin
+    Private mSelPin As Pin
     Private selPinUI As GateUI
 
     Private overPin As Pin
@@ -27,6 +27,8 @@ Public Class CircuitSurface
     Public Property Snap As New Size(10, 10)
     Public Property MultiSelect As Boolean = True
     Public Property [Readonly] As Boolean = False
+
+    Public Event GatesSelectedChanged(sender As Object, e As EventArgs)
 
     Private Sub CircuitSurface_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.SetStyle(ControlStyles.AllPaintingInWmPaint, True)
@@ -90,6 +92,12 @@ Public Class CircuitSurface
         End Get
     End Property
 
+    Public ReadOnly Property SelectedPin As Pin
+        Get
+            Return mSelPin
+        End Get
+    End Property
+
     Protected Overrides Sub OnPaint(e As PaintEventArgs)
         Dim g As Graphics = e.Graphics
         Dim r As Rectangle = Me.DisplayRectangle
@@ -134,8 +142,8 @@ Public Class CircuitSurface
                         g.FillPath(p, gt.UI.Path)
                     End Using
                 Else
-                    g.FillPath(gt.UI.FillColor, gt.UI.Path)
-                    g.DrawPath(gt.UI.BorderColor, gt.UI.Path)
+                    g.FillPath(gt.UI.FillColorBrush, gt.UI.Path)
+                    g.DrawPath(gt.UI.BorderColorPen, gt.UI.Path)
                 End If
             End If
 
@@ -148,11 +156,11 @@ Public Class CircuitSurface
                         g.FillRectangle(Brushes.Blue, New Rectangle(gt.UI.Location + pinUI.Location, pinUI.Size))
 
                         For Each op In n.OutputsUIs
-                            pinUI = If(selPin = op, selPinUI, op.UI)
+                            pinUI = If(mSelPin = op, selPinUI, op.UI)
                             g.FillRectangle(Brushes.MediumVioletRed, New Rectangle(gt.UI.Location + pinUI.Location, pinUI.Size))
                         Next
                         For Each ip In gt.Inputs
-                            pinUI = If(selPin = ip, selPinUI, ip.UI)
+                            pinUI = If(mSelPin = ip, selPinUI, ip.UI)
                             g.FillRectangle(Brushes.MediumVioletRed, New Rectangle(gt.UI.Location + pinUI.Location, pinUI.Size))
                         Next
                     End If
@@ -160,21 +168,21 @@ Public Class CircuitSurface
             Else
                 If gt.Flow <> IBaseGate.DataFlow.Out Then
                     For Each ip In gt.Inputs
-                        pinUI = If(selPin = ip, selPinUI, ip.UI)
+                        pinUI = If(mSelPin = ip, selPinUI, ip.UI)
                         g.FillRectangle(Brushes.MediumVioletRed, New Rectangle(gt.UI.Location + pinUI.Location, pinUI.Size))
                     Next
                 End If
                 If gt.Flow <> IBaseGate.DataFlow.In Then
-                    pinUI = If(selPin = gt.Output, selPinUI, gt.Output.UI)
+                    pinUI = If(mSelPin = gt.Output, selPinUI, gt.Output.UI)
                     g.FillRectangle(Brushes.Orange, New Rectangle(gt.UI.Location + pinUI.Location, pinUI.Size))
                 End If
             End If
 
             g.ResetTransform()
-            g.DrawString(gt.Name, gt.UI.Font, gt.UI.ForeColor, gt.UI.Location + gt.UI.NameOffset)
+            g.DrawString(gt.Name, gt.UI.Font, gt.UI.ForeColorBrush, gt.UI.Location + gt.UI.NameOffset)
         Next
 
-        mGateRenderer.DrawWiresAStar(g, r, selPin, selPinUI)
+        mGateRenderer.DrawWiresAStar(g, r, mSelPin, selPinUI)
         'gr.DrawWires(g, r, selPin, selPinUI)
 
         'For Each gt In mCircuit.Gates.Where(Function(k) k.GateType = IBaseGate.GateTypes.Node)
@@ -189,8 +197,8 @@ Public Class CircuitSurface
 
         'mCircuit.Gates.Where(Function(k) k.GateType = IBaseGate.GateTypes.Node).ToList().ForEach(Sub(gt) g.FillPath(gt.UI.FillColor, gt.UI.Path))
 
-        If selPin IsNot Nothing Then
-            g.FillRectangle(Brushes.Blue, New Rectangle(selPin.ParentGate.UI.Location + selPin.UI.Location, selPin.UI.Size))
+        If mSelPin IsNot Nothing Then
+            g.FillRectangle(Brushes.Blue, New Rectangle(mSelPin.ParentGate.UI.Location + mSelPin.UI.Location, mSelPin.UI.Size))
 
             If overPin IsNot Nothing Then
                 Dim opb = overPinBounds
@@ -280,7 +288,7 @@ Public Class CircuitSurface
                     mSelectedGates.Clear()
                     overGate = Nothing
                     overPin = Nothing
-                    selPin = Nothing
+                    mSelPin = Nothing
                     mCircuit.Evaluate()
                     mGateRenderer.UpgardeGrid()
 
@@ -298,7 +306,7 @@ Public Class CircuitSurface
     Private Sub CircuitSurface_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
         If mCircuit Is Nothing Then Exit Sub
 
-        If txtNameEditor IsNot Nothing Then RemoveTextbox(True)
+        'If txtNameEditor IsNot Nothing Then RemoveTextbox(True)
 
         selRect = New Rectangle(mouseOrigin, New Size())
         isMouseDown = (e.Button = Windows.Forms.MouseButtons.Left)
@@ -311,13 +319,13 @@ Public Class CircuitSurface
         End If
 
         If overPin IsNot Nothing Then
-            selPin = overPin
-            selPinUI = selPin.UI.Clone()
-            selPin.UI.Location = mGateRenderer.TransformPoint(selPin.ParentGate.UI.Location + selPin.UI.Location, selPin.ParentGate) - selPin.ParentGate.UI.Location
+            mSelPin = overPin
+            selPinUI = mSelPin.UI.Clone()
+            mSelPin.UI.Location = mGateRenderer.TransformPoint(mSelPin.ParentGate.UI.Location + mSelPin.UI.Location, mSelPin.ParentGate) - mSelPin.ParentGate.UI.Location
             overPin = Nothing
             mSelectedGates.Clear()
         Else
-            selPin = Nothing
+            mSelPin = Nothing
             If overGate Is Nothing Then
                 mSelectedGates.Clear()
             Else
@@ -332,6 +340,8 @@ Public Class CircuitSurface
                 End If
             End If
         End If
+
+        RaiseEvent GatesSelectedChanged(Me, New EventArgs())
     End Sub
 
     Private Sub CircuitSurface_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
@@ -352,25 +362,23 @@ Public Class CircuitSurface
             If mSelectedGates.Count > 0 AndAlso Not [Readonly] Then
                 For Each gt In mSelectedGates
                     gt.UI.Path = Nothing
-                    gt.UI.Bounds = New Rectangle(gt.UI.Bounds.X + deltaX,
-                                                 gt.UI.Bounds.Y + deltaY,
-                                                 gt.UI.Bounds.Width,
-                                                 gt.UI.Bounds.Height)
+                    gt.UI.X += deltaX
+                    gt.UI.Y += deltaY
                 Next
                 mouseOrigin += (mousePosSnaped - mouseOrigin)
                 mGateRenderer.UpgardeGrid()
             ElseIf overGate Is Nothing Then
-                If selPin Is Nothing Then
+                If mSelPin Is Nothing Then
                     If MultiSelect Then
                         Dim p1 As Point = New Point(Math.Min(mouseOrigin.X, mousePosSnaped.X), Math.Min(mouseOrigin.Y, mousePosSnaped.Y))
                         Dim p2 As Point = New Point(Math.Max(mouseOrigin.X, mousePosSnaped.X), Math.Max(mouseOrigin.Y, mousePosSnaped.Y))
                         selRect = New Rectangle(p1, New Size(p2.X - p1.X, p2.Y - p1.Y))
                     End If
                 Else
-                    selPin.UI.Bounds = New Rectangle(selPin.UI.Bounds.X + deltaX,
-                                                     selPin.UI.Bounds.Y + deltaY,
-                                                     selPin.UI.Bounds.Width,
-                                                     selPin.UI.Bounds.Height)
+                    mSelPin.UI.Bounds = New Rectangle(mSelPin.UI.Bounds.X + deltaX,
+                                                     mSelPin.UI.Bounds.Y + deltaY,
+                                                     mSelPin.UI.Bounds.Width,
+                                                     mSelPin.UI.Bounds.Height)
                     mouseOrigin += (mousePosSnaped - mouseOrigin)
                     mGateRenderer.UpgardeGrid()
                 End If
@@ -383,7 +391,7 @@ Public Class CircuitSurface
             If Not isMouseDown AndAlso gt.UI.Bounds.Contains(mousePosSnaped) Then
                 overGate = gt
                 overPin = Nothing
-                Exit sub
+                Exit Sub
             ElseIf Not [Readonly] Then
                 Dim pb As Rectangle
 
@@ -398,7 +406,7 @@ Public Class CircuitSurface
                         outputs.Add(gt.Output)
                     End If
                     For Each o In outputs
-                        pb = If(selPin = o,
+                        pb = If(mSelPin = o,
                             New Rectangle(gt.UI.Location + selPinUI.Location, selPinUI.Size),
                             New Rectangle(gt.UI.Location + o.UI.Location, o.UI.Size))
                         If gt.UI.Angle <> 0 Then pb.Location = mGateRenderer.TransformPoint(pb.Location, gt)
@@ -414,7 +422,7 @@ Public Class CircuitSurface
 
                 If gt.Flow <> IBaseGate.DataFlow.Out Then
                     For Each ip In gt.Inputs
-                        pb = If(selPin = ip,
+                        pb = If(mSelPin = ip,
                                 New Rectangle(gt.UI.Location + selPinUI.Location, selPinUI.Size),
                                 New Rectangle(gt.UI.Location + ip.UI.Location, ip.UI.Size))
                         If gt.UI.Angle <> 0 Then pb.Location = mGateRenderer.TransformPoint(pb.Location, gt)
@@ -431,7 +439,7 @@ Public Class CircuitSurface
         Next
 
         If overGate IsNot Nothing Then
-            overGate = Nothing
+            If Not isMouseDown Then overGate = Nothing
         ElseIf overPin IsNot Nothing Then
             overPin = Nothing
         End If
@@ -458,9 +466,9 @@ Public Class CircuitSurface
                 If testRect.IntersectsWith(gt.UI.Bounds) Then mSelectedGates.Add(gt)
             Next
             selRect = Rectangle.Empty
-        ElseIf selPin IsNot Nothing Then
+        ElseIf mSelPin IsNot Nothing Then
             If overPin Is Nothing Then
-                If selPin.ConnectedToPinNumber = -1 Then
+                If mSelPin.ConnectedToPinNumber = -1 Then
                     ' Disconnect Input Pin
                     Dim pc As Component.PinConnection = Nothing
 
@@ -469,7 +477,7 @@ Public Class CircuitSurface
                             Dim node = CType(gt, Node)
                             For Each o In node.Outputs
                                 If o Is Nothing Then Continue For
-                                If o.Pin = selPin Then
+                                If o.Pin = mSelPin Then
                                     pc = o
                                     Exit For
                                 End If
@@ -478,7 +486,7 @@ Public Class CircuitSurface
                                 node.Disconnect(pc)
                                 Exit For
                             End If
-                        ElseIf gt.Output.ConnectedToPin = selPin Then
+                        ElseIf gt.Output.ConnectedToPin = mSelPin Then
                             If gt.Output IsNot Nothing Then gt.Output.Disconnect()
                             Exit For
                         End If
@@ -517,23 +525,23 @@ Public Class CircuitSurface
                     'End If
                 Else
                     ' Disconnect Output Pin
-                    selPin.ParentGate.Output.Disconnect()
+                    mSelPin.ParentGate.Output.Disconnect()
                 End If
-            ElseIf selPin <> overPin Then
-                If selPin = selPin.ParentGate.Output Then
+            ElseIf mSelPin <> overPin Then
+                If mSelPin = mSelPin.ParentGate.Output Then
                     ' Connect Output Pin
                     If BaseGate.GetGateConnectedToInput(mCircuit, overPin) Is Nothing Then
                         If overPin.ParentGate.GateType = IBaseGate.GateTypes.Node Then
                             Dim node = CType(overPin.ParentGate, Node)
                             If BaseGate.GetGateConnectedToInput(mCircuit, node.Input) Is Nothing Then
-                                node.ConnectTo(selPin.ParentGate, selPin)
+                                node.ConnectTo(mSelPin.ParentGate, mSelPin)
                             Else
                                 ' TODO: Notify user that nodes do not support multiple connections from outputs
                                 ' as they only have one input.
                             End If
                         Else
-                            selPin.Disconnect()
-                            selPin.ConnectTo(overPin.ParentGate, overPin)
+                            mSelPin.Disconnect()
+                            mSelPin.ConnectTo(overPin.ParentGate, overPin)
                         End If
                     Else
                         ' TODO: Notify user that inputs only support one connection.
@@ -542,17 +550,17 @@ Public Class CircuitSurface
                 Else
                     If overPin.ConnectedToPinNumber = -1 Then
                         ' Connect Output Pin
-                        Dim gt = BaseGate.GetGateConnectedToInput(mCircuit, selPin)
+                        Dim gt = BaseGate.GetGateConnectedToInput(mCircuit, mSelPin)
                         If gt Is Nothing Then
                             If overPin.ParentGate.GateType = IBaseGate.GateTypes.Node Then
-                                CType(overPin.ParentGate, Node).ConnectTo(selPin.ParentGate, selPin.PinNumber, overPin.PinNumber)
-                            ElseIf selPin.ParentGate.GateType = IBaseGate.GateTypes.Node Then
-                                CType(selPin.ParentGate, Node).ConnectTo(overPin.ParentGate, overPin.PinNumber, selPin.PinNumber)
+                                CType(overPin.ParentGate, Node).ConnectTo(mSelPin.ParentGate, mSelPin.PinNumber, overPin.PinNumber)
+                            ElseIf mSelPin.ParentGate.GateType = IBaseGate.GateTypes.Node Then
+                                CType(mSelPin.ParentGate, Node).ConnectTo(overPin.ParentGate, overPin.PinNumber, mSelPin.PinNumber)
                             Else
                                 If overPin.ParentGate.Output = overPin Then
                                     ' Connect from Input pin to Output pin
                                     overPin.Disconnect()
-                                    overPin.ConnectTo(selPin.ParentGate, selPin)
+                                    overPin.ConnectTo(mSelPin.ParentGate, mSelPin)
                                 Else
                                     ' TODO: Notify user that inputs cannot be connected to inputs.
                                     ' Or, alternatively, add a node.
@@ -562,7 +570,7 @@ Public Class CircuitSurface
                             If gt.GateType = IBaseGate.GateTypes.Node Then
                                 Dim node As Node = CType(gt, Node)
                                 For Each o In node.Outputs
-                                    If o.Pin = selPin Then
+                                    If o.Pin = mSelPin Then
                                         node.Disconnect(o)
                                         node.ConnectTo(overPin.ParentGate, overPin)
                                         Exit For
@@ -576,12 +584,13 @@ Public Class CircuitSurface
                     Else
                         ' Connect Input Pin to Output Pin
                         overPin.Disconnect()
-                        overPin.ConnectTo(selPin.ParentGate, selPin)
+                        overPin.ConnectTo(mSelPin.ParentGate, mSelPin)
                     End If
                 End If
                 mCircuit.Evaluate()
             Else
-                Stop
+                mSelPin = overPin
+                mSelectedGates.Clear()
             End If
 
             Dim isDone As Boolean
@@ -613,10 +622,12 @@ Public Class CircuitSurface
                 Next
             Loop Until isDone
 
-            selPin.UI.Location = selPinUI.Location
+            mSelPin.UI.Location = selPinUI.Location
             overPin = Nothing
-            selPin = Nothing
+            'mSelPin = Nothing
         End If
+
+        RaiseEvent GatesSelectedChanged(Me, New EventArgs())
     End Sub
 
     Private Sub CircuitSurface_Click(sender As Object, e As EventArgs) Handles Me.Click
@@ -625,43 +636,43 @@ Public Class CircuitSurface
         If overGate?.GateType = IBaseGate.GateTypes.Switch Then overGate.Inputs(0).Value = Not overGate.Inputs(0).Value
     End Sub
 
-    Private Sub CircuitSurface_DoubleClick(sender As Object, e As EventArgs) Handles Me.DoubleClick
-        If mCircuit Is Nothing OrElse [Readonly] Then Exit Sub
+    'Private Sub CircuitSurface_DoubleClick(sender As Object, e As EventArgs) Handles Me.DoubleClick
+    '    If mCircuit Is Nothing OrElse [Readonly] Then Exit Sub
 
-        If overGate IsNot Nothing Then
-            Dim w As Integer = TextRenderer.MeasureText(overGate.Name, overGate.UI.Font).Width
-            txtNameEditor = New TextBox With {
-                .Location = New Point(overGate.UI.X + overGate.UI.NameOffset.X - 1, overGate.UI.Y + overGate.UI.NameOffset.Y - 1),
-                .Width = If(w = 0, 80, w),
-                .Tag = overGate,
-                .Text = overGate.Name,
-                .Visible = True
-            }
-            Me.Controls.Add(txtNameEditor)
-            txtNameEditor.Focus()
+    '    If overGate IsNot Nothing Then
+    '        Dim w As Integer = TextRenderer.MeasureText(overGate.Name, overGate.UI.Font).Width
+    '        txtNameEditor = New TextBox With {
+    '            .Location = New Point(overGate.UI.X + overGate.UI.NameOffset.X - 1, overGate.UI.Y + overGate.UI.NameOffset.Y - 1),
+    '            .Width = If(w = 0, 80, w),
+    '            .Tag = overGate,
+    '            .Text = overGate.Name,
+    '            .Visible = True
+    '        }
+    '        Me.Controls.Add(txtNameEditor)
+    '        txtNameEditor.Focus()
 
-            AddHandler txtNameEditor.Validated, Sub() RemoveTextbox(True)
-            AddHandler txtNameEditor.KeyDown, Sub(o1 As Object, e1 As KeyEventArgs)
-                                                  If e1.KeyCode = Keys.Escape Then RemoveTextbox(False)
-                                                  If e1.KeyCode = Keys.Enter Then RemoveTextbox(True)
-                                                  If (e1.Modifiers And Keys.Control) = Keys.Control Then
-                                                      Dim gUI As GateUI = CType(txtNameEditor.Tag, BaseGate).UI
-                                                      Dim k As Integer = If((e1.Modifiers And Keys.Shift) = Keys.Shift, 4, 2)
-                                                      Select Case e1.KeyCode
-                                                          Case Keys.Up : gUI.NameOffset = New Point(gUI.NameOffset.X, gUI.NameOffset.Y - k)
-                                                          Case Keys.Down : gUI.NameOffset = New Point(gUI.NameOffset.X, gUI.NameOffset.Y + k)
-                                                          Case Keys.Left : gUI.NameOffset = New Point(gUI.NameOffset.X - k, gUI.NameOffset.Y)
-                                                          Case Keys.Right : gUI.NameOffset = New Point(gUI.NameOffset.X + k, gUI.NameOffset.Y)
-                                                      End Select
-                                                      txtNameEditor.Location = New Point(gUI.X + gUI.NameOffset.X - 1, gUI.Y + gUI.NameOffset.Y - 1)
-                                                  End If
-                                              End Sub
-        End If
-    End Sub
+    '        AddHandler txtNameEditor.Validated, Sub() RemoveTextbox(True)
+    '        AddHandler txtNameEditor.KeyDown, Sub(o1 As Object, e1 As KeyEventArgs)
+    '                                              If e1.KeyCode = Keys.Escape Then RemoveTextbox(False)
+    '                                              If e1.KeyCode = Keys.Enter Then RemoveTextbox(True)
+    '                                              If (e1.Modifiers And Keys.Control) = Keys.Control Then
+    '                                                  Dim gUI As GateUI = CType(txtNameEditor.Tag, BaseGate).UI
+    '                                                  Dim k As Integer = If((e1.Modifiers And Keys.Shift) = Keys.Shift, 4, 2)
+    '                                                  Select Case e1.KeyCode
+    '                                                      Case Keys.Up : gUI.NameOffset = New Point(gUI.NameOffset.X, gUI.NameOffset.Y - k)
+    '                                                      Case Keys.Down : gUI.NameOffset = New Point(gUI.NameOffset.X, gUI.NameOffset.Y + k)
+    '                                                      Case Keys.Left : gUI.NameOffset = New Point(gUI.NameOffset.X - k, gUI.NameOffset.Y)
+    '                                                      Case Keys.Right : gUI.NameOffset = New Point(gUI.NameOffset.X + k, gUI.NameOffset.Y)
+    '                                                  End Select
+    '                                                  txtNameEditor.Location = New Point(gUI.X + gUI.NameOffset.X - 1, gUI.Y + gUI.NameOffset.Y - 1)
+    '                                              End If
+    '                                          End Sub
+    '    End If
+    'End Sub
 
-    Private Sub RemoveTextbox(updateGateText As Boolean)
-        If updateGateText Then CType(txtNameEditor.Tag, BaseGate).Name = txtNameEditor.Text
-        Me.Controls.Remove(txtNameEditor)
-        txtNameEditor = Nothing
-    End Sub
+    'Private Sub RemoveTextbox(updateGateText As Boolean)
+    '    If updateGateText Then CType(txtNameEditor.Tag, BaseGate).Name = txtNameEditor.Text
+    '    Me.Controls.Remove(txtNameEditor)
+    '    txtNameEditor = Nothing
+    'End Sub
 End Class

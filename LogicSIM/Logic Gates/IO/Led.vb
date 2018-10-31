@@ -6,8 +6,8 @@
             MyBase.New()
 
             UI.Size = New Size(28, 28)
-            UI.FillColor = Brushes.DarkGreen
-            UI.ActiveColor = Brushes.LightGreen
+            UI.FillColor = Color.DarkGreen
+            UI.ActiveColor = Color.LightGreen
 
             Inputs(0).UI.X = -UI.Width / 2
             Inputs(0).UI.Y = UI.Height / 2 - Inputs(0).UI.Height / 2

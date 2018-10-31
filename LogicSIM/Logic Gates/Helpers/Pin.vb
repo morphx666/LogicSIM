@@ -1,5 +1,7 @@
-﻿Partial Public Class LogicGates
-    Public Class Pin
+﻿Imports System.ComponentModel
+
+Partial Public Class LogicGates
+    <TypeConverter(GetType(PinConverter))> Public Class Pin
         Implements ICloneable
 
         Private mID As Guid
@@ -12,7 +14,7 @@
         Private mConnectedToPin As Pin
         Private mConnectedToPinNumber As Integer = -1
 
-        Public Property ConnectedFromGate As BaseGate
+        <ReadOnlyAttribute(False)> Public Property ConnectedFromGate As BaseGate
 
         Private mUI As GateUI
 
@@ -58,7 +60,7 @@
             End Select
         End Sub
 
-        Public ReadOnly Property ID As Guid
+        <BrowsableAttribute(False)> Public ReadOnly Property ID As Guid
             Get
                 Return mID
             End Get
@@ -73,7 +75,7 @@
             End Set
         End Property
 
-        Public ReadOnly Property ParentGate As LogicGates.BaseGate
+        <BrowsableAttribute(False)> Public ReadOnly Property ParentGate As LogicGates.BaseGate
             Get
                 Return mParentGate
             End Get
@@ -88,25 +90,25 @@
             End Set
         End Property
 
-        Public ReadOnly Property ConnectedToGate As BaseGate
+        <ReadOnlyAttribute(False)> Public ReadOnly Property ConnectedToGate As BaseGate
             Get
                 Return mConnectedToGate
             End Get
         End Property
 
-        Public ReadOnly Property ConnectedToPin As Pin
+        <ReadOnlyAttribute(False)> Public ReadOnly Property ConnectedToPin As Pin
             Get
                 Return mConnectedToPin
             End Get
         End Property
 
-        Public ReadOnly Property ConnectedToPinNumber As Integer
+        <ReadOnlyAttribute(False)> Public ReadOnly Property ConnectedToPinNumber As Integer
             Get
                 Return mConnectedToPinNumber
             End Get
         End Property
 
-        Public ReadOnly Property PinNumber As Integer
+        <ReadOnlyAttribute(False)> Public ReadOnly Property PinNumber As Integer
             Get
                 Return mPinNumber
             End Get
@@ -141,7 +143,7 @@
             mConnectedToPinNumber = -1
         End Sub
 
-        Public Property Value As Boolean
+        <ReadOnlyAttribute(True)> Public Property Value As Boolean
             Get
                 Return mValue
             End Get
@@ -157,6 +159,18 @@
                 End If
             End Set
         End Property
+
+        Public Overrides Function ToString() As String
+            If mConnectedToPin Is Nothing Then
+                If ConnectedFromGate Is Nothing Then
+                    Return $"[{mName}] {mParentGate.GateType}({mPinNumber})"
+                Else
+                    Return $"[{mName}] {mParentGate.GateType}({mPinNumber})<-{ConnectedFromGate.GateType}"
+                End If
+            Else
+                Return $"[{mName}] {mParentGate.GateType}({mPinNumber})->{mConnectedToPin.ParentGate.GateType}({mConnectedToPin.PinNumber})"
+            End If
+        End Function
 
         Public Shared Operator =(p1 As Pin, p2 As Pin) As Boolean
             If p1 Is Nothing AndAlso p2 IsNot Nothing Then Return False
@@ -199,6 +213,47 @@
 
         Public Function Clone() As Object Implements ICloneable.Clone
             Return Pin.FromXML(Me.ToXML(), mParentGate)
+        End Function
+    End Class
+
+    Public Class PinConverter
+        Inherits ExpandableObjectConverter
+
+        Private selectedPin As Pin
+
+        Public Overrides Function CanConvertTo(ByVal context As ITypeDescriptorContext, ByVal destinationType As Type) As Boolean
+            If destinationType Is GetType(Pin) Then
+                Return True
+            Else
+                Return MyBase.CanConvertTo(context, destinationType)
+            End If
+        End Function
+
+        Public Overloads Overrides Function ConvertTo(ByVal context As ITypeDescriptorContext, ByVal culture As Globalization.CultureInfo, ByVal value As Object, ByVal destinationType As System.Type) As Object
+            If destinationType Is GetType(String) AndAlso TypeOf value Is Pin Then
+                selectedPin = CType(value, Pin)
+                Return selectedPin.ToString()
+            End If
+
+            Return MyBase.ConvertTo(context, culture, value, destinationType)
+        End Function
+
+        Public Overloads Overrides Function ConvertFrom(ByVal context As ITypeDescriptorContext, ByVal culture As Globalization.CultureInfo, ByVal value As Object) As Object
+            If TypeOf value Is String Then
+                Dim description As String = CType(value, String)
+                'selectedPin.Description = description.Replace(selectedPin.Time.ToString() + " ", "")
+                Return selectedPin
+            End If
+
+            Return MyBase.ConvertFrom(context, culture, value)
+        End Function
+
+        Public Overrides Function CanConvertFrom(ByVal context As ITypeDescriptorContext, ByVal sourceType As System.Type) As Boolean
+            If sourceType Is GetType(String) Then
+                Return True
+            Else
+                Return MyBase.CanConvertFrom(context, sourceType)
+            End If
         End Function
     End Class
 End Class

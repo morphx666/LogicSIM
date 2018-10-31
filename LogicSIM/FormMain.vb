@@ -1,9 +1,9 @@
 ﻿Imports LogicSIM.LogicGates
 
 Public Class FormMain
-    Dim circuit As Component
-
-    Dim testFile As String = IO.Path.Combine(My.Application.Info.DirectoryPath, "LogicSIM_Sample.xml")
+    Private circuit As Component
+    Private testFile As String = IO.Path.Combine(My.Application.Info.DirectoryPath, "LogicSIM_Sample.xml")
+    Private Const nisInfo = "No item selected"
 
     Private Sub FormMain_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         IO.File.WriteAllText(testFile, circuit.ToXML().ToString())
@@ -18,7 +18,34 @@ Public Class FormMain
 
         CircuitSurfaceContainer.Circuit = circuit
 
+        AddHandler CircuitSurfaceContainer.GatesSelectedChanged, Sub()
+                                                                     If CircuitSurfaceContainer.SelectedGates.Count = 0 Then
+                                                                         If CircuitSurfaceContainer.SelectedPin Is Nothing Then
+                                                                             PropertyGridGateEditor.SelectedObject = circuit
+                                                                         Else
+                                                                             PropertyGridGateEditor.SelectedObject = CircuitSurfaceContainer.SelectedPin
+                                                                         End If
+                                                                     Else
+                                                                         PropertyGridGateEditor.SelectedObjects = CircuitSurfaceContainer.SelectedGates.ToArray()
+                                                                     End If
+
+                                                                     Dim txt As String = ""
+                                                                     For Each so In PropertyGridGateEditor.SelectedObjects
+                                                                         If TypeOf so Is BaseGate Then
+                                                                             Dim g As BaseGate = CType(so, BaseGate)
+                                                                             txt += $"{g.GateType} [{g.Name}], "
+                                                                         ElseIf TypeOf so Is Pin Then
+                                                                             Dim p As Pin = CType(so, Pin)
+                                                                             'txt += $"PIN [{p.Name}] {p.ParentGate.GateType}, "
+                                                                             txt += $"PIN {p.ToString()}, "
+                                                                         End If
+                                                                     Next
+                                                                     txt = If(txt.Length = 0, nisInfo, txt.Substring(0, txt.Length - 2))
+                                                                     LabelSelectedItem.Text = txt
+                                                                 End Sub
+
         AddGatesToUI()
+        LabelSelectedItem.Text = nisInfo
     End Sub
 
     Private Sub GenTestProject() ' Full adder: https://en.wikipedia.org/wiki/Adder_(electronics)#Full_adder
