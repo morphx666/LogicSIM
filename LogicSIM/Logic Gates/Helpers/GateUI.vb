@@ -124,11 +124,11 @@
         End Set
     End Property
 
-    Public Property ForeColor As Brush
+    Public Property ForeColor As SolidBrush
         Get
             Return mForeColor
         End Get
-        Set(value As Brush)
+        Set(value As SolidBrush)
             mForeColor = value
         End Set
     End Property

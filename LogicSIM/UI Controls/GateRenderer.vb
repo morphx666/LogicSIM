@@ -1,5 +1,5 @@
 ﻿Public Class GateRenderer
-    Public Class WireSegment
+    Public Structure WireSegment
         Public Property P1 As Point
         Public Property P2 As Point
 
@@ -8,37 +8,37 @@
             Me.P2 = p2
         End Sub
 
-        Public Function Intersetcs(p3 As Point, p4 As Point) As Boolean
-            Return Intersetcs(p3.X, p3.Y, p4.X, p4.Y)
-        End Function
+        'Public Function Intersetcs(p3 As Point, p4 As Point) As Boolean
+        '    Return Intersetcs(p3.X, p3.Y, p4.X, p4.Y)
+        'End Function
 
-        Public Function Intersetcs(x3 As Integer, y3 As Integer, x4 As Integer, y4 As Integer) As Boolean
-            Dim q As Double = (P1.Y - y3) * (x4 - x3) - (P1.X - x3) * (y4 - y3)
-            Dim d As Double = (P2.X - P1.X) * (y4 - y3) - (P2.Y - P1.Y) * (x4 - x3)
+        'Public Function Intersetcs(x3 As Integer, y3 As Integer, x4 As Integer, y4 As Integer) As Boolean
+        '    Dim q As Double = (P1.Y - y3) * (x4 - x3) - (P1.X - x3) * (y4 - y3)
+        '    Dim d As Double = (P2.X - P1.X) * (y4 - y3) - (P2.Y - P1.Y) * (x4 - x3)
 
-            If d = 0 Then Return False
+        '    If d = 0 Then Return False
 
-            Dim r As Double = q / d
+        '    Dim r As Double = q / d
 
-            q = (P1.Y - y3) * (P2.X - P1.X) - (P1.X - x3) * (P2.Y - P1.Y)
-            Dim s As Double = q / d
+        '    q = (P1.Y - y3) * (P2.X - P1.X) - (P1.X - x3) * (P2.Y - P1.Y)
+        '    Dim s As Double = q / d
 
-            If r < 0 OrElse r > 1 OrElse s < 0 OrElse s > 1 Then Return False
+        '    If r < 0 OrElse r > 1 OrElse s < 0 OrElse s > 1 Then Return False
 
-            Return True
-        End Function
+        '    Return True
+        'End Function
 
-        Public Function Intersetcs(ws As WireSegment) As Boolean
-            Return Intersetcs(ws.P1, ws.P2)
-        End Function
+        'Public Function Intersetcs(ws As WireSegment) As Boolean
+        '    Return Intersetcs(ws.P1, ws.P2)
+        'End Function
 
-        Public Function Intersetcs(r As Rectangle) As Boolean
-            Return Intersetcs(r.X, r.Y, r.Right, r.Y) OrElse
-                   Intersetcs(r.Right, r.Y, r.Right, r.Bottom) OrElse
-                   Intersetcs(r.Right, r.Bottom, r.X, r.Bottom) OrElse
-                   Intersetcs(r.X, r.Bottom, r.X, r.Y)
-        End Function
-    End Class
+        'Public Function Intersetcs(r As Rectangle) As Boolean
+        '    Return Intersetcs(r.X, r.Y, r.Right, r.Y) OrElse
+        '           Intersetcs(r.Right, r.Y, r.Right, r.Bottom) OrElse
+        '           Intersetcs(r.Right, r.Bottom, r.X, r.Bottom) OrElse
+        '           Intersetcs(r.X, r.Bottom, r.X, r.Y)
+        'End Function
+    End Structure
 
     Private mCircuit As LogicGates.Component
     Private mGrid(,) As Byte
@@ -59,7 +59,7 @@
 
     Private pf As PathFinder.PathFinderFast
 
-    Public ReadOnly Property WiresSegments As New List(Of WireSegment)
+    Public ReadOnly Property WiresSegments As New Dictionary(Of Integer, Point())
 
     Public Sub New(parent As Control, circuit As LogicGates.Component)
         AddHandler parent.SizeChanged, Sub() SetGridResolution()
@@ -93,6 +93,8 @@
 
     Public Sub UpgardeGrid()
         If mCircuit Is Nothing OrElse mGridResolution.Width = 0 OrElse mGridResolution.Height = 0 Then Exit Sub
+
+        WiresSegments.Clear()
 
         For x As Integer = 0 To mGridSize.Width - 1
             For y = 0 To mGridSize.Height - 1
@@ -298,8 +300,7 @@
         Dim p1 As Point
         Dim p2 As Point
         Dim n As LogicGates.Node
-
-        WiresSegments.Clear()
+        Dim recalculate As Boolean = WiresSegments.Count = 0
 
         If selPin IsNot Nothing AndAlso selPin.ConnectedToPinNumber = -1 Then
             If selPin.ParentGate.GateType = IBaseGate.GateTypes.Node Then
@@ -313,8 +314,7 @@
                         p2 = selPin.ParentGate.UI.Location + selPin.UI.Location
                         p2.Y += selPin.UI.Height / 2
 
-                        DrawWire(g, p1, p2, n.OutputsUIs(i))
-
+                        DrawWire(g, p1, p2, n.OutputsUIs(i), recalculate)
                         Exit For
                     End If
                 Next
@@ -331,8 +331,7 @@
                         p2 = selPin.ParentGate.UI.Location + selPin.UI.Location
                         p2.Y += selPin.UI.Height / 2
 
-                        DrawWire(g, p1, p2, ip)
-
+                        DrawWire(g, p1, p2, ip, recalculate)
                         Exit For
                     End If
                 Next
@@ -355,8 +354,8 @@
 
                     If selPin Is Nothing OrElse (op.Pin <> selPin) Then p2 = TransformPoint(p2, op.Gate)
 
-                    DrawWire(g, p1, p2, op.Pin)
-                    DrawWire(g, p1, gt.UI.Location + New Point(gt.UI.Width / 2, gt.UI.Height / 2), op.Pin)
+                    DrawWire(g, p1, p2, op.Pin, recalculate)
+                    DrawWire(g, p1, gt.UI.Location + New Point(gt.UI.Width / 2, gt.UI.Height / 2), op.Pin, recalculate)
                 Next
             ElseIf gt.Output.ConnectedToPinNumber <> -1 Then
                 Dim p As LogicGates.Pin = If(gt.Output = selPin, selPin, gt.Output)
@@ -370,7 +369,7 @@
                 If p.ConnectedToGate.GateType = IBaseGate.GateTypes.Node Then
                     n = CType(p.ConnectedToGate, LogicGates.Node)
                     p2 = n.UI.Location + New Point(-n.UI.Width / 2, n.UI.Height / 2)
-                    DrawWire(g, p2, n.UI.Location + New Point(n.UI.Width / 2, n.UI.Height / 2), p)
+                    DrawWire(g, p2, n.UI.Location + New Point(n.UI.Width / 2, n.UI.Height / 2), p, recalculate)
                 Else
                     n = Nothing
                     p2 = p.ConnectedToGate.UI.Location + p.ConnectedToPin.UI.Location
@@ -378,7 +377,7 @@
                 End If
                 p2 = TransformPoint(p2, p.ConnectedToGate)
 
-                DrawWire(g, p1, p2, p)
+                DrawWire(g, p1, p2, p, recalculate)
             ElseIf gt.Flow <> IBaseGate.DataFlow.In AndAlso gt.Output.ConnectedToPinNumber = -1 AndAlso gt.Output = selPin Then
                 p1 = gt.UI.Location + selPinUI.Location
                 p1.X += selPinUI.Width
@@ -388,103 +387,36 @@
                 p2 = gt.UI.Location + selPin.UI.Location
                 p2.Y += selPin.UI.Height / 2
 
-                DrawWire(g, p1, p2, gt.Output)
+                DrawWire(g, p1, p2, gt.Output, recalculate)
             End If
         Next
     End Sub
 
-    Public Sub DrawWires(g As Graphics, r As Rectangle, selPin As LogicGates.Pin, selPinUI As GateUI)
-        Dim p1 As Point
-        Dim p2 As Point
-
-        WiresSegments.Clear()
-
-        If selPin IsNot Nothing AndAlso selPin.ConnectedToPinNumber = -1 Then
-            If LogicGates.BaseGate.GetGateConnectedToInput(mCircuit, selPin) Is Nothing Then
-                For Each ip In selPin.ParentGate.Inputs
-                    If ip = selPin Then
-                        p1 = selPin.ParentGate.UI.Location + selPinUI.Location
-                        p1.X += selPinUI.Width
-                        p1.Y += selPinUI.Height / 2
-
-                        p1 = TransformPoint(p1, selPin.ParentGate)
-
-                        p2 = selPin.ParentGate.UI.Location + selPin.UI.Location
-                        p2.Y += selPin.UI.Height / 2
-                        DrawWire(g, p1, p2, selPin.ParentGate, ip)
-
-                        Exit For
-                    End If
-                Next
-            End If
+    Private Sub DrawWire(g As Graphics, p1 As Point, p2 As Point, pin As LogicGates.Pin, recalculate As Boolean)
+        Dim hash As Integer = GetHash(p1, p2)
+        If WiresSegments.ContainsKey(hash) Then
+            If recalculate Then Exit Sub
+        ElseIf Not recalculate Then
+            Exit Sub
         End If
 
-        For Each gt In mCircuit.Gates
-            If gt.GateType = IBaseGate.GateTypes.Node Then
-                Dim n As LogicGates.Node = CType(gt, LogicGates.Node)
-                For Each op In n.Outputs
-                    p1 = gt.UI.Location + New Point(gt.UI.Width / 2, gt.UI.Height / 2)
-                    p2 = op.Gate.UI.Location + op.Pin.UI.Location
-                    p2.Y += op.Pin.UI.Height / 2
-
-                    p2 = TransformPoint(p2, op.Gate)
-
-                    DrawWire(g, p1, p2, gt, op.Pin)
-                Next
-            ElseIf gt.Output.ConnectedToPinNumber <> -1 Then
-                Dim p As LogicGates.Pin = If(gt.Output = selPin, selPin, gt.Output)
-
-                p1 = gt.UI.Location + p.UI.Location
-                p1.X += p.UI.Width
-                p1.Y += p.UI.Height / 2
-
-                p1 = TransformPoint(p1, gt)
-
-                p2 = p.ConnectedToGate.UI.Location + p.ConnectedToPin.UI.Location
-                p2.Y += p.ConnectedToPin.UI.Height / 2
-
-                DrawWire(g, p1, p2, gt, p)
-            ElseIf gt.Flow <> IBaseGate.DataFlow.In AndAlso gt.Output.ConnectedToPinNumber = -1 AndAlso gt.Output = selPin Then
-                p1 = gt.UI.Location + selPinUI.Location
-                p1.X += selPinUI.Width
-                p1.Y += selPinUI.Height / 2
-
-                p1 = TransformPoint(p1, gt)
-
-                p2 = gt.UI.Location + selPin.UI.Location
-                p2.Y += selPin.UI.Height / 2
-                DrawWire(g, p1, p2, gt, gt.Output)
-            End If
-        Next
-    End Sub
-
-    Private Sub DrawWire(g As Graphics, p1 As Point, p2 As Point, pin As LogicGates.Pin)
-        'If wiresCache.ContainsKey(pin) Then
-        '    Dim l = wiresCache(pin)
-        '    If l.p1 <> p1 OrElse l.p2 <> p2 Then
-        '        wiresCache(pin) = New Line(p1, p2)
-        '        pin.UI.WireLineSegments = FindAndSimplifyPath(ScreenPointToGridPoint(p1), ScreenPointToGridPoint(p2))
-        '    End If
-        'Else
-        '    wiresCache.Add(pin, New Line(p1, p2))
-        '    pin.UI.WireLineSegments = FindAndSimplifyPath(ScreenPointToGridPoint(p1), ScreenPointToGridPoint(p2))
-        'End If
-
-        Dim pts() As Point = FindAndSimplifyPath(ScreenPointToGridPoint(p1), ScreenPointToGridPoint(p2))
+        Dim pts() As Point = If(recalculate, FindAndSimplifyPath(ScreenPointToGridPoint(p1), ScreenPointToGridPoint(p2)), WiresSegments(hash))
         Using c As New Pen(GetWireColor(pin), 2)
             If pts Is Nothing Then
                 ' FIXME: This should call the old/original DrawWire sub, instead of drawing
                 ' a simple diagonal line
                 g.DrawLine(c, p1, p2)
+                If recalculate Then WiresSegments.Add(hash, {p1, p2})
             Else
                 g.DrawLines(c, pts)
-
-                For i As Integer = 0 To pts.Count - 2 Step 2
-                    WiresSegments.Add(New WireSegment(pts(i), pts(i + 1)))
-                Next
+                If recalculate Then WiresSegments.Add(hash, pts)
             End If
         End Using
     End Sub
+
+    Private Function GetHash(p1 As Point, p2 As Point) As Integer
+        Return p1.X * mGridSize.Width + p1.Y + (p1.X * mGridSize.Width + p1.Y) * mGridSize.Height
+    End Function
 
     Public Function GetWireColor(pin As LogicGates.Pin) As Color
         Return If(pin.Value, Color.PaleVioletRed, Color.LightBlue)
@@ -534,58 +466,6 @@
         Next
     End Sub
 
-    Public Sub DrawWire(g As Graphics, p1 As Point, p2 As Point, gt As LogicGates.BaseGate, pin As LogicGates.Pin)
-        If p2.X < p1.X Then
-            Dim tmp = p1
-            p1 = p2
-            p2 = tmp
-        End If
-
-        Dim hp As Integer
-        Dim h = p2.X - p1.X
-        Dim v = p2.Y - p1.Y
-
-        Using p As New Pen(If(pin.Value, Brushes.PaleVioletRed, Brushes.LightBlue), 2)
-            If gt.GateType = IBaseGate.GateTypes.Node Then
-                AddWireSegment(g, p, p1.X, p1.Y, p1.X, p2.Y)
-                AddWireSegment(g, p, p1.X, p2.Y, p2.X, p2.Y)
-            Else
-                If h > v Then
-                    hp = p1.X + (p2.X - p1.X) / 2
-                    AddWireSegment(g, p, p1.X, p1.Y, hp, p1.Y)
-                    AddWireSegment(g, p, hp, p1.Y, hp, p2.Y)
-                    AddWireSegment(g, p, hp, p2.Y, p2.X, p2.Y)
-                Else
-                    hp = p1.Y + (p2.Y - p1.Y) / 2
-                    AddWireSegment(g, p, p1.X, p1.Y, p1.X, hp)
-                    AddWireSegment(g, p, p1.X, hp, p2.X, hp)
-                    AddWireSegment(g, p, p2.X, hp, p2.X, p2.Y)
-                End If
-            End If
-        End Using
-    End Sub
-
-    Private Sub AddWireSegment(g As Graphics, p As Pen, p1 As Point, p2 As Point)
-        'Dim wss As New List(Of WireSegment) From {New WireSegment(p1, p2)}
-
-        'For Each gt In mCircuit.Gates.Where(Function(k) k.GateType <> IBaseGate.GateTypes.Node)
-        '    For Each ws In wss
-        '        If ws.Intersetcs(gt.UI.Bounds) Then
-        '            wss.Remove(ws)
-        '            wss.AddRange(SurroundRectangle(ws, gt.UI.Bounds))
-        '        End If
-        '    Next
-        'Next
-
-        'wiresSegments.AddRange(wss)
-        WiresSegments.Add(New WireSegment(p1, p2))
-        g.DrawLine(p, p1, p2)
-    End Sub
-
-    Private Sub AddWireSegment(g As Graphics, p As Pen, x1 As Integer, y1 As Integer, x2 As Integer, y2 As Integer)
-        AddWireSegment(g, p, New Point(x1, y1), New Point(x2, y2))
-    End Sub
-
     Private Function SurroundRectangle(ws As WireSegment, r As Rectangle) As List(Of WireSegment)
         Return New List(Of WireSegment) From {ws}
     End Function
@@ -598,6 +478,13 @@
     Public Sub DrawSwitch(g As Graphics, gt As LogicGates.BaseGate)
         g.FillRectangle(If(gt.Inputs(0).Value, gt.UI.ActiveColor, gt.UI.FillColor), gt.UI.Bounds)
         g.DrawRectangle(gt.UI.BorderColor, gt.UI.Bounds)
+    End Sub
+
+    Public Sub DrawClock(g As Graphics, gt As LogicGates.BaseGate)
+        g.FillRectangle(gt.UI.FillColor, gt.UI.Bounds)
+        g.DrawRectangle(gt.UI.BorderColor, gt.UI.Bounds)
+
+        g.FillEllipse(If(gt.Output.Value, gt.UI.ActiveColor, gt.UI.ForeColor), gt.UI.Bounds.Right - 20, gt.UI.Y + 6, 12, 12)
     End Sub
 
     Public Sub ApplyRotation(g As Graphics, ui As GateUI)

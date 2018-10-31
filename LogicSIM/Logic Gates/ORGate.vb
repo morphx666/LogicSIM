@@ -23,6 +23,9 @@
             Next
         End Sub
 
+        Protected Friend Overrides Sub Tick()
+        End Sub
+
         Public Shared Function FromXML(xml As XElement, Optional resetID As Boolean = False) As BaseGate
             Dim g As New ORGate()
             g.SetBaseFromXML(xml, resetID)

@@ -10,6 +10,7 @@
         Component
         Led
         Switch
+        Clock
     End Enum
 
     Enum DataFlow
@@ -27,4 +28,9 @@
 
     Sub InitializeInputs()
     Sub Evaluate()
+    Sub Tick()
+    Sub StartTicking()
+    Sub StopTicking()
+
+    Event Ticked()
 End Interface

@@ -71,6 +71,7 @@
     <Compile Include="GraphicsExtension.vb" />
     <Compile Include="Logic Gates\Helpers\GateUI.vb" />
     <Compile Include="Logic Gates\IO\Led.vb" />
+    <Compile Include="Logic Gates\IO\Clock.vb" />
     <Compile Include="Logic Gates\IO\Switch.vb" />
     <Compile Include="UI Controls\CircuitSurface.Designer.vb">
       <DependentUpon>CircuitSurface.vb</DependentUpon>

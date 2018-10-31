@@ -2,7 +2,6 @@
 
 Public Class CircuitSurface
     Private mCircuit As LogicGates.Component
-
     Private mGateRenderer As GateRenderer
 
     Private overGate As BaseGate
@@ -26,8 +25,8 @@ Public Class CircuitSurface
 
     Public Property SnapToGrid As Boolean = True
     Public Property Snap As New Size(10, 10)
-    Public Property [Readonly] As Boolean = False
     Public Property MultiSelect As Boolean = True
+    Public Property [Readonly] As Boolean = False
 
     Private Sub CircuitSurface_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.SetStyle(ControlStyles.AllPaintingInWmPaint, True)
@@ -40,8 +39,10 @@ Public Class CircuitSurface
         AddHandler KeyDown, Sub(s1 As Object, e1 As KeyEventArgs) isCtrlDown = ((e1.Modifiers And Keys.Control) = Keys.Control)
 
         AddHandler Me.SizeChanged, Sub()
-                                       If mGateRenderer IsNot Nothing Then mGateRenderer.SetGridResolution()
-                                       Me.Invalidate()
+                                       If mGateRenderer IsNot Nothing Then
+                                           mGateRenderer.SetGridResolution()
+                                           mGateRenderer.UpgardeGrid()
+                                       End If
                                    End Sub
     End Sub
 
@@ -50,9 +51,30 @@ Public Class CircuitSurface
             Return mCircuit
         End Get
         Set(value As Component)
+            If mCircuit IsNot Nothing Then mCircuit.StopTicking()
+
             mCircuit = value
             mGateRenderer = New GateRenderer(Me, mCircuit)
-            Me.Invalidate()
+            mGateRenderer.UpgardeGrid()
+
+            Dim curTicks As Long
+            Dim lastTicked As Long
+            If mCircuit IsNot Nothing Then
+                AddHandler mCircuit.Ticked, Sub()
+                                                curTicks = Now.Ticks
+                                                If curTicks - lastTicked > 100000 * 5 Then
+                                                    Try
+                                                        mCircuit.Evaluate()
+                                                    Catch
+                                                        ' FIXME: Fix race condition
+                                                    End Try
+                                                    Me.Invalidate()
+                                                    lastTicked = curTicks
+                                                End If
+                                            End Sub
+                mCircuit.StartTicking()
+                mCircuit.ParentControl = Me
+            End If
         End Set
     End Property
 
@@ -76,9 +98,7 @@ Public Class CircuitSurface
 
         If mCircuit Is Nothing Then Exit Sub
 
-        g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-
-        mGateRenderer.UpgardeGrid()
+        'g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
 
         If selRect.Width > 0 AndAlso selRect.Height > 0 Then
             Using b As New SolidBrush(Color.FromArgb(64, Color.DimGray))
@@ -90,6 +110,8 @@ Public Class CircuitSurface
         End If
 
         For Each gt In mCircuit.Gates
+            mGateRenderer.ApplyRotation(g, gt.UI)
+
             If gt.UI.Path Is Nothing Then
                 Select Case gt.GateType
                     Case IBaseGate.GateTypes.AND : gt.UI.Path = mGateRenderer.DrawANDGate(gt)
@@ -99,18 +121,14 @@ Public Class CircuitSurface
                     Case IBaseGate.GateTypes.XOR : gt.UI.Path = mGateRenderer.DrawXORGate(gt)
                     Case IBaseGate.GateTypes.NOT : gt.UI.Path = mGateRenderer.DrawNOTGate(gt)
                     Case IBaseGate.GateTypes.Node : gt.UI.Path = mGateRenderer.DrawNode(gt)
+                    Case IBaseGate.GateTypes.Led : mGateRenderer.DrawLed(g, gt)
+                    Case IBaseGate.GateTypes.Switch : mGateRenderer.DrawSwitch(g, gt)
+                    Case IBaseGate.GateTypes.Clock : mGateRenderer.DrawClock(g, gt)
                     Case IBaseGate.GateTypes.Component : Continue For
                 End Select
             End If
 
-            mGateRenderer.ApplyRotation(g, gt.UI)
-
-            If gt.UI.Path Is Nothing Then
-                Select Case gt.GateType
-                    Case IBaseGate.GateTypes.Led : mGateRenderer.DrawLed(g, gt)
-                    Case IBaseGate.GateTypes.Switch : mGateRenderer.DrawSwitch(g, gt)
-                End Select
-            Else
+            If gt.UI.Path IsNot Nothing Then
                 If gt.GateType = IBaseGate.GateTypes.Node Then
                     Using p As New SolidBrush(mGateRenderer.GetWireColor(gt.Output))
                         g.FillPath(p, gt.UI.Path)
@@ -264,11 +282,11 @@ Public Class CircuitSurface
                     overPin = Nothing
                     selPin = Nothing
                     mCircuit.Evaluate()
-                    Me.Invalidate()
+                    mGateRenderer.UpgardeGrid()
 
                 Case Keys.Tab
                     mSelectedGates.ForEach(Sub(gt) gt.UI.Angle += 15 * If(isShiftDown, -1, 1))
-                    Me.Invalidate()
+                    mGateRenderer.UpgardeGrid()
                     Return False
 
             End Select
@@ -340,6 +358,7 @@ Public Class CircuitSurface
                                                  gt.UI.Bounds.Height)
                 Next
                 mouseOrigin += (mousePosSnaped - mouseOrigin)
+                mGateRenderer.UpgardeGrid()
             ElseIf overGate Is Nothing Then
                 If selPin Is Nothing Then
                     If MultiSelect Then
@@ -353,6 +372,7 @@ Public Class CircuitSurface
                                                      selPin.UI.Bounds.Width,
                                                      selPin.UI.Bounds.Height)
                     mouseOrigin += (mousePosSnaped - mouseOrigin)
+                    mGateRenderer.UpgardeGrid()
                 End If
             End If
         End If
@@ -363,8 +383,7 @@ Public Class CircuitSurface
             If Not isMouseDown AndAlso gt.UI.Bounds.Contains(mousePosSnaped) Then
                 overGate = gt
                 overPin = Nothing
-                Me.Invalidate()
-                Exit Sub
+                Exit sub
             ElseIf Not [Readonly] Then
                 Dim pb As Rectangle
 
@@ -388,7 +407,6 @@ Public Class CircuitSurface
                             overPin = o
                             overPinBounds = New Rectangle(overPin.ParentGate.UI.Location + overPin.UI.Location, overPin.UI.Size)
                             overGate = Nothing
-                            Me.Invalidate()
                             Exit Sub
                         End If
                     Next
@@ -405,7 +423,6 @@ Public Class CircuitSurface
                             overPin = ip
                             overPinBounds = New Rectangle(overPin.ParentGate.UI.Location + overPin.UI.Location, overPin.UI.Size)
                             overGate = Nothing
-                            Me.Invalidate()
                             Exit Sub
                         End If
                     Next
@@ -415,15 +432,9 @@ Public Class CircuitSurface
 
         If overGate IsNot Nothing Then
             overGate = Nothing
-            Me.Invalidate()
-            Exit Sub
         ElseIf overPin IsNot Nothing Then
             overPin = Nothing
-            Me.Invalidate()
-            Exit Sub
         End If
-
-        If isMouseDown Then Me.Invalidate()
     End Sub
 
     Private Sub CircuitSurface_MouseUp(sender As Object, e As MouseEventArgs) Handles Me.MouseUp
@@ -446,8 +457,6 @@ Public Class CircuitSurface
                 Dim testRect As Rectangle = New Rectangle(p1, p2)
                 If testRect.IntersectsWith(gt.UI.Bounds) Then mSelectedGates.Add(gt)
             Next
-
-            If mSelectedGates.Count > 0 Then Me.Invalidate()
             selRect = Rectangle.Empty
         ElseIf selPin IsNot Nothing Then
             If overPin Is Nothing Then
@@ -589,20 +598,6 @@ Public Class CircuitSurface
                         End If
                     Next
 
-                    'If hasInput Then
-                    '    If node.Outputs.Count = 1 Then
-                    '        Dim g = GetGateConnectedToInput(node.Input)
-                    '        g.Output.ConnectTo(node.Outputs(0).Pin.ParentGate, node.Outputs(0).PinNumber)
-                    '        mCircuit.Gates.Remove(node)
-                    '        isDone = False
-                    '        Exit For
-                    '    End If
-                    'Else
-                    '    mCircuit.Gates.Remove(node)
-                    '    isDone = False
-                    '    Exit For
-                    'End If
-
                     If node.Outputs.Count = 1 AndAlso hasInput Then
                         Dim g = BaseGate.GetGateConnectedToInput(mCircuit, node.Input)
                         g.Output.Disconnect()
@@ -622,20 +617,12 @@ Public Class CircuitSurface
             overPin = Nothing
             selPin = Nothing
         End If
-
-        Me.Invalidate()
     End Sub
 
     Private Sub CircuitSurface_Click(sender As Object, e As EventArgs) Handles Me.Click
         If mCircuit Is Nothing OrElse [Readonly] Then Exit Sub
 
-        For Each gt In mCircuit.Gates.Where(Function(k) k.GateType = IBaseGate.GateTypes.Switch)
-            If gt.UI.Bounds.Contains(mousePosSnaped) Then
-                gt.Inputs(0).Value = Not gt.Inputs(0).Value
-                'Me.Invalidate()
-                Exit Sub
-            End If
-        Next
+        If overGate?.GateType = IBaseGate.GateTypes.Switch Then overGate.Inputs(0).Value = Not overGate.Inputs(0).Value
     End Sub
 
     Private Sub CircuitSurface_DoubleClick(sender As Object, e As EventArgs) Handles Me.DoubleClick
@@ -659,11 +646,12 @@ Public Class CircuitSurface
                                                   If e1.KeyCode = Keys.Enter Then RemoveTextbox(True)
                                                   If (e1.Modifiers And Keys.Control) = Keys.Control Then
                                                       Dim gUI As GateUI = CType(txtNameEditor.Tag, BaseGate).UI
+                                                      Dim k As Integer = If((e1.Modifiers And Keys.Shift) = Keys.Shift, 4, 2)
                                                       Select Case e1.KeyCode
-                                                          Case Keys.Up : gUI.NameOffset = New Point(gUI.NameOffset.X, gUI.NameOffset.Y - 1)
-                                                          Case Keys.Down : gUI.NameOffset = New Point(gUI.NameOffset.X, gUI.NameOffset.Y + 1)
-                                                          Case Keys.Left : gUI.NameOffset = New Point(gUI.NameOffset.X - 1, gUI.NameOffset.Y)
-                                                          Case Keys.Right : gUI.NameOffset = New Point(gUI.NameOffset.X + 1, gUI.NameOffset.Y)
+                                                          Case Keys.Up : gUI.NameOffset = New Point(gUI.NameOffset.X, gUI.NameOffset.Y - k)
+                                                          Case Keys.Down : gUI.NameOffset = New Point(gUI.NameOffset.X, gUI.NameOffset.Y + k)
+                                                          Case Keys.Left : gUI.NameOffset = New Point(gUI.NameOffset.X - k, gUI.NameOffset.Y)
+                                                          Case Keys.Right : gUI.NameOffset = New Point(gUI.NameOffset.X + k, gUI.NameOffset.Y)
                                                       End Select
                                                       txtNameEditor.Location = New Point(gUI.X + gUI.NameOffset.X - 1, gUI.Y + gUI.NameOffset.Y - 1)
                                                   End If

@@ -36,6 +36,8 @@ Partial Public Class LogicGates
         Private mCompOutputs As New List(Of PinConnection)
         Private mCompInputs As New List(Of PinConnection)
 
+        Public Property ParentControl As CircuitSurface
+
         Public Overrides ReadOnly Property GateType As IBaseGate.GateTypes
             Get
                 Return IBaseGate.GateTypes.Component
@@ -95,28 +97,33 @@ Partial Public Class LogicGates
         End Sub
 
         Protected Friend Overrides Sub Evaluate()
-            'For Each g As BaseGate In mGates.Where(Function(tg) tg.GateType() = IBaseGate.GateTypes.Switch)
-            '    g.Inputs(0).Value = Not g.Inputs(0).Value
-            '    g.Inputs(0).Value = Not g.Inputs(0).Value
-            'Next
+            SyncLock mGates
+                For Each g As BaseGate In mGates.Where(Function(tg) tg.GateType() <> IBaseGate.GateTypes.Led).ToList()
+                    Dim tmpGate As BaseGate = g.Clone()
 
-            For Each g As BaseGate In mGates.Where(Function(tg) tg.GateType() <> IBaseGate.GateTypes.Led)
-                Dim tmpGate As BaseGate = g.Clone()
+                    For n As Integer = 0 To 2 ^ g.Inputs.Count - 1
+                        For i As Integer = 0 To g.Inputs.Count - 1
+                            g.Inputs(i).Value = (n And (i + 1)) <> 0
+                        Next
+                    Next
 
-                For n As Integer = 0 To 2 ^ g.Inputs.Count - 1
                     For i As Integer = 0 To g.Inputs.Count - 1
-                        g.Inputs(i).Value = (n And (i + 1)) <> 0
+                        g.Inputs(i).Value = tmpGate.Inputs(i).Value
                     Next
                 Next
-
-                For i As Integer = 0 To g.Inputs.Count - 1
-                    g.Inputs(i).Value = tmpGate.Inputs(i).Value
-                Next
-            Next
+            End SyncLock
         End Sub
 
         Protected Overrides Sub InitializeInputs()
             Name = "Component"
+        End Sub
+
+        Protected Friend Overrides Sub Tick()
+            If ParentControl?.Readonly Then Exit Sub
+
+            For Each g As BaseGate In mGates.Where(Function(tg) tg.GateType() = IBaseGate.GateTypes.Clock)
+                g.Tick()
+            Next
         End Sub
 
         Public Shared Function FromXML(xml As XElement) As Component

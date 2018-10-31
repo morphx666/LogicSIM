@@ -1,4 +1,5 @@
-﻿Imports System.Reflection
+﻿Imports System.Threading
+Imports LogicSIM
 
 Partial Public Class LogicGates
     Public MustInherit Class BaseGate
@@ -9,12 +10,16 @@ Partial Public Class LogicGates
         Private mName As String = ""
         Private mInternalID As Guid
         Private mUI As GateUI
-
+        Public Event Ticked() Implements IBaseGate.Ticked
         Protected MustOverride Sub InitializeInputs() Implements IBaseGate.InitializeInputs
         Protected Friend MustOverride Sub Evaluate() Implements IBaseGate.Evaluate
+        Protected Friend MustOverride Sub Tick() Implements IBaseGate.Tick
         Public MustOverride Function Clone() As Object Implements ICloneable.Clone
         Public MustOverride ReadOnly Property GateType As IBaseGate.GateTypes Implements IBaseGate.GateType
         Public MustOverride ReadOnly Property Flow As IBaseGate.DataFlow Implements IBaseGate.Flow
+
+        Private cts As CancellationTokenSource
+        Private ct As CancellationToken
 
         Public Sub New()
             mUI = New GateUI()
@@ -26,6 +31,29 @@ Partial Public Class LogicGates
             mName = Me.GetType().ToString().Split("+")(1).Replace("Gate", "")
 
             InitializeInputs()
+        End Sub
+
+        Public Sub StartTicking() Implements IBaseGate.StartTicking
+            If cts IsNot Nothing Then Exit Sub
+            cts = New CancellationTokenSource()
+            ct = cts.Token
+
+            Task.Run(Sub()
+                         Do
+                             Thread.Sleep(10)
+                             Tick()
+                             RaiseEvent Ticked()
+                         Loop
+                     End Sub, ct)
+        End Sub
+
+        Public Sub StopTicking() Implements IBaseGate.StopTicking
+            If cts IsNot Nothing Then
+                cts.Cancel()
+                ct = Nothing
+                cts.Dispose()
+                cts = Nothing
+            End If
         End Sub
 
         Public Sub New(name As String)

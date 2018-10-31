@@ -14,11 +14,9 @@ Public Class FormMain
             Dim xDoc = XDocument.Parse(IO.File.ReadAllText(testFile))
             circuit = Component.FromXML(xDoc.FirstNode())
         End If
-
         If circuit Is Nothing Then GenTestProject()
 
         CircuitSurfaceContainer.Circuit = circuit
-        circuit.Evaluate()
 
         AddGatesToUI()
     End Sub
@@ -162,10 +160,8 @@ Public Class FormMain
                                                                     End If
                                                                 End If
                                                                 CircuitSurfaceContainer.SelectedGates.Add(g)
-                                                                CircuitSurfaceContainer.Invalidate()
                                                             End If
                                                             CircuitSurfaceGatePicker.SelectedGates.Clear()
-                                                            CircuitSurfaceGatePicker.Invalidate()
                                                         End If
                                                     End Sub
     End Sub
