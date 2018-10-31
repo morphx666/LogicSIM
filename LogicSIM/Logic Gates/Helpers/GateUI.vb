@@ -234,9 +234,9 @@ Public Class GateUI
             .ActiveColor = Color.FromArgb(xml.<activeColor>.Value),
             .ForeColor = Color.FromArgb(xml.<foreColor>.Value),
             .Font = LogicGates.BaseGate.XMLToFont(xml.<font>(0)),
-            .NameOffset = LogicGates.BaseGate.ParseString(Of Point)(xml.<nameOffset>.Value)
+            .NameOffset = LogicGates.BaseGate.ParseString(Of Point)(xml.<nameOffset>.Value),
+            .Angle = Double.Parse(xml.<angle>.Value)
         }
-        Double.TryParse(xml.<angle>.Value, ui.Angle)
 
         Return ui
     End Function

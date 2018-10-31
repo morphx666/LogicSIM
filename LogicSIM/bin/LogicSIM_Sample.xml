@@ -2185,9 +2185,9 @@
               <gate>04198143-6184-4dd2-b5e5-724f01a3bff7</gate>
               <pinNumber>0</pinNumber>
             </connectedTo>
-            <value>false</value>
+            <value>true</value>
             <pinNumber>0</pinNumber>
-            <value>false</value>
+            <value>true</value>
             <ui>
               <location>{X=100,Y=26}</location>
               <size>{Width=10, Height=10}</size>
@@ -2225,7 +2225,7 @@
         <internals>
           <phase>0</phase>
           <frequency>2</frequency>
-          <dutyCycle>0.42</dutyCycle>
+          <dutyCycle>0.75</dutyCycle>
         </internals>
       </gate>
       <gate>
@@ -2240,9 +2240,9 @@
               <gate></gate>
               <pinNumber>-1</pinNumber>
             </connectedTo>
-            <value>false</value>
+            <value>true</value>
             <pinNumber>0</pinNumber>
-            <value>false</value>
+            <value>true</value>
             <ui>
               <location>{X=-14,Y=9}</location>
               <size>{Width=10, Height=10}</size>
@@ -2269,9 +2269,9 @@
               <gate></gate>
               <pinNumber>-1</pinNumber>
             </connectedTo>
-            <value>false</value>
+            <value>true</value>
             <pinNumber>0</pinNumber>
-            <value>false</value>
+            <value>true</value>
             <ui>
               <location>{X=0,Y=0}</location>
               <size>{Width=10, Height=10}</size>

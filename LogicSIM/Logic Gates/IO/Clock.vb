@@ -31,10 +31,6 @@
             End If
         End Sub
 
-        Public Overrides Function Clone() As Object
-            Return Clock.FromXML(Me.ToXML(), True)
-        End Function
-
         Protected Friend Overrides Sub Evaluate()
         End Sub
 
@@ -47,11 +43,6 @@
         Public Shared Function FromXML(xml As XElement, Optional resetID As Boolean = False) As BaseGate
             Dim g As New Clock()
             g.SetBaseFromXML(xml, resetID)
-
-            g.Phase = Double.Parse(xml.<internals>.<phase>.Value)
-            g.Frequency = Double.Parse(xml.<internals>.<frequency>.Value)
-            g.DutyCycle = Double.Parse(xml.<internals>.<dutyCycle>.Value)
-
             Return g
         End Function
 
@@ -67,11 +58,22 @@
             Return xml
         End Function
 
+        Public Overrides Sub SetBaseFromXML(xml As XElement, Optional resetID As Boolean = False)
+            MyBase.SetBaseFromXML(xml, resetID)
+            Phase = Double.Parse(xml.<internals>.<phase>.Value)
+            Frequency = Double.Parse(xml.<internals>.<frequency>.Value)
+            DutyCycle = Double.Parse(xml.<internals>.<dutyCycle>.Value)
+        End Sub
+
         Protected Overrides Sub InitializeInputs()
             Name = "CLOCK"
             Inputs.Add(New Pin(Me, Inputs.Count)) ' Disable clock = 1
             Inputs.Last().UI.Y = Output.UI.Y
         End Sub
+
+        Public Overrides Function Clone() As Object
+            Return Clock.FromXML(Me.ToXML(), True)
+        End Function
 
         Public Overrides ReadOnly Property Flow As IBaseGate.DataFlow
             Get

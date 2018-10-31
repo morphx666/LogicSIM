@@ -99,8 +99,13 @@ Partial Public Class LogicGates
 
         Protected Friend Overrides Sub Evaluate()
             SyncLock mGates
-                For Each g As BaseGate In mGates.Where(Function(tg) tg.GateType() <> IBaseGate.GateTypes.Led).ToList()
-                    Dim tmpGate As BaseGate = g.Clone()
+                For Each g As BaseGate In mGates.Where(Function(tg) tg.Flow <> IBaseGate.DataFlow.In)
+                    'Dim tmpGate As BaseGate = g.Clone()
+
+                    Dim v(g.Inputs.Count - 1) As Boolean
+                    For i As Integer = 0 To g.Inputs.Count - 1
+                        v(i) = g.Inputs(i).Value
+                    Next
 
                     For n As Integer = 0 To 2 ^ g.Inputs.Count - 1
                         For i As Integer = 0 To g.Inputs.Count - 1
@@ -109,7 +114,8 @@ Partial Public Class LogicGates
                     Next
 
                     For i As Integer = 0 To g.Inputs.Count - 1
-                        g.Inputs(i).Value = tmpGate.Inputs(i).Value
+                        'g.Inputs(i).Value = tmpGate.Inputs(i).Value
+                        g.Inputs(i).Value = v(i)
                     Next
                 Next
             End SyncLock

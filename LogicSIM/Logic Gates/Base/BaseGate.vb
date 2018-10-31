@@ -129,7 +129,7 @@ Partial Public Class LogicGates
             Return Not (g1 = g2)
         End Operator
 
-        Protected Friend Sub SetBaseFromXML(xml As XElement, Optional resetID As Boolean = False)
+        Public Overridable Sub SetBaseFromXML(xml As XElement, Optional resetID As Boolean = False)
             mInternalID = If(resetID, Guid.NewGuid, Guid.Parse(xml.<id>.Value))
             mName = xml.<name>.Value
             mUI = GateUI.FromXML(xml.<ui>(0))

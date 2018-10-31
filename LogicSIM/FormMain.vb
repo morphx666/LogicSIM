@@ -6,7 +6,10 @@ Public Class FormMain
     Private Const nisInfo = "No item selected"
 
     Private Sub FormMain_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        IO.File.WriteAllText(testFile, circuit.ToXML().ToString())
+        If circuit IsNot Nothing Then
+            circuit.StopTicking()
+            IO.File.WriteAllText(testFile, circuit.ToXML().ToString())
+        End If
     End Sub
 
     Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load

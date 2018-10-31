@@ -485,18 +485,18 @@
 
         ' FIXME: This needs to be cached inside a DirectBitmap
         Dim gc As LogicGates.Clock = CType(gt, LogicGates.Clock)
+        Dim f As Integer = gc.Phase
         Dim l As Integer = gt.UI.Bounds.Width / 6
         Dim lx As Integer = gt.UI.X + l
         Dim h As Integer = gt.UI.Bounds.Height / 2
-        Dim x As Integer
         Dim y As Integer = gt.UI.Bounds.Bottom - h
         Dim o As Integer = 0
         h -= 12
         Using p As New Pen(Color.Black, 2)
-            For x = lx To gt.UI.Bounds.Right - l - 1 Step 2
+            For x As Integer = lx To gt.UI.Bounds.Right - l - 1 Step 2
                 g.DrawLine(p, x, y + o, x + 1, y + o)
 
-                If x - lx >= If(o = 0, 1 - gc.DutyCycle, gc.DutyCycle) * h Then
+                If (x - lx) + f >= If(o = 0, gc.DutyCycle, 1 - gc.DutyCycle) * h Then
                     If o = 0 Then
                         g.DrawLine(p, x, y, x, y + h)
                     Else
