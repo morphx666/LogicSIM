@@ -98,7 +98,7 @@ Public Class CircuitSurface
 
         If mCircuit Is Nothing Then Exit Sub
 
-        'g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+        g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
 
         If selRect.Width > 0 AndAlso selRect.Height > 0 Then
             Using b As New SolidBrush(Color.FromArgb(64, Color.DimGray))

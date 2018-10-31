@@ -295,7 +295,6 @@
 
     ' http://www.policyalmanac.org/games/aStarTutorial.htm
     ' http://www.codeguru.com/csharp/csharp/cs_misc/designtechniques/article.php/c12527/AStar-A-Implementation-in-C-Path-Finding-PathFinder.htm#page-2
-    ' E:\Documents\Visual Studio 2013\Projects\ThirdParty\PathFinder_source
     Public Sub DrawWiresAStar(g As Graphics, r As Rectangle, selPin As LogicGates.Pin, selPinUI As GateUI)
         Dim p1 As Point
         Dim p2 As Point
