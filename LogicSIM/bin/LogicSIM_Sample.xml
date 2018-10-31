@@ -2145,13 +2145,13 @@
         </ui>
       </gate>
       <gate>
-        <id>cb79424f-cc26-4a39-b54a-24e8025ac911</id>
+        <id>ed9fc0e3-43c1-4a58-8acc-754cc33ced2a</id>
         <type>Clock</type>
-        <name>Clock</name>
+        <name>CLOCK</name>
         <inputPins>
           <pin>
             <name>PIN</name>
-            <parentGate>cb79424f-cc26-4a39-b54a-24e8025ac911</parentGate>
+            <parentGate>ed9fc0e3-43c1-4a58-8acc-754cc33ced2a</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -2180,9 +2180,9 @@
         <outputPin>
           <pin>
             <name>PIN</name>
-            <parentGate>cb79424f-cc26-4a39-b54a-24e8025ac911</parentGate>
+            <parentGate>ed9fc0e3-43c1-4a58-8acc-754cc33ced2a</parentGate>
             <connectedTo>
-              <gate>e124fa9c-5f0f-4719-b495-a1d9b64910b9</gate>
+              <gate>04198143-6184-4dd2-b5e5-724f01a3bff7</gate>
               <pinNumber>0</pinNumber>
             </connectedTo>
             <value>false</value>
@@ -2207,7 +2207,7 @@
           </pin>
         </outputPin>
         <ui>
-          <location>{X=420,Y=410}</location>
+          <location>{X=370,Y=410}</location>
           <size>{Width=100, Height=62}</size>
           <borderColor>-1</borderColor>
           <borderWidth>2</borderWidth>
@@ -2222,15 +2222,20 @@
           <nameOffset>{X=26,Y=3}</nameOffset>
           <angle>0</angle>
         </ui>
+        <internals>
+          <phase>0</phase>
+          <frequency>2</frequency>
+          <dutyCycle>0.42</dutyCycle>
+        </internals>
       </gate>
       <gate>
-        <id>e124fa9c-5f0f-4719-b495-a1d9b64910b9</id>
+        <id>04198143-6184-4dd2-b5e5-724f01a3bff7</id>
         <type>Led</type>
         <name>LED</name>
         <inputPins>
           <pin>
             <name>PIN</name>
-            <parentGate>e124fa9c-5f0f-4719-b495-a1d9b64910b9</parentGate>
+            <parentGate>04198143-6184-4dd2-b5e5-724f01a3bff7</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -2259,7 +2264,7 @@
         <outputPin>
           <pin>
             <name>PIN</name>
-            <parentGate>e124fa9c-5f0f-4719-b495-a1d9b64910b9</parentGate>
+            <parentGate>04198143-6184-4dd2-b5e5-724f01a3bff7</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -2286,7 +2291,7 @@
           </pin>
         </outputPin>
         <ui>
-          <location>{X=605,Y=425}</location>
+          <location>{X=595,Y=425}</location>
           <size>{Width=28, Height=28}</size>
           <borderColor>-1</borderColor>
           <borderWidth>2</borderWidth>

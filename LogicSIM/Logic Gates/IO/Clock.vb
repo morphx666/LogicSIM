@@ -47,7 +47,24 @@
         Public Shared Function FromXML(xml As XElement, Optional resetID As Boolean = False) As BaseGate
             Dim g As New Clock()
             g.SetBaseFromXML(xml, resetID)
+
+            g.Phase = Double.Parse(xml.<internals>.<phase>.Value)
+            g.Frequency = Double.Parse(xml.<internals>.<frequency>.Value)
+            g.DutyCycle = Double.Parse(xml.<internals>.<dutyCycle>.Value)
+
             Return g
+        End Function
+
+        Public Overrides Function ToXML() As XElement
+            Dim xml = MyBase.ToXML()
+
+            xml.Add(<internals>
+                        <phase><%= Phase %></phase>
+                        <frequency><%= Frequency %></frequency>
+                        <dutyCycle><%= DutyCycle %></dutyCycle>
+                    </internals>)
+
+            Return xml
         End Function
 
         Protected Overrides Sub InitializeInputs()
