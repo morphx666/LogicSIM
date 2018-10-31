@@ -498,9 +498,9 @@
 
                 If x - lx >= If(o = 0, 1 - gc.DutyCycle, gc.DutyCycle) * h Then
                     If o = 0 Then
-                        g.DrawLine(p, lx, y, lx, y + h)
+                        g.DrawLine(p, x, y, x, y + h)
                     Else
-                        g.DrawLine(p, lx, y + h, lx, y)
+                        g.DrawLine(p, x, y + h, x, y)
                     End If
                     lx = x
                     o = If(o = 0, h, 0)
