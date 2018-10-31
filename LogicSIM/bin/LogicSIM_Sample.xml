@@ -2185,9 +2185,9 @@
               <gate>04198143-6184-4dd2-b5e5-724f01a3bff7</gate>
               <pinNumber>0</pinNumber>
             </connectedTo>
-            <value>true</value>
+            <value>false</value>
             <pinNumber>0</pinNumber>
-            <value>true</value>
+            <value>false</value>
             <ui>
               <location>{X=100,Y=26}</location>
               <size>{Width=10, Height=10}</size>
@@ -2240,9 +2240,9 @@
               <gate></gate>
               <pinNumber>-1</pinNumber>
             </connectedTo>
-            <value>true</value>
+            <value>false</value>
             <pinNumber>0</pinNumber>
-            <value>true</value>
+            <value>false</value>
             <ui>
               <location>{X=-14,Y=9}</location>
               <size>{Width=10, Height=10}</size>
@@ -2269,9 +2269,9 @@
               <gate></gate>
               <pinNumber>-1</pinNumber>
             </connectedTo>
-            <value>true</value>
+            <value>false</value>
             <pinNumber>0</pinNumber>
-            <value>true</value>
+            <value>false</value>
             <ui>
               <location>{X=0,Y=0}</location>
               <size>{Width=10, Height=10}</size>
