@@ -1,7 +1,7 @@
 # LogicSIM
 Logic simulator written in VB.NET
 
-![LogicSIM full adder](https://xfx.net/stackoverflow/LogicSIM/logicsim03.png)
+![LogicSIM full adder](https://xfx.net/stackoverflow/LogicSIM/logicsim04.png)
 
 ### Currently supported gates
 
