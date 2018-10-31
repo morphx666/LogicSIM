@@ -13,3 +13,17 @@ Logic simulator written in VB.NET
 | NAND        |           |
 | NOT         |           |
 | XOR         |           |
+
+### Working with the simulator
+
+The program lacks lots of the features expected in an end-user/production application, as it is a work in progress.
+At this moment it's more a proof of concept than a usable logic simulator.
+
+* Adding: Select a gate from the left pane and the click on the circuit surface.
+* Deleting: Select a gate from the circuit surface and press de Delete key.
+* Rotating: Select a gate from the circuit surface and press de Tab key. Hold the Shift key to rotate the gate counter clockwise.
+* Connecting: Drag a wire from either an input or an output pin to the desired pin.
+* Multiple Connections: Add a Node to the circuit surface to connect up to four gates.
+* Saving/Loading: Not implemented. When closing the simulator, the circuit will be saved in an XML file which will be automatically loaded when re-opening the program.
+* Renaming a gate: Double click on a gate to change its name. While renaming a gate, hold the Shift key down and use the arrow keys to change the gate's name position.
+* Changing other parameters: At this moment there's no UI to change the gates' parameters, other than the name (label).
