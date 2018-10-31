@@ -10,10 +10,9 @@ Partial Public Class LogicGates
         Private mName As String = ""
         Private mInternalID As Guid
         Private mUI As GateUI
-        Public Event Ticked() Implements IBaseGate.Ticked
+        Public Event Ticked(ticksCount As Long) Implements IBaseGate.Ticked
         Protected MustOverride Sub InitializeInputs() Implements IBaseGate.InitializeInputs
         Protected Friend MustOverride Sub Evaluate() Implements IBaseGate.Evaluate
-        Protected Friend MustOverride Sub Tick() Implements IBaseGate.Tick
         Public MustOverride Function Clone() As Object Implements ICloneable.Clone
         <BrowsableAttribute(False)> Public MustOverride ReadOnly Property GateType As IBaseGate.GateTypes Implements IBaseGate.GateType
         <BrowsableAttribute(False)> Public MustOverride ReadOnly Property Flow As IBaseGate.DataFlow Implements IBaseGate.Flow
@@ -33,21 +32,28 @@ Partial Public Class LogicGates
             InitializeInputs()
         End Sub
 
-        Public Sub StartTicking() Implements IBaseGate.StartTicking
+        Protected Friend Overridable Sub Tick(ticksCount As Long, lastTicksCount As Long) Implements IBaseGate.Tick
+        End Sub
+
+        Public Overridable Sub StartTicking() Implements IBaseGate.StartTicking
             If cts IsNot Nothing Then Exit Sub
             cts = New CancellationTokenSource()
             ct = cts.Token
 
             Task.Run(Sub()
+                         Dim curTicks As Long
+                         Dim lastTicks As Long
                          Do
+                             curTicks = Now.Ticks
+                             Tick(curTicks, lastTicks)
                              Thread.Sleep(10)
-                             Tick()
-                             RaiseEvent Ticked()
+                             RaiseEvent Ticked(curTicks)
+                             lastTicks = Now.Ticks
                          Loop
                      End Sub, ct)
         End Sub
 
-        Public Sub StopTicking() Implements IBaseGate.StopTicking
+        Public Overridable Sub StopTicking() Implements IBaseGate.StopTicking
             If cts IsNot Nothing Then
                 cts.Cancel()
                 ct = Nothing

@@ -7,6 +7,7 @@
         Public Property DutyCycle As Double = 0.5 ' 50%
 
         Private lastTickCount As Long
+        Private ticksCounter As Long
 
         Public Sub New()
             MyBase.New()
@@ -19,16 +20,21 @@
             Output.UI.Y = UI.Height / 2 - Output.UI.Height / 2
 
             UI.NameOffset = New Point(26, 3)
-
-            lastTickCount = Now.Ticks
         End Sub
 
-        Protected Friend Overrides Sub Tick()
-            Dim curTicks As Long = Now.Ticks
-            If curTicks - lastTickCount > If(Output.Value, DutyCycle, 1 - DutyCycle) * 10000000 / Frequency + Phase Then
-                lastTickCount = curTicks
+        Protected Friend Overrides Sub Tick(ticksCount As Long, lastTicksCount As Long)
+            ticksCounter += ticksCount - lastTickCount
+            If ticksCounter > If(Output.Value, DutyCycle, 1 - DutyCycle) * 100000000 / Frequency + Phase Then
+                ticksCounter = 0
+                lastTickCount = ticksCount
                 Output.Value = (Not Output.Value) And (Not Inputs(0).Value)
             End If
+        End Sub
+
+        Public Overrides Sub StartTicking()
+            MyBase.StartTicking()
+            lastTickCount = Now.Ticks
+            ticksCounter = 0
         End Sub
 
         Protected Friend Overrides Sub Evaluate()

@@ -45,7 +45,10 @@
                 Next
             End If
 
-            mOutputs(outputPinNumber) = New Component.PinConnection(gate, pinNumber, outputPinNumber)
+            Try
+                mOutputs(outputPinNumber) = New Component.PinConnection(gate, pinNumber, outputPinNumber)
+            Catch ex As Exception
+            End Try
         End Sub
 
         Public Sub ConnectTo(gate As BaseGate, pin As Pin)
@@ -110,9 +113,6 @@
 
             PositionPin(Input, 180)
             PositionOutputs()
-        End Sub
-
-        Protected Friend Overrides Sub Tick()
         End Sub
 
         Public Shared Function FromXML(xml As XElement, Optional resetID As Boolean = False) As BaseGate

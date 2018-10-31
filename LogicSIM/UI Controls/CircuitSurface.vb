@@ -59,19 +59,16 @@ Public Class CircuitSurface
             mGateRenderer = New GateRenderer(Me, mCircuit)
             mGateRenderer.UpgardeGrid()
 
-            Dim curTicks As Long
             Dim lastTicked As Long
             If mCircuit IsNot Nothing Then
-                AddHandler mCircuit.Ticked, Sub()
-                                                curTicks = Now.Ticks
-                                                If curTicks - lastTicked > 100000 * 5 Then
+                AddHandler mCircuit.Ticked, Sub(ticksCount As Long)
+                                                If ticksCount - lastTicked > 100000 * 15 Then
                                                     Try
                                                         mCircuit.Evaluate()
-                                                    Catch
-                                                        ' FIXME: Fix race condition
+                                                    Catch ' FIXME: Fix race condition
                                                     End Try
                                                     Me.Invalidate()
-                                                    lastTicked = curTicks
+                                                    lastTicked = ticksCount
                                                 End If
                                             End Sub
                 mCircuit.StartTicking()

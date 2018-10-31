@@ -15,9 +15,6 @@
             UI.NameOffset = New Point(0, UI.Height)
         End Sub
 
-        Protected Friend Overrides Sub Tick()
-        End Sub
-
         Public Overrides Function Clone() As Object
             Return Led.FromXML(Me.ToXML(), True)
         End Function

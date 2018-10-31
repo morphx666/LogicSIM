@@ -100,8 +100,6 @@ Partial Public Class LogicGates
         Protected Friend Overrides Sub Evaluate()
             SyncLock mGates
                 For Each g As BaseGate In mGates.Where(Function(tg) tg.Flow <> IBaseGate.DataFlow.In)
-                    'Dim tmpGate As BaseGate = g.Clone()
-
                     Dim v(g.Inputs.Count - 1) As Boolean
                     For i As Integer = 0 To g.Inputs.Count - 1
                         v(i) = g.Inputs(i).Value
@@ -114,7 +112,6 @@ Partial Public Class LogicGates
                     Next
 
                     For i As Integer = 0 To g.Inputs.Count - 1
-                        'g.Inputs(i).Value = tmpGate.Inputs(i).Value
                         g.Inputs(i).Value = v(i)
                     Next
                 Next
@@ -125,11 +122,11 @@ Partial Public Class LogicGates
             Name = "Component"
         End Sub
 
-        Protected Friend Overrides Sub Tick()
+        Protected Friend Overrides Sub Tick(ticksCount As Long, lastTicksCount As Long)
             If ParentControl?.Readonly Then Exit Sub
 
             For Each g As BaseGate In mGates.Where(Function(tg) tg.GateType() = IBaseGate.GateTypes.Clock)
-                g.Tick()
+                g.Tick(ticksCount, lastTicksCount)
             Next
         End Sub
 

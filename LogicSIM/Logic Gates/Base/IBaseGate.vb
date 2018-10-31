@@ -28,9 +28,9 @@
 
     Sub InitializeInputs()
     Sub Evaluate()
-    Sub Tick()
+    Sub Tick(ticksCount As Long, lastTicksCount As Long)
     Sub StartTicking()
     Sub StopTicking()
 
-    Event Ticked()
+    Event Ticked(ticksCount As Long)
 End Interface

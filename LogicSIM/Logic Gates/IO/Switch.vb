@@ -15,9 +15,6 @@
             UI.NameOffset = New Point(3, 3)
         End Sub
 
-        Protected Friend Overrides Sub Tick()
-        End Sub
-
         Public Overrides Function Clone() As Object
             Return Switch.FromXML(Me.ToXML(), True)
         End Function
