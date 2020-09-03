@@ -1,13 +1,13 @@
 <component>
   <gate>
-    <id>95a01110-4e09-4455-b470-7c41729e7a7e</id>
+    <id>a34be520-555a-4ee5-a0ac-caf8ca23411a</id>
     <type>Component</type>
     <name>Full Adder</name>
     <inputPins />
     <outputPin>
       <pin>
         <name>PIN</name>
-        <parentGate>95a01110-4e09-4455-b470-7c41729e7a7e</parentGate>
+        <parentGate>a34be520-555a-4ee5-a0ac-caf8ca23411a</parentGate>
         <connectedTo>
           <gate></gate>
           <pinNumber>-1</pinNumber>
@@ -53,13 +53,13 @@
   <internals>
     <gates>
       <gate>
-        <id>2113bf9f-f1e3-4cc1-8336-94b55e95f885</id>
+        <id>a7409e19-4d71-4b37-a4a2-cd6100348a4a</id>
         <type>XORGate</type>
         <name>XOR 1</name>
         <inputPins>
           <pin>
             <name>PIN</name>
-            <parentGate>2113bf9f-f1e3-4cc1-8336-94b55e95f885</parentGate>
+            <parentGate>a7409e19-4d71-4b37-a4a2-cd6100348a4a</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -86,7 +86,7 @@
           </pin>
           <pin>
             <name>PIN</name>
-            <parentGate>2113bf9f-f1e3-4cc1-8336-94b55e95f885</parentGate>
+            <parentGate>a7409e19-4d71-4b37-a4a2-cd6100348a4a</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -115,9 +115,9 @@
         <outputPin>
           <pin>
             <name>PIN</name>
-            <parentGate>2113bf9f-f1e3-4cc1-8336-94b55e95f885</parentGate>
+            <parentGate>a7409e19-4d71-4b37-a4a2-cd6100348a4a</parentGate>
             <connectedTo>
-              <gate>1bf75bae-c975-4230-a574-cf3f5587bced</gate>
+              <gate>aff0d953-933b-4b82-b4cb-347f3ba03771</gate>
               <pinNumber>0</pinNumber>
             </connectedTo>
             <value>false</value>
@@ -142,7 +142,7 @@
           </pin>
         </outputPin>
         <ui>
-          <location>{X=300,Y=20}</location>
+          <location>{X=520,Y=40}</location>
           <size>{Width=100, Height=80}</size>
           <borderColor>-1</borderColor>
           <borderWidth>2</borderWidth>
@@ -159,13 +159,13 @@
         </ui>
       </gate>
       <gate>
-        <id>589d8fd3-8291-4ac1-9f6c-9da3b0f16c75</id>
+        <id>27d4a277-2bd2-4968-a882-c3a71177d4a7</id>
         <type>XORGate</type>
         <name>XOR 2</name>
         <inputPins>
           <pin>
             <name>PIN</name>
-            <parentGate>589d8fd3-8291-4ac1-9f6c-9da3b0f16c75</parentGate>
+            <parentGate>27d4a277-2bd2-4968-a882-c3a71177d4a7</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -192,7 +192,7 @@
           </pin>
           <pin>
             <name>PIN</name>
-            <parentGate>589d8fd3-8291-4ac1-9f6c-9da3b0f16c75</parentGate>
+            <parentGate>27d4a277-2bd2-4968-a882-c3a71177d4a7</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -221,9 +221,9 @@
         <outputPin>
           <pin>
             <name>PIN</name>
-            <parentGate>589d8fd3-8291-4ac1-9f6c-9da3b0f16c75</parentGate>
+            <parentGate>27d4a277-2bd2-4968-a882-c3a71177d4a7</parentGate>
             <connectedTo>
-              <gate>058676cd-81da-46bd-ab9c-8111024dc5dc</gate>
+              <gate>6e1787e8-df05-4bb0-b731-dff1a7c3299c</gate>
               <pinNumber>0</pinNumber>
             </connectedTo>
             <value>false</value>
@@ -248,7 +248,7 @@
           </pin>
         </outputPin>
         <ui>
-          <location>{X=550,Y=40}</location>
+          <location>{X=790,Y=60}</location>
           <size>{Width=100, Height=80}</size>
           <borderColor>-1</borderColor>
           <borderWidth>2</borderWidth>
@@ -265,13 +265,13 @@
         </ui>
       </gate>
       <gate>
-        <id>4b9b28eb-2903-48d8-af46-2fb70d1c0a88</id>
+        <id>13e2802a-72e4-45a8-a731-b6141a12abeb</id>
         <type>ANDGate</type>
         <name>AND 1</name>
         <inputPins>
           <pin>
             <name>PIN</name>
-            <parentGate>4b9b28eb-2903-48d8-af46-2fb70d1c0a88</parentGate>
+            <parentGate>13e2802a-72e4-45a8-a731-b6141a12abeb</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -298,7 +298,7 @@
           </pin>
           <pin>
             <name>PIN</name>
-            <parentGate>4b9b28eb-2903-48d8-af46-2fb70d1c0a88</parentGate>
+            <parentGate>13e2802a-72e4-45a8-a731-b6141a12abeb</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -327,9 +327,9 @@
         <outputPin>
           <pin>
             <name>PIN</name>
-            <parentGate>4b9b28eb-2903-48d8-af46-2fb70d1c0a88</parentGate>
+            <parentGate>13e2802a-72e4-45a8-a731-b6141a12abeb</parentGate>
             <connectedTo>
-              <gate>acb6795e-922c-4cd6-aa95-620c306ec1ee</gate>
+              <gate>9bc38906-af1f-4314-87f7-ee6b296f87e4</gate>
               <pinNumber>0</pinNumber>
             </connectedTo>
             <value>false</value>
@@ -354,7 +354,7 @@
           </pin>
         </outputPin>
         <ui>
-          <location>{X=550,Y=180}</location>
+          <location>{X=780,Y=200}</location>
           <size>{Width=100, Height=80}</size>
           <borderColor>-1</borderColor>
           <borderWidth>2</borderWidth>
@@ -371,13 +371,13 @@
         </ui>
       </gate>
       <gate>
-        <id>7908b6c6-58ad-4769-a39f-65aa45454768</id>
+        <id>867d6fd3-665a-4d25-b05e-9a3ffc51a509</id>
         <type>ANDGate</type>
         <name>AND 2</name>
         <inputPins>
           <pin>
             <name>PIN</name>
-            <parentGate>7908b6c6-58ad-4769-a39f-65aa45454768</parentGate>
+            <parentGate>867d6fd3-665a-4d25-b05e-9a3ffc51a509</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -404,7 +404,7 @@
           </pin>
           <pin>
             <name>PIN</name>
-            <parentGate>7908b6c6-58ad-4769-a39f-65aa45454768</parentGate>
+            <parentGate>867d6fd3-665a-4d25-b05e-9a3ffc51a509</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -433,9 +433,9 @@
         <outputPin>
           <pin>
             <name>PIN</name>
-            <parentGate>7908b6c6-58ad-4769-a39f-65aa45454768</parentGate>
+            <parentGate>867d6fd3-665a-4d25-b05e-9a3ffc51a509</parentGate>
             <connectedTo>
-              <gate>acb6795e-922c-4cd6-aa95-620c306ec1ee</gate>
+              <gate>9bc38906-af1f-4314-87f7-ee6b296f87e4</gate>
               <pinNumber>1</pinNumber>
             </connectedTo>
             <value>false</value>
@@ -460,7 +460,7 @@
           </pin>
         </outputPin>
         <ui>
-          <location>{X=550,Y=270}</location>
+          <location>{X=520,Y=240}</location>
           <size>{Width=100, Height=80}</size>
           <borderColor>-1</borderColor>
           <borderWidth>2</borderWidth>
@@ -477,13 +477,13 @@
         </ui>
       </gate>
       <gate>
-        <id>acb6795e-922c-4cd6-aa95-620c306ec1ee</id>
+        <id>9bc38906-af1f-4314-87f7-ee6b296f87e4</id>
         <type>ORGate</type>
         <name>OR</name>
         <inputPins>
           <pin>
             <name>PIN</name>
-            <parentGate>acb6795e-922c-4cd6-aa95-620c306ec1ee</parentGate>
+            <parentGate>9bc38906-af1f-4314-87f7-ee6b296f87e4</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -510,7 +510,7 @@
           </pin>
           <pin>
             <name>PIN</name>
-            <parentGate>acb6795e-922c-4cd6-aa95-620c306ec1ee</parentGate>
+            <parentGate>9bc38906-af1f-4314-87f7-ee6b296f87e4</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -539,9 +539,9 @@
         <outputPin>
           <pin>
             <name>PIN</name>
-            <parentGate>acb6795e-922c-4cd6-aa95-620c306ec1ee</parentGate>
+            <parentGate>9bc38906-af1f-4314-87f7-ee6b296f87e4</parentGate>
             <connectedTo>
-              <gate>c47ca865-500e-49da-8e58-4ad424c88186</gate>
+              <gate>4159f5af-dc82-411e-80fd-4e0143f95d2b</gate>
               <pinNumber>0</pinNumber>
             </connectedTo>
             <value>false</value>
@@ -566,7 +566,7 @@
           </pin>
         </outputPin>
         <ui>
-          <location>{X=750,Y=230}</location>
+          <location>{X=990,Y=250}</location>
           <size>{Width=100, Height=80}</size>
           <borderColor>-1</borderColor>
           <borderWidth>2</borderWidth>
@@ -583,13 +583,13 @@
         </ui>
       </gate>
       <gate>
-        <id>4c3e534c-d74f-42f8-bdef-0b7bacc00f59</id>
+        <id>d0551e18-2056-48d6-8164-a2dbc37003b7</id>
         <type>Node</type>
         <name>1</name>
         <inputPins>
           <pin>
             <name>PIN</name>
-            <parentGate>4c3e534c-d74f-42f8-bdef-0b7bacc00f59</parentGate>
+            <parentGate>d0551e18-2056-48d6-8164-a2dbc37003b7</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -618,7 +618,7 @@
         <outputPin>
           <pin>
             <name>PIN</name>
-            <parentGate>4c3e534c-d74f-42f8-bdef-0b7bacc00f59</parentGate>
+            <parentGate>d0551e18-2056-48d6-8164-a2dbc37003b7</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -645,7 +645,7 @@
           </pin>
         </outputPin>
         <ui>
-          <location>{X=220,Y=35}</location>
+          <location>{X=460,Y=55}</location>
           <size>{Width=10, Height=10}</size>
           <borderColor>-1</borderColor>
           <borderWidth>2</borderWidth>
@@ -663,12 +663,12 @@
         <internals>
           <outputPins>
             <gatePin>
-              <gate>2113bf9f-f1e3-4cc1-8336-94b55e95f885</gate>
+              <gate>a7409e19-4d71-4b37-a4a2-cd6100348a4a</gate>
               <pinNumber>0</pinNumber>
               <outputPinNumber>1</outputPinNumber>
             </gatePin>
             <gatePin>
-              <gate>7908b6c6-58ad-4769-a39f-65aa45454768</gate>
+              <gate>867d6fd3-665a-4d25-b05e-9a3ffc51a509</gate>
               <pinNumber>0</pinNumber>
               <outputPinNumber>2</outputPinNumber>
             </gatePin>
@@ -676,13 +676,13 @@
         </internals>
       </gate>
       <gate>
-        <id>a3fe7d80-c3d6-4669-bf22-79d6046fc193</id>
+        <id>4b65f157-b1c9-4245-a331-33c50ea2c5fe</id>
         <type>Node</type>
         <name>2</name>
         <inputPins>
           <pin>
             <name>PIN</name>
-            <parentGate>a3fe7d80-c3d6-4669-bf22-79d6046fc193</parentGate>
+            <parentGate>4b65f157-b1c9-4245-a331-33c50ea2c5fe</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -711,7 +711,7 @@
         <outputPin>
           <pin>
             <name>PIN</name>
-            <parentGate>a3fe7d80-c3d6-4669-bf22-79d6046fc193</parentGate>
+            <parentGate>4b65f157-b1c9-4245-a331-33c50ea2c5fe</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -738,7 +738,7 @@
           </pin>
         </outputPin>
         <ui>
-          <location>{X=180,Y=75}</location>
+          <location>{X=420,Y=95}</location>
           <size>{Width=10, Height=10}</size>
           <borderColor>-1</borderColor>
           <borderWidth>2</borderWidth>
@@ -756,12 +756,12 @@
         <internals>
           <outputPins>
             <gatePin>
-              <gate>2113bf9f-f1e3-4cc1-8336-94b55e95f885</gate>
+              <gate>a7409e19-4d71-4b37-a4a2-cd6100348a4a</gate>
               <pinNumber>1</pinNumber>
               <outputPinNumber>1</outputPinNumber>
             </gatePin>
             <gatePin>
-              <gate>7908b6c6-58ad-4769-a39f-65aa45454768</gate>
+              <gate>867d6fd3-665a-4d25-b05e-9a3ffc51a509</gate>
               <pinNumber>1</pinNumber>
               <outputPinNumber>2</outputPinNumber>
             </gatePin>
@@ -769,13 +769,13 @@
         </internals>
       </gate>
       <gate>
-        <id>1bf75bae-c975-4230-a574-cf3f5587bced</id>
+        <id>aff0d953-933b-4b82-b4cb-347f3ba03771</id>
         <type>Node</type>
         <name>3</name>
         <inputPins>
           <pin>
             <name>PIN</name>
-            <parentGate>1bf75bae-c975-4230-a574-cf3f5587bced</parentGate>
+            <parentGate>aff0d953-933b-4b82-b4cb-347f3ba03771</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -804,7 +804,7 @@
         <outputPin>
           <pin>
             <name>PIN</name>
-            <parentGate>1bf75bae-c975-4230-a574-cf3f5587bced</parentGate>
+            <parentGate>aff0d953-933b-4b82-b4cb-347f3ba03771</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -831,7 +831,7 @@
           </pin>
         </outputPin>
         <ui>
-          <location>{X=490,Y=55}</location>
+          <location>{X=730,Y=75}</location>
           <size>{Width=10, Height=10}</size>
           <borderColor>-1</borderColor>
           <borderWidth>2</borderWidth>
@@ -849,12 +849,12 @@
         <internals>
           <outputPins>
             <gatePin>
-              <gate>589d8fd3-8291-4ac1-9f6c-9da3b0f16c75</gate>
+              <gate>27d4a277-2bd2-4968-a882-c3a71177d4a7</gate>
               <pinNumber>0</pinNumber>
               <outputPinNumber>1</outputPinNumber>
             </gatePin>
             <gatePin>
-              <gate>4b9b28eb-2903-48d8-af46-2fb70d1c0a88</gate>
+              <gate>13e2802a-72e4-45a8-a731-b6141a12abeb</gate>
               <pinNumber>0</pinNumber>
               <outputPinNumber>2</outputPinNumber>
             </gatePin>
@@ -862,13 +862,13 @@
         </internals>
       </gate>
       <gate>
-        <id>47b2b0ce-f90a-4fd7-aea7-e4e48b4789e4</id>
+        <id>d4af8dc8-f968-416f-8b59-8abbbc9011ed</id>
         <type>Node</type>
         <name>4</name>
         <inputPins>
           <pin>
             <name>PIN</name>
-            <parentGate>47b2b0ce-f90a-4fd7-aea7-e4e48b4789e4</parentGate>
+            <parentGate>d4af8dc8-f968-416f-8b59-8abbbc9011ed</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -897,7 +897,7 @@
         <outputPin>
           <pin>
             <name>PIN</name>
-            <parentGate>47b2b0ce-f90a-4fd7-aea7-e4e48b4789e4</parentGate>
+            <parentGate>d4af8dc8-f968-416f-8b59-8abbbc9011ed</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -924,7 +924,7 @@
           </pin>
         </outputPin>
         <ui>
-          <location>{X=450,Y=95}</location>
+          <location>{X=660,Y=185}</location>
           <size>{Width=10, Height=10}</size>
           <borderColor>-1</borderColor>
           <borderWidth>2</borderWidth>
@@ -942,12 +942,12 @@
         <internals>
           <outputPins>
             <gatePin>
-              <gate>589d8fd3-8291-4ac1-9f6c-9da3b0f16c75</gate>
+              <gate>27d4a277-2bd2-4968-a882-c3a71177d4a7</gate>
               <pinNumber>1</pinNumber>
               <outputPinNumber>1</outputPinNumber>
             </gatePin>
             <gatePin>
-              <gate>4b9b28eb-2903-48d8-af46-2fb70d1c0a88</gate>
+              <gate>13e2802a-72e4-45a8-a731-b6141a12abeb</gate>
               <pinNumber>1</pinNumber>
               <outputPinNumber>2</outputPinNumber>
             </gatePin>
@@ -955,13 +955,13 @@
         </internals>
       </gate>
       <gate>
-        <id>058676cd-81da-46bd-ab9c-8111024dc5dc</id>
+        <id>6e1787e8-df05-4bb0-b731-dff1a7c3299c</id>
         <type>Led</type>
         <name>S</name>
         <inputPins>
           <pin>
             <name>PIN</name>
-            <parentGate>058676cd-81da-46bd-ab9c-8111024dc5dc</parentGate>
+            <parentGate>6e1787e8-df05-4bb0-b731-dff1a7c3299c</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -990,7 +990,7 @@
         <outputPin>
           <pin>
             <name>PIN</name>
-            <parentGate>058676cd-81da-46bd-ab9c-8111024dc5dc</parentGate>
+            <parentGate>6e1787e8-df05-4bb0-b731-dff1a7c3299c</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -1017,7 +1017,7 @@
           </pin>
         </outputPin>
         <ui>
-          <location>{X=910,Y=206}</location>
+          <location>{X=1150,Y=226}</location>
           <size>{Width=28, Height=28}</size>
           <borderColor>-1</borderColor>
           <borderWidth>2</borderWidth>
@@ -1034,13 +1034,13 @@
         </ui>
       </gate>
       <gate>
-        <id>c47ca865-500e-49da-8e58-4ad424c88186</id>
+        <id>4159f5af-dc82-411e-80fd-4e0143f95d2b</id>
         <type>Led</type>
         <name>C</name>
         <inputPins>
           <pin>
             <name>PIN</name>
-            <parentGate>c47ca865-500e-49da-8e58-4ad424c88186</parentGate>
+            <parentGate>4159f5af-dc82-411e-80fd-4e0143f95d2b</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -1069,7 +1069,7 @@
         <outputPin>
           <pin>
             <name>PIN</name>
-            <parentGate>c47ca865-500e-49da-8e58-4ad424c88186</parentGate>
+            <parentGate>4159f5af-dc82-411e-80fd-4e0143f95d2b</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -1096,7 +1096,7 @@
           </pin>
         </outputPin>
         <ui>
-          <location>{X=910,Y=256}</location>
+          <location>{X=1150,Y=276}</location>
           <size>{Width=28, Height=28}</size>
           <borderColor>-1</borderColor>
           <borderWidth>2</borderWidth>
@@ -1113,13 +1113,13 @@
         </ui>
       </gate>
       <gate>
-        <id>02f2cc0e-ecd8-426e-bf4c-6085858190ea</id>
+        <id>2c1b74df-b157-40bc-a9ac-782a496444bb</id>
         <type>Switch</type>
-        <name>A</name>
+        <name>S</name>
         <inputPins>
           <pin>
             <name>PIN</name>
-            <parentGate>02f2cc0e-ecd8-426e-bf4c-6085858190ea</parentGate>
+            <parentGate>2c1b74df-b157-40bc-a9ac-782a496444bb</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -1148,9 +1148,9 @@
         <outputPin>
           <pin>
             <name>PIN</name>
-            <parentGate>02f2cc0e-ecd8-426e-bf4c-6085858190ea</parentGate>
+            <parentGate>2c1b74df-b157-40bc-a9ac-782a496444bb</parentGate>
             <connectedTo>
-              <gate>4c3e534c-d74f-42f8-bdef-0b7bacc00f59</gate>
+              <gate>dbcb0fc5-3ba7-4415-a113-5184efbbe0ab</gate>
               <pinNumber>0</pinNumber>
             </connectedTo>
             <value>false</value>
@@ -1175,7 +1175,7 @@
           </pin>
         </outputPin>
         <ui>
-          <location>{X=60,Y=25}</location>
+          <location>{X=275,Y=575}</location>
           <size>{Width=28, Height=28}</size>
           <borderColor>-1</borderColor>
           <borderWidth>2</borderWidth>
@@ -1187,18 +1187,18 @@
             <size>12</size>
             <style>Regular</style>
           </font>
-          <nameOffset>{X=3,Y=3}</nameOffset>
+          <nameOffset>{X=6,Y=4}</nameOffset>
           <angle>0</angle>
         </ui>
       </gate>
       <gate>
-        <id>c3c24320-6877-49b6-9dcd-c91a790fd164</id>
+        <id>de2d372e-429d-40fa-959b-129b7da8b26c</id>
         <type>Switch</type>
-        <name>B</name>
+        <name>R</name>
         <inputPins>
           <pin>
             <name>PIN</name>
-            <parentGate>c3c24320-6877-49b6-9dcd-c91a790fd164</parentGate>
+            <parentGate>de2d372e-429d-40fa-959b-129b7da8b26c</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -1223,9 +1223,194 @@
               <angle>0</angle>
             </ui>
           </pin>
+        </inputPins>
+        <outputPin>
           <pin>
             <name>PIN</name>
-            <parentGate>c3c24320-6877-49b6-9dcd-c91a790fd164</parentGate>
+            <parentGate>de2d372e-429d-40fa-959b-129b7da8b26c</parentGate>
+            <connectedTo>
+              <gate>e68f3d3c-d0c0-468d-add6-2a854132e751</gate>
+              <pinNumber>1</pinNumber>
+            </connectedTo>
+            <value>false</value>
+            <pinNumber>0</pinNumber>
+            <value>false</value>
+            <ui>
+              <location>{X=28,Y=9}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </outputPin>
+        <ui>
+          <location>{X=275,Y=785}</location>
+          <size>{Width=28, Height=28}</size>
+          <borderColor>-1</borderColor>
+          <borderWidth>2</borderWidth>
+          <fillColor>-16751616</fillColor>
+          <activeColor>-7278960</activeColor>
+          <foreColor>-256</foreColor>
+          <font>
+            <family>Consolas</family>
+            <size>12</size>
+            <style>Regular</style>
+          </font>
+          <nameOffset>{X=6,Y=4}</nameOffset>
+          <angle>0</angle>
+        </ui>
+      </gate>
+      <gate>
+        <id>dbcb0fc5-3ba7-4415-a113-5184efbbe0ab</id>
+        <type>NANDGate</type>
+        <name>NAND</name>
+        <inputPins>
+          <pin>
+            <name>PIN</name>
+            <parentGate>dbcb0fc5-3ba7-4415-a113-5184efbbe0ab</parentGate>
+            <connectedTo>
+              <gate></gate>
+              <pinNumber>-1</pinNumber>
+            </connectedTo>
+            <value>false</value>
+            <pinNumber>0</pinNumber>
+            <value>false</value>
+            <ui>
+              <location>{X=-10,Y=15}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+          <pin>
+            <name>PIN</name>
+            <parentGate>dbcb0fc5-3ba7-4415-a113-5184efbbe0ab</parentGate>
+            <connectedTo>
+              <gate></gate>
+              <pinNumber>-1</pinNumber>
+            </connectedTo>
+            <value>true</value>
+            <pinNumber>1</pinNumber>
+            <value>true</value>
+            <ui>
+              <location>{X=-10,Y=55}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </inputPins>
+        <outputPin>
+          <pin>
+            <name>PIN</name>
+            <parentGate>dbcb0fc5-3ba7-4415-a113-5184efbbe0ab</parentGate>
+            <connectedTo>
+              <gate>e6fcaec8-2b1f-49f9-80bb-c74ec20124e8</gate>
+              <pinNumber>0</pinNumber>
+            </connectedTo>
+            <value>true</value>
+            <pinNumber>0</pinNumber>
+            <value>true</value>
+            <ui>
+              <location>{X=100,Y=35}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </outputPin>
+        <ui>
+          <location>{X=430,Y=470}</location>
+          <size>{Width=100, Height=80}</size>
+          <borderColor>-1</borderColor>
+          <borderWidth>2</borderWidth>
+          <fillColor>-16728065</fillColor>
+          <activeColor>-7114533</activeColor>
+          <foreColor>-256</foreColor>
+          <font>
+            <family>Consolas</family>
+            <size>12</size>
+            <style>Regular</style>
+          </font>
+          <nameOffset>{X=30,Y=30}</nameOffset>
+          <angle>0</angle>
+        </ui>
+      </gate>
+      <gate>
+        <id>e68f3d3c-d0c0-468d-add6-2a854132e751</id>
+        <type>NANDGate</type>
+        <name>NAND</name>
+        <inputPins>
+          <pin>
+            <name>PIN</name>
+            <parentGate>e68f3d3c-d0c0-468d-add6-2a854132e751</parentGate>
+            <connectedTo>
+              <gate></gate>
+              <pinNumber>-1</pinNumber>
+            </connectedTo>
+            <value>true</value>
+            <pinNumber>0</pinNumber>
+            <value>true</value>
+            <ui>
+              <location>{X=-10,Y=15}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+          <pin>
+            <name>PIN</name>
+            <parentGate>e68f3d3c-d0c0-468d-add6-2a854132e751</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
@@ -1234,7 +1419,7 @@
             <pinNumber>1</pinNumber>
             <value>false</value>
             <ui>
-              <location>{X=0,Y=0}</location>
+              <location>{X=-10,Y=55}</location>
               <size>{Width=10, Height=10}</size>
               <borderColor>-1</borderColor>
               <borderWidth>2</borderWidth>
@@ -1254,16 +1439,16 @@
         <outputPin>
           <pin>
             <name>PIN</name>
-            <parentGate>c3c24320-6877-49b6-9dcd-c91a790fd164</parentGate>
+            <parentGate>e68f3d3c-d0c0-468d-add6-2a854132e751</parentGate>
             <connectedTo>
-              <gate>a3fe7d80-c3d6-4669-bf22-79d6046fc193</gate>
+              <gate>beaba624-cda8-499e-bcf8-ab3a0d793cb1</gate>
               <pinNumber>0</pinNumber>
             </connectedTo>
-            <value>false</value>
+            <value>true</value>
             <pinNumber>0</pinNumber>
-            <value>false</value>
+            <value>true</value>
             <ui>
-              <location>{X=28,Y=9}</location>
+              <location>{X=100,Y=35}</location>
               <size>{Width=10, Height=10}</size>
               <borderColor>-1</borderColor>
               <borderWidth>2</borderWidth>
@@ -1281,39 +1466,412 @@
           </pin>
         </outputPin>
         <ui>
-          <location>{X=60,Y=65}</location>
-          <size>{Width=28, Height=28}</size>
+          <location>{X=530,Y=740}</location>
+          <size>{Width=100, Height=80}</size>
           <borderColor>-1</borderColor>
           <borderWidth>2</borderWidth>
-          <fillColor>-16751616</fillColor>
-          <activeColor>-7278960</activeColor>
+          <fillColor>-16728065</fillColor>
+          <activeColor>-7114533</activeColor>
           <foreColor>-256</foreColor>
           <font>
             <family>Consolas</family>
             <size>12</size>
             <style>Regular</style>
           </font>
-          <nameOffset>{X=3,Y=3}</nameOffset>
+          <nameOffset>{X=30,Y=30}</nameOffset>
           <angle>0</angle>
         </ui>
       </gate>
       <gate>
-        <id>1fa076af-b5a8-4d40-9d64-9a93680994cc</id>
-        <type>Switch</type>
-        <name>C</name>
+        <id>e6fcaec8-2b1f-49f9-80bb-c74ec20124e8</id>
+        <type>Node</type>
+        <name></name>
         <inputPins>
           <pin>
             <name>PIN</name>
-            <parentGate>1fa076af-b5a8-4d40-9d64-9a93680994cc</parentGate>
+            <parentGate>e6fcaec8-2b1f-49f9-80bb-c74ec20124e8</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
+            </connectedTo>
+            <value>true</value>
+            <pinNumber>0</pinNumber>
+            <value>true</value>
+            <ui>
+              <location>{X=-10,Y=0}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </inputPins>
+        <outputPin>
+          <pin>
+            <name>PIN</name>
+            <parentGate>e6fcaec8-2b1f-49f9-80bb-c74ec20124e8</parentGate>
+            <connectedTo>
+              <gate></gate>
+              <pinNumber>-1</pinNumber>
+            </connectedTo>
+            <value>true</value>
+            <pinNumber>0</pinNumber>
+            <value>true</value>
+            <ui>
+              <location>{X=0,Y=0}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </outputPin>
+        <ui>
+          <location>{X=745,Y=605}</location>
+          <size>{Width=10, Height=10}</size>
+          <borderColor>-1</borderColor>
+          <borderWidth>2</borderWidth>
+          <fillColor>-16776961</fillColor>
+          <activeColor>-7114533</activeColor>
+          <foreColor>-256</foreColor>
+          <font>
+            <family>Consolas</family>
+            <size>12</size>
+            <style>Regular</style>
+          </font>
+          <nameOffset>{X=-13,Y=10}</nameOffset>
+          <angle>0</angle>
+        </ui>
+        <internals>
+          <outputPins>
+            <gatePin>
+              <gate>85312b6c-059b-414a-bdf4-33ab90645176</gate>
+              <pinNumber>0</pinNumber>
+              <outputPinNumber>1</outputPinNumber>
+            </gatePin>
+            <gatePin>
+              <gate>e68f3d3c-d0c0-468d-add6-2a854132e751</gate>
+              <pinNumber>0</pinNumber>
+              <outputPinNumber>2</outputPinNumber>
+            </gatePin>
+          </outputPins>
+        </internals>
+      </gate>
+      <gate>
+        <id>beaba624-cda8-499e-bcf8-ab3a0d793cb1</id>
+        <type>Node</type>
+        <name></name>
+        <inputPins>
+          <pin>
+            <name>PIN</name>
+            <parentGate>beaba624-cda8-499e-bcf8-ab3a0d793cb1</parentGate>
+            <connectedTo>
+              <gate></gate>
+              <pinNumber>-1</pinNumber>
+            </connectedTo>
+            <value>true</value>
+            <pinNumber>0</pinNumber>
+            <value>true</value>
+            <ui>
+              <location>{X=-10,Y=0}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </inputPins>
+        <outputPin>
+          <pin>
+            <name>PIN</name>
+            <parentGate>beaba624-cda8-499e-bcf8-ab3a0d793cb1</parentGate>
+            <connectedTo>
+              <gate></gate>
+              <pinNumber>-1</pinNumber>
+            </connectedTo>
+            <value>true</value>
+            <pinNumber>0</pinNumber>
+            <value>true</value>
+            <ui>
+              <location>{X=0,Y=0}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </outputPin>
+        <ui>
+          <location>{X=805,Y=775}</location>
+          <size>{Width=10, Height=10}</size>
+          <borderColor>-1</borderColor>
+          <borderWidth>2</borderWidth>
+          <fillColor>-16776961</fillColor>
+          <activeColor>-7114533</activeColor>
+          <foreColor>-256</foreColor>
+          <font>
+            <family>Consolas</family>
+            <size>12</size>
+            <style>Regular</style>
+          </font>
+          <nameOffset>{X=-13,Y=10}</nameOffset>
+          <angle>0</angle>
+        </ui>
+        <internals>
+          <outputPins>
+            <gatePin>
+              <gate>dbcb0fc5-3ba7-4415-a113-5184efbbe0ab</gate>
+              <pinNumber>1</pinNumber>
+              <outputPinNumber>0</outputPinNumber>
+            </gatePin>
+            <gatePin>
+              <gate>accce5be-3d86-4d09-ad7b-bc2050788e66</gate>
+              <pinNumber>0</pinNumber>
+              <outputPinNumber>1</outputPinNumber>
+            </gatePin>
+          </outputPins>
+        </internals>
+      </gate>
+      <gate>
+        <id>85312b6c-059b-414a-bdf4-33ab90645176</id>
+        <type>Led</type>
+        <name> Q</name>
+        <inputPins>
+          <pin>
+            <name>PIN</name>
+            <parentGate>85312b6c-059b-414a-bdf4-33ab90645176</parentGate>
+            <connectedTo>
+              <gate></gate>
+              <pinNumber>-1</pinNumber>
+            </connectedTo>
+            <value>true</value>
+            <pinNumber>0</pinNumber>
+            <value>true</value>
+            <ui>
+              <location>{X=-14,Y=9}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </inputPins>
+        <outputPin>
+          <pin>
+            <name>PIN</name>
+            <parentGate>85312b6c-059b-414a-bdf4-33ab90645176</parentGate>
+            <connectedTo>
+              <gate></gate>
+              <pinNumber>-1</pinNumber>
+            </connectedTo>
+            <value>true</value>
+            <pinNumber>0</pinNumber>
+            <value>true</value>
+            <ui>
+              <location>{X=0,Y=0}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </outputPin>
+        <ui>
+          <location>{X=945,Y=595}</location>
+          <size>{Width=28, Height=28}</size>
+          <borderColor>-1</borderColor>
+          <borderWidth>2</borderWidth>
+          <fillColor>-16751616</fillColor>
+          <activeColor>-7278960</activeColor>
+          <foreColor>-256</foreColor>
+          <font>
+            <family>Consolas</family>
+            <size>12</size>
+            <style>Regular</style>
+          </font>
+          <nameOffset>{X=0,Y=28}</nameOffset>
+          <angle>0</angle>
+        </ui>
+      </gate>
+      <gate>
+        <id>accce5be-3d86-4d09-ad7b-bc2050788e66</id>
+        <type>Led</type>
+        <name>~Q</name>
+        <inputPins>
+          <pin>
+            <name>PIN</name>
+            <parentGate>accce5be-3d86-4d09-ad7b-bc2050788e66</parentGate>
+            <connectedTo>
+              <gate></gate>
+              <pinNumber>-1</pinNumber>
+            </connectedTo>
+            <value>true</value>
+            <pinNumber>0</pinNumber>
+            <value>true</value>
+            <ui>
+              <location>{X=-14,Y=9}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </inputPins>
+        <outputPin>
+          <pin>
+            <name>PIN</name>
+            <parentGate>accce5be-3d86-4d09-ad7b-bc2050788e66</parentGate>
+            <connectedTo>
+              <gate></gate>
+              <pinNumber>-1</pinNumber>
+            </connectedTo>
+            <value>true</value>
+            <pinNumber>0</pinNumber>
+            <value>true</value>
+            <ui>
+              <location>{X=0,Y=0}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </outputPin>
+        <ui>
+          <location>{X=945,Y=765}</location>
+          <size>{Width=28, Height=28}</size>
+          <borderColor>-1</borderColor>
+          <borderWidth>2</borderWidth>
+          <fillColor>-16751616</fillColor>
+          <activeColor>-7278960</activeColor>
+          <foreColor>-256</foreColor>
+          <font>
+            <family>Consolas</family>
+            <size>12</size>
+            <style>Regular</style>
+          </font>
+          <nameOffset>{X=0,Y=28}</nameOffset>
+          <angle>0</angle>
+        </ui>
+      </gate>
+      <gate>
+        <id>ed9fc0e3-43c1-4a58-8acc-754cc33ced2a</id>
+        <type>Clock</type>
+        <name>CLK A</name>
+        <inputPins>
+          <pin>
+            <name>PIN</name>
+            <parentGate>ed9fc0e3-43c1-4a58-8acc-754cc33ced2a</parentGate>
+            <connectedTo>
+              <gate></gate>
+              <pinNumber>-1</pinNumber>
+            </connectedTo>
+            <value>true</value>
+            <pinNumber>0</pinNumber>
+            <value>true</value>
+            <ui>
+              <location>{X=-10,Y=35}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </inputPins>
+        <outputPin>
+          <pin>
+            <name>PIN</name>
+            <parentGate>ed9fc0e3-43c1-4a58-8acc-754cc33ced2a</parentGate>
+            <connectedTo>
+              <gate>d0551e18-2056-48d6-8164-a2dbc37003b7</gate>
+              <pinNumber>0</pinNumber>
             </connectedTo>
             <value>false</value>
             <pinNumber>0</pinNumber>
             <value>false</value>
             <ui>
-              <location>{X=0,Y=0}</location>
+              <location>{X=100,Y=26}</location>
               <size>{Width=10, Height=10}</size>
               <borderColor>-1</borderColor>
               <borderWidth>2</borderWidth>
@@ -1329,16 +1887,157 @@
               <angle>0</angle>
             </ui>
           </pin>
+        </outputPin>
+        <ui>
+          <location>{X=260,Y=30}</location>
+          <size>{Width=100, Height=62}</size>
+          <borderColor>-1</borderColor>
+          <borderWidth>2</borderWidth>
+          <fillColor>-16751616</fillColor>
+          <activeColor>-7278960</activeColor>
+          <foreColor>-256</foreColor>
+          <font>
+            <family>Consolas</family>
+            <size>12</size>
+            <style>Regular</style>
+          </font>
+          <nameOffset>{X=26,Y=3}</nameOffset>
+          <angle>0</angle>
+        </ui>
+        <internals>
+          <phase>0</phase>
+          <frequency>0.5</frequency>
+          <dutyCycle>0.5</dutyCycle>
+        </internals>
+      </gate>
+      <gate>
+        <id>476f9c1b-3b5a-4b15-853b-56a6b99dd235</id>
+        <type>Clock</type>
+        <name>CLK B</name>
+        <inputPins>
           <pin>
             <name>PIN</name>
-            <parentGate>1fa076af-b5a8-4d40-9d64-9a93680994cc</parentGate>
+            <parentGate>476f9c1b-3b5a-4b15-853b-56a6b99dd235</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
             </connectedTo>
+            <value>true</value>
+            <pinNumber>0</pinNumber>
+            <value>true</value>
+            <ui>
+              <location>{X=-10,Y=35}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </inputPins>
+        <outputPin>
+          <pin>
+            <name>PIN</name>
+            <parentGate>476f9c1b-3b5a-4b15-853b-56a6b99dd235</parentGate>
+            <connectedTo>
+              <gate>4b65f157-b1c9-4245-a331-33c50ea2c5fe</gate>
+              <pinNumber>0</pinNumber>
+            </connectedTo>
             <value>false</value>
-            <pinNumber>1</pinNumber>
+            <pinNumber>0</pinNumber>
             <value>false</value>
+            <ui>
+              <location>{X=100,Y=26}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </outputPin>
+        <ui>
+          <location>{X=260,Y=110}</location>
+          <size>{Width=100, Height=62}</size>
+          <borderColor>-1</borderColor>
+          <borderWidth>2</borderWidth>
+          <fillColor>-16751616</fillColor>
+          <activeColor>-7278960</activeColor>
+          <foreColor>-256</foreColor>
+          <font>
+            <family>Consolas</family>
+            <size>12</size>
+            <style>Regular</style>
+          </font>
+          <nameOffset>{X=26,Y=3}</nameOffset>
+          <angle>0</angle>
+        </ui>
+        <internals>
+          <phase>0</phase>
+          <frequency>0.125</frequency>
+          <dutyCycle>0.5</dutyCycle>
+        </internals>
+      </gate>
+      <gate>
+        <id>63ce1d47-ef6f-4982-a327-812e492572c2</id>
+        <type>Node</type>
+        <name></name>
+        <inputPins>
+          <pin>
+            <name>PIN</name>
+            <parentGate>63ce1d47-ef6f-4982-a327-812e492572c2</parentGate>
+            <connectedTo>
+              <gate></gate>
+              <pinNumber>-1</pinNumber>
+            </connectedTo>
+            <value>true</value>
+            <pinNumber>0</pinNumber>
+            <value>true</value>
+            <ui>
+              <location>{X=-10,Y=0}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </inputPins>
+        <outputPin>
+          <pin>
+            <name>PIN</name>
+            <parentGate>63ce1d47-ef6f-4982-a327-812e492572c2</parentGate>
+            <connectedTo>
+              <gate></gate>
+              <pinNumber>-1</pinNumber>
+            </connectedTo>
+            <value>true</value>
+            <pinNumber>0</pinNumber>
+            <value>true</value>
             <ui>
               <location>{X=0,Y=0}</location>
               <size>{Width=10, Height=10}</size>
@@ -1356,16 +2055,58 @@
               <angle>0</angle>
             </ui>
           </pin>
+        </outputPin>
+        <ui>
+          <location>{X=145,Y=155}</location>
+          <size>{Width=10, Height=10}</size>
+          <borderColor>-1</borderColor>
+          <borderWidth>2</borderWidth>
+          <fillColor>-16776961</fillColor>
+          <activeColor>-7114533</activeColor>
+          <foreColor>-256</foreColor>
+          <font>
+            <family>Consolas</family>
+            <size>12</size>
+            <style>Regular</style>
+          </font>
+          <nameOffset>{X=-13,Y=10}</nameOffset>
+          <angle>0</angle>
+        </ui>
+        <internals>
+          <outputPins>
+            <gatePin>
+              <gate>ed9fc0e3-43c1-4a58-8acc-754cc33ced2a</gate>
+              <pinNumber>0</pinNumber>
+              <outputPinNumber>0</outputPinNumber>
+            </gatePin>
+            <gatePin>
+              <gate>476f9c1b-3b5a-4b15-853b-56a6b99dd235</gate>
+              <pinNumber>0</pinNumber>
+              <outputPinNumber>1</outputPinNumber>
+            </gatePin>
+            <gatePin>
+              <gate>b346266e-5b3d-4d2a-8320-c6bbdbd3e35f</gate>
+              <pinNumber>0</pinNumber>
+              <outputPinNumber>2</outputPinNumber>
+            </gatePin>
+          </outputPins>
+        </internals>
+      </gate>
+      <gate>
+        <id>1189b4f6-4b0d-4590-8f84-958e2112809a</id>
+        <type>Switch</type>
+        <name>DISABLE</name>
+        <inputPins>
           <pin>
             <name>PIN</name>
-            <parentGate>1fa076af-b5a8-4d40-9d64-9a93680994cc</parentGate>
+            <parentGate>1189b4f6-4b0d-4590-8f84-958e2112809a</parentGate>
             <connectedTo>
               <gate></gate>
               <pinNumber>-1</pinNumber>
             </connectedTo>
-            <value>false</value>
-            <pinNumber>2</pinNumber>
-            <value>false</value>
+            <value>true</value>
+            <pinNumber>0</pinNumber>
+            <value>true</value>
             <ui>
               <location>{X=0,Y=0}</location>
               <size>{Width=10, Height=10}</size>
@@ -1387,14 +2128,14 @@
         <outputPin>
           <pin>
             <name>PIN</name>
-            <parentGate>1fa076af-b5a8-4d40-9d64-9a93680994cc</parentGate>
+            <parentGate>1189b4f6-4b0d-4590-8f84-958e2112809a</parentGate>
             <connectedTo>
-              <gate>47b2b0ce-f90a-4fd7-aea7-e4e48b4789e4</gate>
+              <gate>63ce1d47-ef6f-4982-a327-812e492572c2</gate>
               <pinNumber>0</pinNumber>
             </connectedTo>
-            <value>false</value>
+            <value>true</value>
             <pinNumber>0</pinNumber>
-            <value>false</value>
+            <value>true</value>
             <ui>
               <location>{X=28,Y=9}</location>
               <size>{Width=10, Height=10}</size>
@@ -1414,7 +2155,7 @@
           </pin>
         </outputPin>
         <ui>
-          <location>{X=60,Y=105}</location>
+          <location>{X=55,Y=145}</location>
           <size>{Width=28, Height=28}</size>
           <borderColor>-1</borderColor>
           <borderWidth>2</borderWidth>
@@ -1426,36 +2167,104 @@
             <size>12</size>
             <style>Regular</style>
           </font>
-          <nameOffset>{X=3,Y=3}</nameOffset>
+          <nameOffset>{X=-20,Y=30}</nameOffset>
           <angle>0</angle>
         </ui>
+      </gate>
+      <gate>
+        <id>b346266e-5b3d-4d2a-8320-c6bbdbd3e35f</id>
+        <type>Clock</type>
+        <name>CLK C</name>
+        <inputPins>
+          <pin>
+            <name>PIN</name>
+            <parentGate>b346266e-5b3d-4d2a-8320-c6bbdbd3e35f</parentGate>
+            <connectedTo>
+              <gate></gate>
+              <pinNumber>-1</pinNumber>
+            </connectedTo>
+            <value>true</value>
+            <pinNumber>0</pinNumber>
+            <value>true</value>
+            <ui>
+              <location>{X=-10,Y=35}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </inputPins>
+        <outputPin>
+          <pin>
+            <name>PIN</name>
+            <parentGate>b346266e-5b3d-4d2a-8320-c6bbdbd3e35f</parentGate>
+            <connectedTo>
+              <gate>d4af8dc8-f968-416f-8b59-8abbbc9011ed</gate>
+              <pinNumber>0</pinNumber>
+            </connectedTo>
+            <value>false</value>
+            <pinNumber>0</pinNumber>
+            <value>false</value>
+            <ui>
+              <location>{X=100,Y=26}</location>
+              <size>{Width=10, Height=10}</size>
+              <borderColor>-1</borderColor>
+              <borderWidth>2</borderWidth>
+              <fillColor>-16728065</fillColor>
+              <activeColor>-7114533</activeColor>
+              <foreColor>-256</foreColor>
+              <font>
+                <family>Consolas</family>
+                <size>12</size>
+                <style>Regular</style>
+              </font>
+              <nameOffset>{X=0,Y=0}</nameOffset>
+              <angle>0</angle>
+            </ui>
+          </pin>
+        </outputPin>
+        <ui>
+          <location>{X=260,Y=190}</location>
+          <size>{Width=100, Height=62}</size>
+          <borderColor>-1</borderColor>
+          <borderWidth>2</borderWidth>
+          <fillColor>-16751616</fillColor>
+          <activeColor>-7278960</activeColor>
+          <foreColor>-256</foreColor>
+          <font>
+            <family>Consolas</family>
+            <size>12</size>
+            <style>Regular</style>
+          </font>
+          <nameOffset>{X=26,Y=3}</nameOffset>
+          <angle>0</angle>
+        </ui>
+        <internals>
+          <phase>0</phase>
+          <frequency>0.0625</frequency>
+          <dutyCycle>0.5</dutyCycle>
+        </internals>
       </gate>
     </gates>
-    <inputPins>
-      <gatePin>
-        <gate>02f2cc0e-ecd8-426e-bf4c-6085858190ea</gate>
-        <pinNumber>0</pinNumber>
-        <outputPinNumber>-1</outputPinNumber>
-      </gatePin>
-      <gatePin>
-        <gate>c3c24320-6877-49b6-9dcd-c91a790fd164</gate>
-        <pinNumber>1</pinNumber>
-        <outputPinNumber>-1</outputPinNumber>
-      </gatePin>
-      <gatePin>
-        <gate>1fa076af-b5a8-4d40-9d64-9a93680994cc</gate>
-        <pinNumber>2</pinNumber>
-        <outputPinNumber>-1</outputPinNumber>
-      </gatePin>
-    </inputPins>
+    <inputPins />
     <outputPins>
       <gatePin>
-        <gate>589d8fd3-8291-4ac1-9f6c-9da3b0f16c75</gate>
+        <gate>27d4a277-2bd2-4968-a882-c3a71177d4a7</gate>
         <pinNumber>0</pinNumber>
         <outputPinNumber>-1</outputPinNumber>
       </gatePin>
       <gatePin>
-        <gate>acb6795e-922c-4cd6-aa95-620c306ec1ee</gate>
+        <gate>9bc38906-af1f-4314-87f7-ee6b296f87e4</gate>
         <pinNumber>1</pinNumber>
         <outputPinNumber>-1</outputPinNumber>
       </gatePin>

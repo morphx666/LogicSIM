@@ -3,6 +3,7 @@
         [OR]
         [AND]
         [XOR]
+        XNOR
         [NOT]
         NOR
         NAND

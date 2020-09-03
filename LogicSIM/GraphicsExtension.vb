@@ -444,6 +444,11 @@ Public Module GraphicsExtension
         Return FontMetricsImpl.GetFontMetrics(graphics, font)
     End Function
 
+    <Extension()>
+    Public Function GetCenter(r As Rectangle) As Point
+        Return New Point(r.Left + r.Width / 2, r.Top + r.Height / 2)
+    End Function
+
     Private Class FontMetricsImpl
         Inherits FontMetrics
         <StructLayout(LayoutKind.Sequential)>

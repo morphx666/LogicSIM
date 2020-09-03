@@ -124,6 +124,7 @@ Public Class CircuitSurface
                     Case IBaseGate.GateTypes.OR : gt.UI.Path = mGateRenderer.DrawORGate(gt)
                     Case IBaseGate.GateTypes.NOR : gt.UI.Path = mGateRenderer.DrawNORGate(gt)
                     Case IBaseGate.GateTypes.XOR : gt.UI.Path = mGateRenderer.DrawXORGate(gt)
+                    Case IBaseGate.GateTypes.XNOR : gt.UI.Path = mGateRenderer.DrawXNORGate(gt)
                     Case IBaseGate.GateTypes.NOT : gt.UI.Path = mGateRenderer.DrawNOTGate(gt)
                     Case IBaseGate.GateTypes.Node : gt.UI.Path = mGateRenderer.DrawNode(gt)
                     Case IBaseGate.GateTypes.Led : mGateRenderer.DrawLed(g, gt)

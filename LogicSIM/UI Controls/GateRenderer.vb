@@ -1,4 +1,6 @@
-﻿Public Class GateRenderer
+﻿Imports System.Drawing.Drawing2D
+
+Public Class GateRenderer
     Public Structure WireSegment
         Public Property P1 As Point
         Public Property P2 As Point
@@ -145,13 +147,13 @@
         End Get
     End Property
 
-    Public Function DrawANDGate(gt As LogicGates.BaseGate, Optional leftMargin As Integer = 0, Optional rightMargin As Integer = 0) As Drawing2D.GraphicsPath
-        Dim r = gt.UI.Bounds
+    Public Function DrawANDGate(gt As LogicGates.BaseGate, Optional leftMargin As Integer = 0, Optional rightMargin As Integer = 0) As GraphicsPath
+        Dim r As Rectangle = gt.UI.Bounds
 
         r.X += leftMargin
         r.Width -= (leftMargin + rightMargin)
 
-        Dim p As New Drawing2D.GraphicsPath()
+        Dim p As New GraphicsPath()
 
         Dim kx As Integer = r.X + r.Width * 0.1
 
@@ -171,13 +173,13 @@
         Return p
     End Function
 
-    Public Function DrawORGate(gt As LogicGates.BaseGate, Optional leftMargin As Integer = 0, Optional rightMargin As Integer = 0) As Drawing2D.GraphicsPath
-        Dim r = gt.UI.Bounds
+    Public Function DrawORGate(gt As LogicGates.BaseGate, Optional leftMargin As Integer = 0, Optional rightMargin As Integer = 0) As GraphicsPath
+        Dim r As Rectangle = gt.UI.Bounds
 
         r.X += leftMargin
         r.Width -= (leftMargin + rightMargin)
 
-        Dim p As New Drawing2D.GraphicsPath()
+        Dim p As New GraphicsPath()
 
         Dim kx As Integer = r.Width * 0.5
 
@@ -206,10 +208,13 @@
         Return p
     End Function
 
-    Public Function DrawXORGate(gt As LogicGates.BaseGate) As Drawing2D.GraphicsPath
-        Dim p As Drawing2D.GraphicsPath = DrawORGate(gt, 10)
+    Public Function DrawXORGate(gt As LogicGates.BaseGate, Optional leftMargin As Integer = 0, Optional rightMargin As Integer = 0) As GraphicsPath
+        Dim p As GraphicsPath = DrawORGate(gt, 10, rightMargin)
 
-        Dim r = gt.UI.Bounds
+        Dim r As Rectangle = gt.UI.Bounds
+
+        r.X += leftMargin
+        r.Width -= (leftMargin + rightMargin)
 
         p.AddBezier(New Point(r.X, r.Bottom),
                     New Point(r.X + r.Width / 10, r.Y + r.Height / 2 + r.Height / 5),
@@ -224,33 +229,43 @@
         Return p
     End Function
 
-    Public Function DrawNANDGate(gt As LogicGates.BaseGate) As Drawing2D.GraphicsPath
-        Dim r = gt.UI.Bounds
+    Public Function DrawNANDGate(gt As LogicGates.BaseGate) As GraphicsPath
+        Dim r As Rectangle = gt.UI.Bounds
 
         Dim k As Integer = GetNOTSymbolSize(r)
-        Dim p As Drawing2D.GraphicsPath = DrawANDGate(gt, 0, k)
+        Dim p As GraphicsPath = DrawANDGate(gt, 0, k)
 
         DrawNOT(p, k, r)
 
         Return p
     End Function
 
-    Public Function DrawNORGate(gt As LogicGates.BaseGate) As Drawing2D.GraphicsPath
-        Dim r = gt.UI.Bounds
+    Public Function DrawNORGate(gt As LogicGates.BaseGate) As GraphicsPath
+        Dim r As Rectangle = gt.UI.Bounds
 
         Dim k As Integer = GetNOTSymbolSize(r)
-
-        Dim p As Drawing2D.GraphicsPath = DrawORGate(gt, 0, k)
+        Dim p As GraphicsPath = DrawORGate(gt, 0, k)
 
         DrawNOT(p, k, r)
 
         Return p
     End Function
 
-    Public Function DrawNOTGate(gt As LogicGates.BaseGate) As Drawing2D.GraphicsPath
-        Dim r = gt.UI.Bounds
+    Public Function DrawXNORGate(gt As LogicGates.BaseGate) As GraphicsPath
+        Dim r As Rectangle = gt.UI.Bounds
 
-        Dim p As New Drawing2D.GraphicsPath()
+        Dim k As Integer = GetNOTSymbolSize(r)
+        Dim p As GraphicsPath = DrawXORGate(gt, 0, k)
+
+        DrawNOT(p, k, r)
+
+        Return p
+    End Function
+
+    Public Function DrawNOTGate(gt As LogicGates.BaseGate) As GraphicsPath
+        Dim r As Rectangle = gt.UI.Bounds
+
+        Dim p As New GraphicsPath()
 
         Dim k As Integer = GetNOTSymbolSize(r)
 
@@ -263,10 +278,10 @@
         Return p
     End Function
 
-    Public Function DrawNode(gt As LogicGates.BaseGate) As Drawing2D.GraphicsPath
-        Dim r = gt.UI.Bounds
+    Public Function DrawNode(gt As LogicGates.BaseGate) As GraphicsPath
+        Dim r As Rectangle = gt.UI.Bounds
 
-        Dim p As New Drawing2D.GraphicsPath()
+        Dim p As New GraphicsPath()
 
         p.AddEllipse(r.X, r.Y - 1, r.Width, r.Height)
 
@@ -277,7 +292,7 @@
         Return Math.Max(r.Width, r.Height) / 8
     End Function
 
-    Public Sub DrawNOT(p As Drawing2D.GraphicsPath, k As Integer, r As Rectangle)
+    Public Sub DrawNOT(p As GraphicsPath, k As Integer, r As Rectangle)
         p.AddEllipse(r.Right - k, r.Y + r.Height \ 2 - k \ 2, k, k)
     End Sub
 
@@ -513,7 +528,7 @@
 
     Public Sub ApplyRotation(g As Graphics, ui As GateUI)
         If ui.Angle <> 0 Then
-            Using m As Drawing2D.Matrix = New Drawing2D.Matrix()
+            Using m As Matrix = New Matrix()
                 m.RotateAt(ui.Angle, New PointF(ui.X + ui.Width / 2, ui.Y + ui.Height / 2))
                 g.Transform = m
             End Using
@@ -523,7 +538,7 @@
     Public Function TransformPoint(p As Point, Optional gt As LogicGates.BaseGate = Nothing) As Point
         If gt IsNot Nothing AndAlso gt.UI.Angle <> 0 Then
             Dim pts() As Point = New Point() {p}
-            Using m As Drawing2D.Matrix = New Drawing2D.Matrix()
+            Using m As Matrix = New Matrix()
                 m.RotateAt(gt.UI.Angle, New PointF(gt.UI.X + gt.UI.Width / 2, gt.UI.Y + gt.UI.Height / 2))
                 'm.Invert()
                 m.TransformPoints(pts)

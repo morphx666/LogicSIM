@@ -73,6 +73,7 @@
     <Compile Include="Logic Gates\IO\Led.vb" />
     <Compile Include="Logic Gates\IO\Clock.vb" />
     <Compile Include="Logic Gates\IO\Switch.vb" />
+    <Compile Include="Logic Gates\XNORGate.vb" />
     <Compile Include="UI Controls\CircuitSurface.Designer.vb">
       <DependentUpon>CircuitSurface.vb</DependentUpon>
     </Compile>
@@ -145,6 +146,9 @@
       <Project>{ba179816-f3cf-452f-9aed-06bace52f972}</Project>
       <Name>PathFinder</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LogicSIM_Sample.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
