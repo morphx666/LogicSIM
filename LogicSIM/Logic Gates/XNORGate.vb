@@ -30,7 +30,7 @@
         End Function
 
         Public Overrides Function Clone() As Object
-            Return XORGate.FromXML(Me.ToXML(), True)
+            Return XNORGate.FromXML(Me.ToXML(), True)
         End Function
 
         Public Overrides ReadOnly Property Flow As IBaseGate.DataFlow
