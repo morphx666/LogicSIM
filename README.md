@@ -13,6 +13,7 @@ Logic simulator written in VB.NET
 | NAND        |           |
 | NOT         |           |
 | XOR         |           |
+| XNOR        |           |
 
 ### Working with the simulator
 
