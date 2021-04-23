@@ -24,8 +24,8 @@ Partial Class FormMain
     Private Sub InitializeComponent()
         Me.PropertyGridGateEditor = New System.Windows.Forms.PropertyGrid()
         Me.SplitContainerCircuit = New System.Windows.Forms.SplitContainer()
-        Me.LabelSelectedItem = New System.Windows.Forms.Label()
         Me.CircuitSurfaceContainer = New LogicSIM.CircuitSurface()
+        Me.LabelSelectedItem = New System.Windows.Forms.Label()
         Me.CircuitSurfaceGatePicker = New LogicSIM.CircuitSurface()
         CType(Me.SplitContainerCircuit, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainerCircuit.Panel1.SuspendLayout()
@@ -77,16 +77,6 @@ Partial Class FormMain
         Me.SplitContainerCircuit.SplitterDistance = 607
         Me.SplitContainerCircuit.TabIndex = 3
         '
-        'LabelSelectedItem
-        '
-        Me.LabelSelectedItem.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LabelSelectedItem.Location = New System.Drawing.Point(-3, 0)
-        Me.LabelSelectedItem.Name = "LabelSelectedItem"
-        Me.LabelSelectedItem.Size = New System.Drawing.Size(189, 17)
-        Me.LabelSelectedItem.TabIndex = 3
-        Me.LabelSelectedItem.TextAlign = System.Drawing.ContentAlignment.TopCenter
-        '
         'CircuitSurfaceContainer
         '
         Me.CircuitSurfaceContainer.BackColor = System.Drawing.Color.FromArgb(CType(CType(32, Byte), Integer), CType(CType(32, Byte), Integer), CType(CType(32, Byte), Integer))
@@ -103,6 +93,17 @@ Partial Class FormMain
         Me.CircuitSurfaceContainer.Snap = New System.Drawing.Size(10, 10)
         Me.CircuitSurfaceContainer.SnapToGrid = True
         Me.CircuitSurfaceContainer.TabIndex = 0
+        Me.CircuitSurfaceContainer.Zoom = 1.0R
+        '
+        'LabelSelectedItem
+        '
+        Me.LabelSelectedItem.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.LabelSelectedItem.Location = New System.Drawing.Point(-3, 0)
+        Me.LabelSelectedItem.Name = "LabelSelectedItem"
+        Me.LabelSelectedItem.Size = New System.Drawing.Size(189, 17)
+        Me.LabelSelectedItem.TabIndex = 3
+        Me.LabelSelectedItem.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'CircuitSurfaceGatePicker
         '
@@ -121,16 +122,18 @@ Partial Class FormMain
         Me.CircuitSurfaceGatePicker.Snap = New System.Drawing.Size(10, 10)
         Me.CircuitSurfaceGatePicker.SnapToGrid = True
         Me.CircuitSurfaceGatePicker.TabIndex = 1
+        Me.CircuitSurfaceGatePicker.Zoom = 1.0R
         '
         'FormMain
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 17.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 21.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(22, Byte), Integer), CType(CType(22, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(1023, 505)
         Me.Controls.Add(Me.SplitContainerCircuit)
         Me.Controls.Add(Me.CircuitSurfaceGatePicker)
         Me.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.KeyPreview = True
         Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.Name = "FormMain"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen

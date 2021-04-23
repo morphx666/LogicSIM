@@ -1,18 +1,26 @@
 ﻿Imports LogicSIM.LogicGates
 
 Public Class CircuitSurface
+    Public Class PanningXY
+        Public Property X
+        Public Property Y
+    End Class
+
     Private mCircuit As Component
     Private mGateRenderer As GateRenderer
+    Private mZoom As Double = 1.0
+    Private ReadOnly mPanning As New PanningXY()
 
     Private overGate As BaseGate
-    Private mSelectedGates As New List(Of BaseGate)
+    Private ReadOnly mSelectedGates As New List(Of BaseGate)
     Private mSelPin As Pin
     Private selPinUI As GateUI
 
     Private overPin As Pin
     Private overPinBounds As Rectangle
 
-    Private isMouseDown As Boolean
+    Private isLeftMouseDown As Boolean
+    Private isRightMouseDown As Boolean
     Private isCtrlDown As Boolean
 
     Private mouseOrigin As Point
@@ -21,7 +29,7 @@ Public Class CircuitSurface
 
     Private selRect As Rectangle = Rectangle.Empty
 
-    Private txtNameEditor As TextBox
+    Private ReadOnly txtNameEditor As TextBox
 
     Public Property SnapToGrid As Boolean = True
     Public Property Snap As New Size(10, 10)
@@ -37,8 +45,8 @@ Public Class CircuitSurface
         Me.SetStyle(ControlStyles.UserPaint, True)
         Me.SetStyle(ControlStyles.Selectable, True)
 
-        AddHandler KeyUp, Sub(s1 As Object, e1 As KeyEventArgs) isCtrlDown = ((e1.Modifiers And Keys.Control) = Keys.Control)
-        AddHandler KeyDown, Sub(s1 As Object, e1 As KeyEventArgs) isCtrlDown = ((e1.Modifiers And Keys.Control) = Keys.Control)
+        AddHandler Me.KeyUp, Sub(s1 As Object, e1 As KeyEventArgs) isCtrlDown = ((e1.Modifiers And Keys.Control) = Keys.Control)
+        AddHandler Me.KeyDown, Sub(s1 As Object, e1 As KeyEventArgs) isCtrlDown = ((e1.Modifiers And Keys.Control) = Keys.Control)
 
         AddHandler Me.SizeChanged, Sub()
                                        If mGateRenderer IsNot Nothing Then
@@ -46,6 +54,14 @@ Public Class CircuitSurface
                                            mGateRenderer.UpgardeGrid()
                                        End If
                                    End Sub
+
+        AddHandler Me.MouseWheel, Sub(s1 As Object, e1 As MouseEventArgs)
+                                      If e1.Delta > 0 Then
+                                          mZoom += e1.Delta / 1500
+                                      Else
+                                          mZoom -= Math.Abs(e1.Delta) / 1500
+                                      End If
+                                  End Sub
     End Sub
 
     Public Property Circuit As Component
@@ -77,6 +93,21 @@ Public Class CircuitSurface
         End Set
     End Property
 
+    Public ReadOnly Property Panning As PanningXY
+        Get
+            Return mPanning
+        End Get
+    End Property
+
+    Public Property Zoom As Double
+        Get
+            Return mZoom
+        End Get
+        Set(value As Double)
+            mZoom = value
+        End Set
+    End Property
+
     Public ReadOnly Property GateRenderer As GateRenderer
         Get
             Return mGateRenderer
@@ -105,6 +136,8 @@ Public Class CircuitSurface
 
         g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
 
+        g.ScaleTransform(mZoom, mZoom)
+        g.TranslateTransform(mPanning.X, mPanning.Y)
         If selRect.Width > 0 AndAlso selRect.Height > 0 Then
             Using b As New SolidBrush(Color.FromArgb(64, Color.DimGray))
                 g.FillRoundedRectangle(b, selRect, 10, RectangleEdgeFilter.All)
@@ -115,7 +148,7 @@ Public Class CircuitSurface
         End If
 
         For Each gt In mCircuit.Gates
-            mGateRenderer.ApplyRotation(g, gt.UI)
+            mGateRenderer.ApplyRotation(g, gt.UI, mZoom, mPanning)
 
             If gt.UI.Path Is Nothing Then
                 Select Case gt.GateType
@@ -177,6 +210,8 @@ Public Class CircuitSurface
             End If
 
             g.ResetTransform()
+            g.ScaleTransform(mZoom, mZoom)
+            g.TranslateTransform(mPanning.X, mPanning.Y)
             g.DrawString(gt.Name, gt.UI.Font, gt.UI.ForeColorBrush, gt.UI.Location + gt.UI.NameOffset)
         Next
 
@@ -204,7 +239,7 @@ Public Class CircuitSurface
                 DrawSelection(g, opb)
             End If
         ElseIf overPin IsNot Nothing Then
-            mGateRenderer.ApplyRotation(g, overPin.ParentGate.UI)
+            mGateRenderer.ApplyRotation(g, overPin.ParentGate.UI, mZoom, mPanning)
             g.FillRectangle(Brushes.Red, overPinBounds)
             g.ResetTransform()
         Else
@@ -212,7 +247,7 @@ Public Class CircuitSurface
                 Dim overBounds = overGate.UI.Bounds
                 overBounds.Inflate(10, 10)
 
-                mGateRenderer.ApplyRotation(g, overGate.UI)
+                mGateRenderer.ApplyRotation(g, overGate.UI, mZoom, mPanning)
                 DrawSelection(g, overBounds)
                 g.ResetTransform()
             End If
@@ -221,7 +256,7 @@ Public Class CircuitSurface
                 Dim selBounds = gt.UI.Bounds
                 selBounds.Inflate(10, 10)
 
-                mGateRenderer.ApplyRotation(g, gt.UI)
+                mGateRenderer.ApplyRotation(g, gt.UI, mZoom, mPanning)
                 DrawSelection(g, selBounds)
                 g.ResetTransform()
             Next
@@ -293,7 +328,7 @@ Public Class CircuitSurface
                 Case Keys.Tab
                     mSelectedGates.ForEach(Sub(gt) gt.UI.Angle += 15 * If(isShiftDown, -1, 1))
                     mGateRenderer.UpgardeGrid()
-                    Return False
+                    Return True
 
             End Select
         End If
@@ -306,35 +341,44 @@ Public Class CircuitSurface
 
         'If txtNameEditor IsNot Nothing Then RemoveTextbox(True)
 
-        selRect = New Rectangle(mouseOrigin, New Size())
-        isMouseDown = (e.Button = Windows.Forms.MouseButtons.Left)
+        Dim p As Point = e.Location
+        p.X /= mZoom
+        p.Y /= mZoom
+        p.X -= mPanning.X
+        p.Y -= mPanning.Y
 
-        mouseOrigin = mGateRenderer.TransformPoint(e.Location)
+        selRect = New Rectangle(mouseOrigin, New Size())
+        isLeftMouseDown = (e.Button = Windows.Forms.MouseButtons.Left)
+        isRightMouseDown = (e.Button = Windows.Forms.MouseButtons.Right)
+
+        mouseOrigin = mGateRenderer.TransformPoint(p)
 
         If SnapToGrid Then
             mouseOrigin.X -= mouseOrigin.X Mod Snap.Width
             mouseOrigin.Y -= mouseOrigin.Y Mod Snap.Height
         End If
 
-        If overPin IsNot Nothing Then
-            mSelPin = overPin
-            selPinUI = mSelPin.UI.Clone()
-            mSelPin.UI.Location = mGateRenderer.TransformPoint(mSelPin.ParentGate.UI.Location + mSelPin.UI.Location, mSelPin.ParentGate) - mSelPin.ParentGate.UI.Location
-            overPin = Nothing
-            mSelectedGates.Clear()
-        Else
-            mSelPin = Nothing
-            If overGate Is Nothing Then
+        If isLeftMouseDown Then
+            If overPin IsNot Nothing Then
+                mSelPin = overPin
+                selPinUI = mSelPin.UI.Clone()
+                mSelPin.UI.Location = mGateRenderer.TransformPoint(mSelPin.ParentGate.UI.Location + mSelPin.UI.Location, mSelPin.ParentGate) - mSelPin.ParentGate.UI.Location
+                overPin = Nothing
                 mSelectedGates.Clear()
             Else
-                If Not isCtrlDown AndAlso Not mSelectedGates.Contains(overGate) Then mSelectedGates.Clear()
-                If isCtrlDown AndAlso mSelectedGates.Contains(overGate) Then
-                    mSelectedGates.Remove(overGate)
-                    Exit Sub
-                End If
-                If Not mSelectedGates.Contains(overGate) Then
-                    If Not MultiSelect Then mSelectedGates.Clear()
-                    mSelectedGates.Add(overGate)
+                mSelPin = Nothing
+                If overGate Is Nothing Then
+                    mSelectedGates.Clear()
+                Else
+                    If Not isCtrlDown AndAlso Not mSelectedGates.Contains(overGate) Then mSelectedGates.Clear()
+                    If isCtrlDown AndAlso mSelectedGates.Contains(overGate) Then
+                        mSelectedGates.Remove(overGate)
+                        Exit Sub
+                    End If
+                    If Not mSelectedGates.Contains(overGate) Then
+                        If Not MultiSelect Then mSelectedGates.Clear()
+                        mSelectedGates.Add(overGate)
+                    End If
                 End If
             End If
         End If
@@ -345,7 +389,13 @@ Public Class CircuitSurface
     Private Sub CircuitSurface_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
         If mCircuit Is Nothing Then Exit Sub
 
-        mousePosSnaped = mGateRenderer.TransformPoint(e.Location)
+        Dim p As Point = e.Location
+        p.X /= mZoom
+        p.Y /= mZoom
+        p.X -= mPanning.X
+        p.Y -= mPanning.Y
+
+        mousePosSnaped = mGateRenderer.TransformPoint(p)
         mousePos = mousePosSnaped
 
         If SnapToGrid Then
@@ -356,7 +406,7 @@ Public Class CircuitSurface
         Dim deltaX As Integer = (mousePosSnaped.X - mouseOrigin.X)
         Dim deltaY As Integer = (mousePosSnaped.Y - mouseOrigin.Y)
 
-        If isMouseDown Then
+        If isLeftMouseDown Then
             If mSelectedGates.Count > 0 AndAlso Not [Readonly] Then
                 For Each gt In mSelectedGates
                     gt.UI.Path = Nothing
@@ -374,19 +424,24 @@ Public Class CircuitSurface
                     End If
                 Else
                     mSelPin.UI.Bounds = New Rectangle(mSelPin.UI.Bounds.X + deltaX,
-                                                     mSelPin.UI.Bounds.Y + deltaY,
-                                                     mSelPin.UI.Bounds.Width,
-                                                     mSelPin.UI.Bounds.Height)
+                                                      mSelPin.UI.Bounds.Y + deltaY,
+                                                      mSelPin.UI.Bounds.Width,
+                                                      mSelPin.UI.Bounds.Height)
                     mouseOrigin += (mousePosSnaped - mouseOrigin)
                     mGateRenderer.UpgardeGrid()
                 End If
             End If
+        ElseIf isRightMouseDown Then
+            mPanning.X += deltaX
+            mPanning.Y += deltaY
+            mouseOrigin += (mousePosSnaped - mouseOrigin)
+            Exit Sub
         End If
 
         Dim lastMousePos As Point = mousePosSnaped
         For Each gt In mCircuit.Gates
             mousePosSnaped = If(gt.UI.Angle <> 0, mGateRenderer.TransformPoint(mousePos, gt), mousePos)
-            If Not isMouseDown AndAlso gt.UI.Bounds.Contains(mousePosSnaped) Then
+            If Not isLeftMouseDown AndAlso gt.UI.Bounds.Contains(mousePosSnaped) Then
                 overGate = gt
                 overPin = Nothing
                 Exit Sub
@@ -405,11 +460,11 @@ Public Class CircuitSurface
                     End If
                     For Each o In outputs
                         pb = If(mSelPin = o,
-                            New Rectangle(gt.UI.Location + selPinUI.Location, selPinUI.Size),
-                            New Rectangle(gt.UI.Location + o.UI.Location, o.UI.Size))
+                                New Rectangle(gt.UI.Location + selPinUI.Location, selPinUI.Size),
+                                New Rectangle(gt.UI.Location + o.UI.Location, o.UI.Size))
                         If gt.UI.Angle <> 0 Then pb.Location = mGateRenderer.TransformPoint(pb.Location, gt)
 
-                        If pb.Contains(e.Location) Then
+                        If pb.Contains(p) Then
                             overPin = o
                             overPinBounds = New Rectangle(overPin.ParentGate.UI.Location + overPin.UI.Location, overPin.UI.Size)
                             overGate = Nothing
@@ -425,7 +480,7 @@ Public Class CircuitSurface
                                 New Rectangle(gt.UI.Location + ip.UI.Location, ip.UI.Size))
                         If gt.UI.Angle <> 0 Then pb.Location = mGateRenderer.TransformPoint(pb.Location, gt)
 
-                        If pb.Contains(e.Location) Then
+                        If pb.Contains(p) Then
                             overPin = ip
                             overPinBounds = New Rectangle(overPin.ParentGate.UI.Location + overPin.UI.Location, overPin.UI.Size)
                             overGate = Nothing
@@ -437,7 +492,7 @@ Public Class CircuitSurface
         Next
 
         If overGate IsNot Nothing Then
-            If Not isMouseDown Then overGate = Nothing
+            If Not isLeftMouseDown Then overGate = Nothing
         ElseIf overPin IsNot Nothing Then
             overPin = Nothing
         End If
@@ -445,7 +500,11 @@ Public Class CircuitSurface
 
     Private Sub CircuitSurface_MouseUp(sender As Object, e As MouseEventArgs) Handles Me.MouseUp
         If mCircuit Is Nothing Then Exit Sub
-        isMouseDown = False
+        If isLeftMouseDown Then isLeftMouseDown = Not (e.Button = Windows.Forms.MouseButtons.Left)
+        If isRightMouseDown Then
+            isRightMouseDown = Not (e.Button = Windows.Forms.MouseButtons.Right)
+            If Not isRightMouseDown Then Exit Sub
+        End If
 
         If SnapToGrid Then
             mousePosSnaped.X -= mousePosSnaped.X Mod Snap.Width

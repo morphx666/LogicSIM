@@ -526,13 +526,13 @@ Public Class GateRenderer
         End Using
     End Sub
 
-    Public Sub ApplyRotation(g As Graphics, ui As GateUI)
-        If ui.Angle <> 0 Then
-            Using m As Matrix = New Matrix()
-                m.RotateAt(ui.Angle, New PointF(ui.X + ui.Width / 2, ui.Y + ui.Height / 2))
-                g.Transform = m
-            End Using
-        End If
+    Public Sub ApplyRotation(g As Graphics, ui As GateUI, zoom As Double, panning As CircuitSurface.PanningXY)
+        Using m As Matrix = New Matrix()
+            m.Scale(zoom, zoom)
+            m.Translate(panning.X, panning.Y)
+            If ui.Angle <> 0 Then m.RotateAt(ui.Angle, New PointF(ui.X + ui.Width / 2, ui.Y + ui.Height / 2))
+            g.Transform = m
+        End Using
     End Sub
 
     Public Function TransformPoint(p As Point, Optional gt As LogicGates.BaseGate = Nothing) As Point

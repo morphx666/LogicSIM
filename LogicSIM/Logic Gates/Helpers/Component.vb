@@ -10,6 +10,10 @@ Partial Public Class LogicGates
             Public Property PinNumber As Integer
             Public Property OutputPinNumber As Integer
 
+            Public Sub New()
+
+            End Sub
+
             Public Sub New(gate As BaseGate, pinNumber As Integer, Optional outputPinNumber As Integer = -1)
                 Me.Gate = gate
                 Me.PinNumber = pinNumber

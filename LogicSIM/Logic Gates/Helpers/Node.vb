@@ -1,4 +1,6 @@
-﻿Partial Public Class LogicGates
+﻿Imports System.ComponentModel
+
+Partial Public Class LogicGates
     Public Class Node
         Inherits BaseGate
 
@@ -103,7 +105,7 @@
             Inputs(0).UI.Size = New Size(10, 10)
 
             mOutputs = New List(Of Component.PinConnection)()
-            mOutputsUIs = New List(Of Pin)
+            mOutputsUIs = New List(Of Pin)()
 
             For i As Integer = 0 To 3 - 1
                 mOutputsUIs.Add(New Pin(Me, i))

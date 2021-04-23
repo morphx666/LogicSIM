@@ -136,7 +136,7 @@ Partial Public Class LogicGates
         End Operator
 
         Public Overridable Sub SetBaseFromXML(xml As XElement, Optional resetID As Boolean = False)
-            mInternalID = If(resetID, Guid.NewGuid, Guid.Parse(xml.<id>.Value))
+            mInternalID = If(resetID, Guid.NewGuid(), Guid.Parse(xml.<id>.Value))
             mName = xml.<name>.Value
             mUI = GateUI.FromXML(xml.<ui>(0))
 
