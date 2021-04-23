@@ -9,10 +9,11 @@ Logic simulator written in VB.NET
 |-------------|-----------|---------------|
 | OR          | LED       | Wire [autorouting](https://github.com/RedpointGames/AStarPathFinder/blob/master/AStarPathFinder/PathFinder.cs) |
 | AND         | SWITCH    | Wire nodes
-| NOR         | CLOCK     |
-| NAND        |           |
+| XOR         | CLOCK     |
 | NOT         |           |
-| XOR         |           |
+| NOR         |           |
+| NAND        |           |
+| XNOR        |           |
 
 ### Working with the simulator
 
